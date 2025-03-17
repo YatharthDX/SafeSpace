@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from config.db import users_collection
+from ..database.connection import users_collection
 from utils.jwt import decode_access_token
 
 user = APIRouter()

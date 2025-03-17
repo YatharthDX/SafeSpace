@@ -3,7 +3,7 @@ import smtplib
 import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from config.db import users_collection, otp_collection
+from database.connection import users_collection, otp_collection
 from datetime import datetime, timedelta, timezone
 
 EMAIL = "example@gmail.com"

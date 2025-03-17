@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from models.user import User
-from config.db import users_collection, otp_collection, conn
-from schemas.user import UserCreate, VerifyOTP, ForgotPasswordRequest, ResetPasswordRequest
+from ..database.models import User
+from ..database.connection import users_collection, otp_collection, conn
+from ..database.schemas import UserCreate, VerifyOTP, ForgotPasswordRequest, ResetPasswordRequest
 from datetime import datetime, timezone
 from utils.hash import hash_password, verify_password
 from utils.otp import generate_otp, send_otp_email, store_otp, verify_otp
