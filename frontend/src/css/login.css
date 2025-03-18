@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Main container */
+.login-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+}
+
+/* Left section with logo text and scooter illustration */
+.left-section {
+  width: 50%;
+  height: 100%;
+  background-color: #e9bf7f; /* Matches the beige color in the image */
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-text {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}
+
+.logo-text img {
+  width: 40%;
+  max-width: 250px;
+  height: auto;
+}
+
+/* Fallback if no logo image is available */
+.logo-text h1 {
+  color: #c85c44; /* Matches the reddish-brown text color in the image */
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.left-illustration {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.left-illustration img {
+  width: 100%;
+  height: auto;
+}
+
+/* Right section with brain flower icon and playing illustration */
+.right-section {
+  width: 50%;
+  height: 100%;
+  background-color: #fff; /* Matches the white background on the right */
+  position: relative;
+}
+
+.brain-flower-icon {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  width: 15%;
+  max-width: 120px;
+}
+
+.brain-flower-icon img {
+  width: 100%;
+  height: auto;
+}
+
+.right-illustration {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  width: 45%;
+  max-width: 300px;
+}
+
+.right-illustration img {
+  width: 100%;
+  height: auto;
+}
+
+/* Center login form */
+.login-form-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 40%;
+  max-width: 450px;
+  min-width: 320px;
+}
+
+.login-form {
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding: 8%;
+  text-align: center;
+}
+
+.form-header {
+  margin-bottom: 8%;
+}
+
+.welcome-text {
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  color: #333;
+  margin-bottom: 2%;
+}
+
+.sign-in-heading {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 600;
+  color: #212121;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+label {
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  color: #333;
+}
+
+input {
+  padding: 4% 3%;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: clamp(0.9rem, 1vw, 1rem);
+  outline: none;
+  transition: border-color 0.3s;
+  width: 100%;
+}
+
+input:focus {
+  border-color: #d88c4a;
+}
+
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #777;
+  font-size: 1.2rem;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: -0.5rem;
+}
+
+.forgot-password a {
+  color: #c85c44; /* Matches the reddish-brown link color in the image */
+  text-decoration: none;
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  text-align: center;
+}
+
+.sign-in-btn {
+  background-color: #d88c4a; /* Matches the orange button in the image */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 4% 0;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+  margin-top: 3%;
+}
+
+.sign-in-btn:hover {
+  background-color: #c27b3a;
+}
+
+.sign-in-btn:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.no-account {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  color: #777;
+  margin-top: 5%;
+}
+
+.no-account a {
+  color: #d88c4a; /* Matches the orange link color in the image */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .login-form-wrapper {
+    width: 50%;
+  }
+}
+
+@media (max-width: 992px) {
+  .login-form-wrapper {
+    width: 60%;
+  }
+  
+  .left-illustration img, .right-illustration img {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+  
+  .left-section {
+    width: 100%;
+    height: 50%;
+  }
+  
+  .right-section {
+    width: 100%;
+    height: 50%;
+  }
+  
+  .login-form-wrapper {
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  .brain-flower-icon {
+    top: 3%;
+    right: 5%;
+    width: 15%;
+  }
+  
+  .right-illustration {
+    bottom: 5%;
+    right: 5%;
+    width: 35%;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    padding: 10% 6%;
+  }
+  
+  .right-illustration {
+    display: none;
+  }
+  
+  .brain-flower-icon {
+    width: 20%;
+  }
+}
+
+@media (max-height: 700px) {
+  .login-form {
+    padding: 5%;
+  }
+  
+  .form-header {
+    margin-bottom: 4%;
+  }
+  
+  form {
+    gap: 1rem;
+  }
+}
