@@ -4,7 +4,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 5vh;
+  height: 7vh;
   background-color: #eec296;
   display: flex;
   justify-content: space-between; /* ✅ Space between elements */
