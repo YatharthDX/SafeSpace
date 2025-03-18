@@ -1,0 +1,91 @@
+/* Post Container */
+.post-container {
+  background: white;
+  border: 1.5px solid #e0a878;
+  border-radius: 12px;
+  padding: 15px;
+  width: 100%;
+  max-width: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-family: "Arial", sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Post Header */
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Author and Time */
+.post-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-icon {
+  font-size: 1.2rem;
+  color: black;
+}
+
+.post-author {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.post-time {
+  font-size: 0.9rem;
+  color: gray;
+}
+
+/* Title */
+.post-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Content */
+.post-content {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Tags */
+.post-tags {
+  display: flex;
+  gap: 5px;
+}
+
+.tag {
+  background-color: #e6be96;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+/* Post Actions (Bottom Left) */
+.post-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.action-icon {
+  font-size: 1.4rem;
+  color: #333;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.action-icon:hover {
+  transform: scale(1.1);
+}

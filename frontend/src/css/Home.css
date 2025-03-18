@@ -1,0 +1,76 @@
+/* Main Container (Divides Left Sidebar & Right Section) */
+.home-container {
+  display: flex;
+  width: 100%;
+  height: 100vh; /* Full viewport height */
+  overflow: hidden;
+}
+
+/* Left Sidebar (Fixed, 25% width) */
+.left-sidebar {
+  width: 25%;
+  background-color: #f9f2eb;
+  padding: 20px;
+  border-right: 2px solid #e0a878;
+  height: 100vh; /* Fixed height */
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto; /* In case there are too many tags */
+}
+
+/* Tags Style */
+.tags {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tag {
+  background-color: #e6be96;
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* Create Post Button */
+.create-post {
+  background-color: #e0a878;
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 1rem;
+  margin-top: 20px;
+  cursor: pointer;
+  display: block;
+}
+
+/* Right Section (Scrollable, 75% width) */
+/* Remove height restriction so the main scrollbar handles scrolling */
+.posts-section {
+  width: 75%;
+  /* margin-left: 25%; */
+  overflow-y: visible; /* Change from 'auto' */
+  padding: 20px;
+}
+
+/* Posts Container */
+.posts-container {
+  width: 100%;
+  /* max-width: 800px; Ensures posts don’t stretch too much */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Navbar Fix */
+.posts-section nav {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+  padding-bottom: 10px;
+}

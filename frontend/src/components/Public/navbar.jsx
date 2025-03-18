@@ -9,12 +9,7 @@ const Navbar = () => {
     <nav className="navbar">
       {/* Left Section - Logo & Brand Name */}
       <div className="navbar-left">
-<<<<<<< HEAD:frontend/src/components/public/navbar.jsx
-       <img src={logo} alt="SafeSpace Logo" className="logo" /> 
-      
-=======
         <img src={logo} alt="SafeSpace Logo" className="logo" />
->>>>>>> 3974e81f6049874e3414bb5c3d56c3f19f34d0be:frontend/src/components/Public/navbar.jsx
         <h1 className="brand-name">SafeSpace</h1>
       </div>
 
