@@ -6,9 +6,9 @@ from email.mime.multipart import MIMEMultipart
 from database.connection import users_collection, otp_collection
 from datetime import datetime, timedelta, timezone
 
-EMAIL = "example@gmail.com"
-PASSWORD = "pass"
 
+EMAIL = "safespaceiitk@gmail.com"
+PASSWORD = "ttnjizyvosjnmdqx"
 def generate_otp():
     return str(random.randint(100000, 999999))
 

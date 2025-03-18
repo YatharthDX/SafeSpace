@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException, Depends
-from ..database.models import User
-from ..database.connection import users_collection, otp_collection, conn
-from ..database.schemas import UserCreate, VerifyOTP, ForgotPasswordRequest, ResetPasswordRequest
+from fastapi import APIRouter, HTTPException, Depends, Response
+from database.models import User, LoginUser
+from database.connection import users_collection, otp_collection, conn
+from database.schemas import UserCreate, VerifyOTP, ForgotPasswordRequest, ResetPasswordRequest
 from datetime import datetime, timezone
 from utils.hash import hash_password, verify_password
 from utils.otp import generate_otp, send_otp_email, store_otp, verify_otp
@@ -79,18 +79,34 @@ async def reset_password(request: ResetPasswordRequest):
     
     return {"message": "Password reset successfully"}
 
+# @auth.post("/login")
+# async def login(user: User):
+#     db_user = users_collection.find_one({"email": user.email})
+#     if not db_user or not verify_password(user.password, db_user["password"]):
+#         raise HTTPException(status_code=401, detail="Invalid credentials")
+
+#     token = create_access_token({"sub": db_user["email"]})
+#     user.set_cookie(
+#         key="jwt",
+#         value=token,
+#         httponly=True,  
+#         secure=True,     
+#         samesite="Lax"   
+#     )
+#     return {"message":"Login Successful"}
 @auth.post("/login")
-async def login(user: User):
+async def login(user: LoginUser , response: Response):  # Change to LoginUser
     db_user = users_collection.find_one({"email": user.email})
     if not db_user or not verify_password(user.password, db_user["password"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": db_user["email"]})
+    
     response.set_cookie(
         key="jwt",
         value=token,
         httponly=True,  
-        secure=True,     
+        secure=False,  # Change to True in production (HTTPS required)     
         samesite="Lax"   
     )
-    return {"message":"Login Successful"}
+    return {"message": "Login Successful"}
