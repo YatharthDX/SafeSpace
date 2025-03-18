@@ -15,6 +15,7 @@ function App() {
       {/* Required for React Router to work */}
       <div>
         <Routes>
+          <Route path="/home" element={<Home />} />
           <Route path="/" element={<Login />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/chat" element={<Chat />} />

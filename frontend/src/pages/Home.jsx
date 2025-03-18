@@ -19,7 +19,7 @@
 
 // export default Home;
 import React from "react";
-import Navbar from "../components/Public/Navbar";
+import Navbar from "../components/Public/navbar";
 import SinglePost from "../components/Posts/SinglePost";
 import "../css/Home.css"; // Import the CSS file
 
