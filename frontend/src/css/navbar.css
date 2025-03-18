@@ -1,0 +1,91 @@
+/* Navbar Container */
+.navbar {
+  position: fixed; /* ✅ Stays visible while scrolling */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5vh;
+  background-color: #eec296;
+  display: flex;
+  justify-content: space-between; /* ✅ Space between elements */
+  align-items: center;
+  padding: 1vh 2vw; /* ✅ Responsive padding */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* ✅ Soft shadow */
+  z-index: 1000; /* ✅ Ensures it's above other elements */
+}
+
+/* Left Section */
+.navbar-left {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  width: 20%; /* ✅ Responsive width */
+  justify-content: flex-start;
+}
+
+.logo {
+  height: 3vh; /* ✅ Adjusted for visibility */
+  max-width: 2vw; /* ✅ Ensures proper scaling */
+  /* margin-right: 1vw; */
+}
+
+.brand-name {
+  font-size: 4vh; /* ✅ Increased font size */
+  font-weight: bold;
+  color: #a24524;
+}
+
+/* Center Section (Search Bar) */
+.navbar-center {
+  display: flex;
+  align-items: center;
+  width: 50%; /* ✅ Responsive width */
+  justify-content: center;
+}
+
+.search-bar {
+  width: 80%; /* ✅ Responsive width */
+  padding: 1vh;
+  border: 1px solid #ccc;
+  border-radius: 2vh;
+  outline: none;
+  font-size: 1.8vh;
+}
+
+.search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: -6vh; /* ✅ Positions icon inside the search box */
+  font-size: 2vh;
+}
+
+/* Right Section */
+.navbar-right {
+  /* max-height: fit-content; */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 30%; /* ✅ Responsive width */
+  gap: 2vw; /* ✅ Space between links */
+  padding-right: 3.5%;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: black;
+  font-size: 2.5vh; /* ✅ Adjusted font size */
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+  /* font-weight: bold; */
+}
+
+.nav-link:hover {
+  color: #a24524;
+}
+
+/* Prevent Content Overlap */
+body {
+  padding-top: 9vh; /* ✅ Prevents content from hiding under navbar */
+}

@@ -1,0 +1,33 @@
+# Ignore Node.js dependencies (Both Frontend & Backend)
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Ignore Environment files (Secrets)
+.env
+.env.local
+.env.development
+.env.production
+
+# Ignore Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Ignore Editor & OS-specific files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Docker-related files (If using Docker)
+docker-compose.yml
