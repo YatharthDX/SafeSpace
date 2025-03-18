@@ -2,13 +2,14 @@ import React from "react";
 import { FaSearch, FaCalendarAlt, FaComments, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../../css/navbar.css"; // Import the CSS file
+import logo from "../../assets/logo.png"; // Import the logo image
 
 const Navbar = () => {
   return (
     <nav className="navbar">
       {/* Left Section - Logo & Brand Name */}
       <div className="navbar-left">
-        <img src="/logo.png" alt="SafeSpace Logo" className="logo" />
+        <img src={logo} alt="SafeSpace Logo" className="logo" />
         <h1 className="brand-name">SafeSpace</h1>
       </div>
 
