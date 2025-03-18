@@ -22,10 +22,10 @@
   width: 20%; /* ✅ Responsive width */
   justify-content: flex-start;
 }
-
 .logo {
+  padding-top: 2vh; /* ✅ Adjusted for visibility */
   height: 3vh; /* ✅ Adjusted for visibility */
-  max-width: 2vw; /* ✅ Ensures proper scaling */
+  /* max-width: 6vw; ✅ Ensures proper scaling */
   /* margin-right: 1vw; */
 }
 
