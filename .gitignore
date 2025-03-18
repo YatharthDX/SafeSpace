@@ -4,6 +4,9 @@ dist/
 dist-ssr/
 *.local
 
+# Ignore venv
+venv/
+
 # Ignore Environment files (Secrets)
 .env
 .env.local
