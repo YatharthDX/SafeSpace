@@ -7,6 +7,8 @@ import Home from "./pages/Home.jsx"; // Import Home page
 import Appointments from "./pages/Appointments.jsx"; // Import the Appointments page
 import Chat from "./pages/Chat.jsx";
 import Profile from "./pages/Profile.jsx";
+import Signup from "./pages/Signup";
+
 
 function App() {
   return (
@@ -14,7 +16,9 @@ function App() {
       <div>
       
       <Routes>
+        <Route path="/home" element={<Home />} />
         <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/appointments" element={<Appointments />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile" element={<Profile />} />
