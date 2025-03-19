@@ -39,14 +39,14 @@ body, html {
 
 .logo-text h1 {
   color: #e05e34;
-  font-size: 42px;
+  font-size: 55px;
   font-weight: bold;
 }
 
 /* Left illustration - person on scooter */
 .left-illustration {
   position: absolute;
-  bottom: 60px;
+  bottom: 120px;
   left: 80px; /* Moved further to the left */
 }
 
@@ -65,7 +65,7 @@ body, html {
 /* Right illustration - person playing */
 .right-illustration {
   position: absolute;
-  bottom: 60px;
+  bottom: 120px;
   right: 40px; /* Moved further to the right */
 }
 
@@ -77,8 +77,8 @@ body, html {
 /* Brain flower icon in top right */
 .brain-flower-icon {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 0px;
+  right: 0px;
 }
 
 .brain-flower-icon img {
