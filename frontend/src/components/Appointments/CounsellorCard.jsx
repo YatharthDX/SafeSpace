@@ -1,7 +1,14 @@
 import React from "react";
 import "../../css/counselorCard.css"; // Import CSS file
+import { useNavigate } from "react-router-dom";
 
 const CounselorCard = ({ counselor }) => {
+  const navigate = useNavigate()
+  const HandleBooking = () => {
+    // Redirect to the appointselect page
+    navigate("/appointselect", { state: { counselor } });
+  };
+
   return (
     <div className="counselor-card-container">
       <div className="counselor-card">
@@ -10,7 +17,7 @@ const CounselorCard = ({ counselor }) => {
         <p className="counselor-info">
           {counselor.specialization} | {counselor.experience} years experience
         </p>
-        <button className="book-btn" onClick={() => alert(`Booking appointment with ${counselor.name}`)}>
+        <button className="book-btn" onClick={HandleBooking}>
           Book an Appointment
         </button>
       </div>

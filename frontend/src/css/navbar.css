@@ -36,6 +36,11 @@
   margin: 0;
 }
 
+.brand-name:hover {
+  color: #db9160; /* Darker shade for hover effect */
+  cursor: pointer;
+}
+
 /* Center Section - Search Bar */
 .navbar-center {
   display: flex;
