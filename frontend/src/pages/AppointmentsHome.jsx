@@ -3,6 +3,7 @@ import Navbar from "../components/Public/navbar";
 import CounselorCard from "../components/Appointments/CounsellorCard";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import { useState } from "react";
+import "../css/AppointmentsHome.css";
 
 const counselors = [
   {

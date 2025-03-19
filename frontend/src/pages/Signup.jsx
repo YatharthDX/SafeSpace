@@ -14,6 +14,7 @@ const Signup = () => {
     const [loading, setLoading] = useState(false);
     const [showOtpModal, setShowOtpModal] = useState(false);
     const [otp, setOtp] = useState('');
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -74,8 +75,34 @@ const Signup = () => {
                 throw new Error(data.message || 'Failed to resend OTP');
             }
             
-            alert('OTP has been resent to your email');
             setError('');
+            // Show custom alert for OTP resent
+            const tempAlert = document.createElement('div');
+            tempAlert.className = 'custom-alert custom-alert-info';
+            tempAlert.innerHTML = `
+                <div class="custom-alert-content">
+                    <span>OTP has been resent to your email</span>
+                    <button class="custom-alert-close">&times;</button>
+                </div>
+            `;
+            document.body.appendChild(tempAlert);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                if (tempAlert.parentNode) {
+                    document.body.removeChild(tempAlert);
+                }
+            }, 3000);
+            
+            // Add close button functionality
+            const closeBtn = tempAlert.querySelector('.custom-alert-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    if (tempAlert.parentNode) {
+                        document.body.removeChild(tempAlert);
+                    }
+                });
+            }
         } catch (err) {
             console.error('Error resending OTP:', err);
             setError(err.message);
@@ -127,15 +154,26 @@ const Signup = () => {
                 throw new Error(registerData.message || 'Failed to create account');
             }
 
-            // If registration is successful, redirect to login
-            alert('Account created successfully! Please log in.');
-            navigate('/');
+            // If registration is successful, show success alert
+            setShowSuccessAlert(true);
+            
+            // Navigate after a delay to let user see the success message
+            setTimeout(() => {
+                navigate('/');
+            }, 3000);
+            
         } catch (err) {
             console.error('Error during verification/registration:', err);
             setError(err.message);
         } finally {
             setLoading(false);
         }
+    };
+
+    // Function to close the success alert
+    const closeSuccessAlert = () => {
+        setShowSuccessAlert(false);
+        navigate('/');
     };
 
     return (
@@ -233,7 +271,7 @@ const Signup = () => {
                                 
                                 <div className="no-account">
                                     <span>Already have an account?</span>
-                                    <a href="/login">Sign in</a>
+                                    <a href="/">Sign in</a>
                                 </div>
                             </form>
                         </>
@@ -295,6 +333,20 @@ const Signup = () => {
                     )}
                 </div>
             </div>
+            
+            {/* Custom Success Alert */}
+            {showSuccessAlert && (
+                <div className="custom-alert-overlay">
+                    <div className="custom-success-alert">
+                        <div className="success-icon">✓</div>
+                        <h2>Account Created Successfully!</h2>
+                        <p>You will be redirected to login page shortly.</p>
+                        <button onClick={closeSuccessAlert} className="close-alert-btn">
+                            Continue to Login
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

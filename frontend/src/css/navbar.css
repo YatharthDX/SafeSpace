@@ -1,159 +1,155 @@
-/* Navbar Container */
+/* navbar.css */
+
 .navbar {
-  position: fixed; /* Stays fixed at the top while scrolling */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 60px;
+  background-color: #f9e5c9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   width: 100%;
-  height: 10vh;
-  background-color: #fbe8cf; /* Warm beige color from reference image */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1vh 2vw;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 1000; /* Ensures navbar stays above other elements */
+  z-index: 1000;
 }
 
-/* Left Section - Logo & Brand Name */
+/* Left section - Logo & Brand Name */
 .navbar-left {
   display: flex;
   align-items: center;
-  width: 20%;
-  justify-content: flex-start;
+  gap: 10px;
 }
 
 .logo {
-  height: 10vh; /* Doubled the size from 5vh to 10vh */
+  height: 36px;
   width: auto;
-  margin-right: 1vw;
-  object-fit: contain;
 }
 
 .brand-name {
-  font-size: 4vh;
+  font-size: 24px;
   font-weight: bold;
-  color: #d97462; /* Coral/reddish color from reference */
-  margin: 0;
+  color: #d86d45;
+  text-decoration: none;
+  font-family: sans-serif;
 }
 
-.brand-name:hover {
-  color: #db9160; /* Darker shade for hover effect */
-  cursor: pointer;
-}
-
-/* Center Section - Search Bar */
+/* Center section - Search Bar */
 .navbar-center {
   display: flex;
   align-items: center;
-  width: 50%;
-  justify-content: center;
   position: relative;
+  width: 40%;
+  max-width: 600px;
+  margin-top: 10px; /* Shifts the search bar downward */
 }
 
 .search-bar {
-  width: 80%;
-  padding: 1vh 1vh 1vh 6vh; /* Increased left padding to make room for the icon */
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border-radius: 20px;
   border: 1px solid #e0e0e0;
-  border-radius: 2vh;
+  font-size: 14px;
   outline: none;
-  font-size: 1.8vh;
-  background-color: white;
+  background-color: white; /* Ensures the search bar is white */
 }
 
 .search-btn {
   position: absolute;
-  left: 12%;
-  background: none;
-  border: none;
+  right: 15px;
+  color: #888;
   cursor: pointer;
-  color: #a0a0a0;
-  font-size: 2vh;
-  display: flex;
-  align-items: center;
-  /* Added some horizontal padding to ensure no text overlap */
-  padding: 0 1vh;
+  display: none; /* Hide the default search button */
 }
 
-/* Right Section - Navigation Links */
+/* Create a new search icon that appears after the placeholder text */
+.search-bar::placeholder {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23888888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px; /* Make room for the icon */
+}
+
+/* Right section - Navigation Links */
 .navbar-right {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  width: 30%;
-  gap: 2vw;
-  padding-right: 3.5%;
+  gap: 20px;
 }
 
 .nav-link {
-  text-decoration: none;
-  color: #333;
-  font-size: 2.5vh;
   display: flex;
   align-items: center;
-  gap: 0.5vw;
+  gap: 5px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
 .nav-link:hover {
-  color: #d97462; /* Matches brand color on hover */
-}
-
-/* Prevent Content Overlap */
-body {
-  padding-top: 11vh; /* Prevents content from hiding under navbar */
-  margin: 0;
+  color: #d86d45;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .navbar-left {
-    width: 25%;
-  }
-  
-  .logo {
-    height: 8vh; /* Slightly smaller on medium screens but still large */
-  }
-  
   .navbar-center {
-    width: 40%;
+    width: 30%;
   }
   
-  .navbar-right {
-    width: 35%;
-    gap: 1.5vw;
-  }
-  
-  .nav-link {
-    font-size: 2vh;
+  .nav-link span {
+    display: none;
   }
 }
 
 @media (max-width: 576px) {
   .navbar {
-    height: 8vh;
-  }
-  
-  .navbar-left {
-    width: 40%;
-  }
-  
-  .logo {
-    height: 6vh; /* Further reduced on small screens for balance */
-  }
-  
-  .navbar-center {
-    display: none;
-  }
-  
-  .navbar-right {
-    width: 60%;
-    gap: 3vw;
+    padding: 0 10px;
   }
   
   .brand-name {
-    font-size: 3vh;
+    font-size: 20px;
   }
   
-  body {
-    padding-top: 9vh;
+  .navbar-center {
+    width: 40%;
   }
+  
+  .navbar-right {
+    gap: 10px;
+  }
+}
+
+/* Ensure content below navbar isn't hidden */
+body {
+  padding-top: 60px;
+}
+
+/* Search container styles */
+.search-container {
+  position: relative;
+  width: 100%;
+  margin-top: 10px; /* Shifts the search bar downward */
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border-radius: 20px;
+  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  outline: none;
+  background-color: white;
+}
+
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
 }
