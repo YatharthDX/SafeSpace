@@ -14,7 +14,6 @@ const Signup = () => {
     const [loading, setLoading] = useState(false);
     const [showOtpModal, setShowOtpModal] = useState(false);
     const [otp, setOtp] = useState('');
-    const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -30,34 +29,35 @@ const Signup = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/api/auth/register', {
+            // First, send OTP to the user's email
+            const otpResponse = await fetch('http://localhost:8000/api/auth/send-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, username}),
+                body: JSON.stringify({ 
+                    email: email,
+                    requestType: 'signup'
+                }),
                 credentials: 'include',
             });
 
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Failed to create account');
+            if (!otpResponse.ok) {
+                const otpErrorData = await otpResponse.json();
+                throw new Error(otpErrorData.message || 'Failed to send OTP');
             }
-
-            const data = await response.json();
-            setUserId(data.userId); // Store the user ID for verification
             
-            // Send OTP request
-            await sendOtp(email);
-            
-            // Show OTP verification modal
+            // If OTP was sent successfully, show the OTP verification modal
             setShowOtpModal(true);
+            setError('');
         } catch (err) {
+            console.error('Error sending OTP:', err);
             setError(err.message);
         } finally {
             setLoading(false);
         }
     };
 
-    const sendOtp = async (email) => {
+    const resendOtp = async () => {
+        setLoading(true);
         try {
             const response = await fetch('http://localhost:8000/api/auth/send-otp', {
                 method: 'POST',
@@ -71,13 +71,16 @@ const Signup = () => {
 
             if (!response.ok) {
                 const data = await response.json();
-                throw new Error(data.message || 'Failed to send OTP');
+                throw new Error(data.message || 'Failed to resend OTP');
             }
             
-            return true;
+            alert('OTP has been resent to your email');
+            setError('');
         } catch (err) {
+            console.error('Error resending OTP:', err);
             setError(err.message);
-            return false;
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -90,7 +93,8 @@ const Signup = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/api/auth/verify-otp', {
+            // First verify the OTP
+            const verifyResponse = await fetch('http://localhost:8000/api/auth/verify-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -101,24 +105,37 @@ const Signup = () => {
                 credentials: 'include',
             });
 
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Invalid OTP');
+            if (!verifyResponse.ok) {
+                const verifyData = await verifyResponse.json();
+                throw new Error(verifyData.message || 'Invalid OTP');
             }
 
-            // On successful verification, redirect to login
-            navigate('/login');
+            // If OTP is valid, proceed with registration
+            const registerResponse = await fetch('http://localhost:8000/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email: email, 
+                    password: password, 
+                    name: username
+                }),
+                credentials: 'include',
+            });
+
+            if (!registerResponse.ok) {
+                const registerData = await registerResponse.json();
+                throw new Error(registerData.message || 'Failed to create account');
+            }
+
+            // If registration is successful, redirect to login
+            alert('Account created successfully! Please log in.');
+            navigate('/');
         } catch (err) {
+            console.error('Error during verification/registration:', err);
             setError(err.message);
         } finally {
             setLoading(false);
         }
-    };
-
-    const resendOtp = async () => {
-        await sendOtp(email);
-        setError('');
-        alert('OTP has been resent to your email');
     };
 
     return (
@@ -211,7 +228,7 @@ const Signup = () => {
                                 {error && <div className="error-message">{error}</div>}
                                 
                                 <button type="submit" className="sign-in-btn" disabled={loading}>
-                                    {loading ? 'Signing up...' : 'Sign Up'}
+                                    {loading ? 'Sending OTP...' : 'Sign Up'}
                                 </button>
                                 
                                 <div className="no-account">
@@ -254,7 +271,7 @@ const Signup = () => {
                                 className="sign-in-btn" 
                                 disabled={loading}
                             >
-                                {loading ? 'Verifying...' : 'Verify OTP'}
+                                {loading ? 'Verifying...' : 'Verify & Register'}
                             </button>
                             
                             <div className="no-account">
