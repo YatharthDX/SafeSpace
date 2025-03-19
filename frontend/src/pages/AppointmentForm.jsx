@@ -3,6 +3,33 @@ import { useLocation, useNavigate } from "react-router-dom";
 // import "../css/AppointmentForm.css";
 import Navbar from "../components/Public/navbar";
 
+
+function add30Minutes(timeStr) {
+    // Convert "12:30 PM" to hours and minutes
+    let [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+  
+    // Convert to 24-hour format
+    if (modifier === "PM" && hours !== 12) hours += 12;
+    if (modifier === "AM" && hours === 12) hours = 0;
+  
+    // Add 30 minutes
+    minutes += 30;
+    if (minutes >= 60) {
+      minutes -= 60;
+      hours += 1;
+    }
+  
+    // Convert back to 12-hour format
+    let newModifier = hours >= 12 ? "PM" : "AM";
+    if (hours > 12) hours -= 12;
+    if (hours === 0) hours = 12;
+  
+    // Format minutes properly (e.g., "2:5" → "2:05")
+    let newTime = `${hours}:${minutes.toString().padStart(2, "0")} ${newModifier}`;
+    return newTime;
+  }
+
 function AppointmentForm() {
   // 1. Retrieve data from navigate("/appointmentform", { state: { ... } })
   const location = useLocation();
@@ -58,7 +85,7 @@ function AppointmentForm() {
           <p>{counselor?.experience ? `${counselor.experience} years experience` : "30 mins"}</p>
           {/* You can combine date & time into a single string, or show them separately */}
           <p>
-            {selectedTime || "02:30pm"} - 03:00pm, {selectedDate || "Thursday, August 10th"}
+            {selectedTime || "02:30pm"} - {add30Minutes(selectedTime)}, {selectedDate || "Thursday, August 10th"}
           </p>
         </div>
 

@@ -147,7 +147,7 @@ body {
   gap: 20px;
   padding: 20px 20px 0 20px; /* Remove top and bottom padding */
   overflow-y: auto; /* Enable scrolling */
-  margin-left: 220px; /* Match the width of the sidebar */
+  /* margin-left: 220px; Match the width of the sidebar */
   height: 100%; /* Full height */
   width: calc(100% - 220px); /* Adjust width to account for the sidebar */
   background-color: #f9f4ef; /* Match the background color */
