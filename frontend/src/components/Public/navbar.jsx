@@ -10,11 +10,13 @@ const Navbar = () => {
       {/* Left Section - Logo & Brand Name */}
       <div className="navbar-left">
         <img src={logo} alt="SafeSpace Logo" className="logo" />
-        <h1 className="brand-name">SafeSpace</h1>
+        <Link to="/home" className="brand-name">
+          SafeSpace
+        </Link>
       </div>
 
       {/* Center Section - Search Bar */}
-      <div className="navbar-center"> 
+      <div className="navbar-center">
         <input type="text" placeholder="Search" className="search-bar" />
         <button className="search-btn">
           <FaSearch />
