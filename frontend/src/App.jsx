@@ -4,9 +4,10 @@ import Login from "./pages/Login"; // Ensure correct path to Navbar
 // import Navbar from "./components/Public/navbar";
 import "./App.css"; // Import global styles
 import Home from "./pages/Home.jsx"; // Import Home page
-import Appointments from "./pages/Appointments.jsx"; // Import the Appointments page
+import Appointments from "./pages/AppointmentsHome.jsx"; // Import the Appointments page
 import Chat from "./pages/Chat.jsx";
 import Profile from "./pages/Profile.jsx";
+import AppointmentsSelect from "./pages/AppointmentsSelect.jsx";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Login />} />
           <Route path="/appointments" element={<Appointments />} />
+          <Route path="/appointselect" element={<AppointmentsSelect />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>

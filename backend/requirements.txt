@@ -4,3 +4,4 @@ pymongo
 redis
 passlib[bcrypt]
 pyjwt
+pydantic[email]
