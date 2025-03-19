@@ -8,7 +8,9 @@ import Appointments from "./pages/AppointmentsHome.jsx"; // Import the Appointme
 import Chat from "./pages/Chat.jsx";
 import Profile from "./pages/Profile.jsx";
 import AppointmentsSelect from "./pages/AppointmentsSelect.jsx";
+import AppointmentForm from "./pages/AppointmentForm";
 import Signup from "./pages/Signup";
+import CreatePostPage from "./pages/CreatePost";
 
 
 function App() {
@@ -23,8 +25,10 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/appointselect" element={<AppointmentsSelect />} />
+          <Route path="/appointmentform" element={<AppointmentForm />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/createpost" element={<CreatePostPage/>} />
         </Routes>
       
       
