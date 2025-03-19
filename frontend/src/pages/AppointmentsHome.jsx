@@ -78,7 +78,7 @@ const counselors = [
   },
 ];
 
-const role = "counselor";
+const role = "user";
 
 const Appointments = () => {
   if (role === "counselor") {
