@@ -278,25 +278,25 @@ body {
     border-right: none;
     border-bottom: 1px solid rgba(224, 168, 120, 0.2);
   }
-  
+
   .main-content {
     flex-direction: column;
     height: auto;
   }
-  
+
   .posts-container {
     margin-left: 0;
     width: 100%;
     height: auto;
   }
-  
+
   .tags-list {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     max-height: none;
   }
-  
+
   .tag-item {
     width: auto;
   }

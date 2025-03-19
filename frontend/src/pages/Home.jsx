@@ -11,7 +11,6 @@ import Navbar from "../components/Public/navbar";
 import "../css/Home.css";
 import { Link } from "react-router-dom";
 
-
 const Home = () => {
   // Sample posts data based on your screenshot
   const posts = [
@@ -104,12 +103,16 @@ const Home = () => {
           </div>
 
           {/* Create post button in the sidebar */}
-          
-         
-          <button className="create-post-btn">
+
+          {/* <button className="create-post-btn">
             <FaPlus className="plus-icon" />
             <span>Create Post</span>
-          </button>
+          </button> */}
+
+          <Link to="/createpost" className="create-post-btn">
+            <FaPlus className="plus-icon" />
+            <span>Create Post</span>
+          </Link>
         </div>
 
         {/* Main posts area */}
