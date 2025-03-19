@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from database.models import EmailRequest, OTPVerification, UserRegistration, PasswordReset, LoginRequest
 from services.auth_service import send_otp_service, verify_otp_service, register_user_service, reset_password_service, login_service
 
@@ -21,5 +21,5 @@ async def reset_password(request: PasswordReset):
     return reset_password_service(request)
 
 @router.post("/login")
-async def login(request: LoginRequest):
-    return login_service(request)
+async def login(request: LoginRequest, response: Response):
+    return login_service(request, response)

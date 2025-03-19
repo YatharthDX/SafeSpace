@@ -15,10 +15,13 @@ function AppointmentsSelect() {
     navigate("/appointmentform", {
       state: {
         counselor,
-        selectedDate: selectedDate.toDateString(), 
-        selectedTime, 
+        selectedDate: selectedDate.toDateString(),
+        selectedTime,
       },
     });
+  };
+  const handleBack = () => {
+    navigate(-1); // Go back one page
   };
 
   const timeSlots = [];
@@ -39,6 +42,9 @@ function AppointmentsSelect() {
     <>
       <Navbar />
       <div>
+        <button className="back-button" onClick={handleBack}>
+          <span className="back-arrow">&#8592;</span> Back
+        </button>
         <h1>Book an Appointment</h1>
         <h2>{counselor.name}</h2>
         <h3>{counselor.specialization}</h3>
