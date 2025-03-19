@@ -1,112 +1,25 @@
-from fastapi import APIRouter, HTTPException, Depends, Response
-from database.models import User, LoginUser
-from database.connection import users_collection, otp_collection, conn
-from database.schemas import UserCreate, VerifyOTP, ForgotPasswordRequest, ResetPasswordRequest
-from datetime import datetime, timezone
-from utils.hash import hash_password, verify_password
-from utils.otp import generate_otp, send_otp_email, store_otp, verify_otp
-from utils.jwt import create_access_token
+from fastapi import APIRouter
+from database.models import EmailRequest, OTPVerification, UserRegistration, PasswordReset, LoginRequest
+from services.auth_service import send_otp_service, verify_otp_service, register_user_service, reset_password_service, login_service
 
-auth = APIRouter()
+router = APIRouter()
 
-@auth.post("/register")
-async def register(user: User):
-    
-    allowed_domain = "iitk.ac.in"
-    # Extract domain from email
-    domain = user.email.split("@")[-1]
-    if domain != allowed_domain:
-        raise HTTPException(status_code=400, detail="Only IITK email ID is allowed")
+@router.post("/send-otp")
+async def send_otp(request: EmailRequest):
+    return send_otp_service(request)
 
-    existing_user = users_collection.find_one({"email": user.email })
-    if existing_user:
-        raise HTTPException(status_code=400, detail="User already exists")
+@router.post("/verify-otp")
+async def verify_otp(request: OTPVerification):
+    return verify_otp_service(request)
 
-    # user.password = hash_password(user.password)
-    # users_collection.insert_one(user.dict())
-    # return {"message": "User registered successfully"}
-    otp = generate_otp()
-    send_otp_email(user.email, otp)
-    store_otp(user.email, otp)
+@router.post("/register")
+async def register_user(user: UserRegistration):
+    return register_user_service(user)
 
-    return {"message": "OTP sent to email"}
+@router.post("/reset-password")
+async def reset_password(request: PasswordReset):
+    return reset_password_service(request)
 
-@auth.post("/verify-otp-registration")
-async def verify_otp_registration(data: VerifyOTP):
-    if not verify_otp(data.email, data.otp):  # ✅ Now checking OTP expiry
-        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
-
-
-    users_collection.insert_one({
-        "username": data.username,
-        "email": data.email,
-        "password": hash_password(data.password)
-    })
-    
-    return {"message": "User registered successfully"}
-
-# 📌 1. Send OTP to user's email
-@auth.post("/forgot-password/")
-async def forgot_password(request: ForgotPasswordRequest):
-    db_user = users_collection.find_one({"email": request.email})
-    if not db_user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    otp = generate_otp()
-    send_otp_email(request.email, otp)
-    store_otp(request.email, otp) 
-    
-    return {"message": "OTP sent to your email"}
-
-
-# 📌 2. Verify OTP
-@auth.post("/verify-otp-forgot-pass/")
-async def verify_otp_forgot_pass(data: VerifyOTP):
-    if not verify_otp(data.email, data.otp):  # ✅ Now checking OTP expiry
-        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
-
-    return {"message": "OTP verified successfully"}
-
-# 📌 3. Reset Password
-@auth.post("/reset-password/")
-async def reset_password(request: ResetPasswordRequest):
-    user = conn.local.user.find_one({"email": request.email})
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    hashed_password = hash_password(request.new_password)
-    conn.local.user.update_one({"email": request.email}, {"$set": {"hashed_password": hashed_password}})
-    
-    return {"message": "Password reset successfully"}
-
-# @auth.post("/login")
-# async def login(user: User):
-#     db_user = users_collection.find_one({"email": user.email})
-#     if not db_user or not verify_password(user.password, db_user["password"]):
-#         raise HTTPException(status_code=401, detail="Invalid credentials")
-
-#     token = create_access_token({"sub": db_user["email"]})
-#     user.set_cookie(
-#         key="jwt",
-#         value=token,
-#         httponly=True,  
-#         secure=True,     
-#         samesite="Lax"   
-#     )
-#     return {"message":"Login Successful"}
-@auth.post("/login")
-async def login(user: LoginUser , response: Response):  # Change to LoginUser
-    db_user = users_collection.find_one({"email": user.email})
-    if not db_user or not verify_password(user.password, db_user["password"]):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    token = create_access_token({"sub": db_user["email"]})
-    
-    response.set_cookie(
-        key="jwt",
-        value=token,
-        httponly=True,  
-        secure=False,  # Change to True in production (HTTPS required)     
-        samesite="Lax"   
-    )
-    return {"message": "Login Successful"}
+@router.post("/login")
+async def login(request: LoginRequest):
+    return login_service(request)

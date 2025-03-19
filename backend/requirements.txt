@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pymongo
+redis
+passlib[bcrypt]
+pyjwt

@@ -1,17 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
-from database.connection import users_collection
-from utils.jwt import decode_access_token
+from fastapi import APIRouter, Depends
+from database.models import RoleRequest
+from services.user_service import request_counselor_role_service, update_role_service
+from utils.jwt import get_current_user
 
-user = APIRouter()
+router = APIRouter()
 
-def get_current_user(token: str = Depends(decode_access_token)):
-    if not token:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
-    return token["sub"]  # Return email
+@router.post("/request-counselor-role")
+async def request_counselor_role(request: RoleRequest, current_user: dict = Depends(get_current_user)):
+    return request_counselor_role_service(request)
 
-@user.get("/profile")
-async def get_profile(email: str = Depends(get_current_user)):
-    user_data = users_collection.find_one({"email": email}, {"_id": 0, "password": 0})
-    if not user_data:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user_data
+@router.post("/update-role")
+async def update_role(email: str, new_role: str, admin_email: str):
+    return update_role_service(email, new_role, admin_email)

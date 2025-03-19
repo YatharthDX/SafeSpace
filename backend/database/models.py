@@ -1,15 +1,54 @@
-from pydantic import BaseModel, EmailStr
-from typing import List, Optional
+from pydantic import BaseModel, EmailStr, validator
 from datetime import datetime
-from enum import Enum
+from typing import List
 
-# User
-class User(BaseModel):
-    username: str
+class EmailRequest(BaseModel):
     email: EmailStr
-    password: str  # This will be hashed before storing
+    requestType: str
 
-# New model for login
-class LoginUser(BaseModel):
+    @validator('email')
+    def validate_email_domain(cls, v):
+        if not v.endswith('@iitk.ac.in'):
+            raise ValueError('Only @iitk.ac.in email addresses are allowed')
+        return v
+
+    @validator('requestType')
+    def validate_request_type(cls, v):
+        if v not in ['signup', 'forgot']:
+            raise ValueError('Request type must be either "signup" or "forgot"')
+        return v
+
+class OTPVerification(BaseModel):
+    email: EmailStr
+    otp: str
+    requestType: str
+
+class UserRegistration(BaseModel):
     email: EmailStr
     password: str
+    name: str
+
+class PasswordReset(BaseModel):
+    email: EmailStr
+    password: str
+
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+class Appointment(BaseModel):
+    user_email: EmailStr
+    counselor_email: EmailStr
+    date: datetime
+    time_slot: str
+    description: str
+    status: str = "pending"
+
+class AvailableSlot(BaseModel):
+    counselor_email: EmailStr
+    date: datetime
+    time_slots: List[str]
+
+class RoleRequest(BaseModel):
+    email: str
+    
