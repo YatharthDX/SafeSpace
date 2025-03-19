@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { FaRegUser, FaRegComment, FaRegHeart, FaHeart, FaShareAlt, FaPlus } from "react-icons/fa";
 import Navbar from "../components/Public/navbar";
 import "../css/Home.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 
 const Home = () => {
@@ -33,13 +34,16 @@ const Home = () => {
       tags: ["tag 1"]
     }
   ];
-
+  const navigate = useNavigate();
   // Popular tags list
   const popularTags = [
     "tag 1", "tag 2", "tag 3", "tag 4", "tag 5", 
     "tag 6", "tag 7", "tag 8", "tag 9"
   ];
 
+  const HandleCreate=() => {
+    navigate("/createpost");
+  }  
   // State for liked posts
   const [likedPosts, setLikedPosts] = useState({});
 
@@ -82,7 +86,7 @@ const Home = () => {
           {/* Create post button in the sidebar */}
           
          
-          <button className="create-post-btn">
+          <button className="create-post-btn" onClick={HandleCreate}>
             <FaPlus className="plus-icon" />
             <span>Create Post</span>
           </button>
