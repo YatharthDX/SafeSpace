@@ -1,102 +1,199 @@
-import Navbar from "../components/Public/navbar";
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import { useNavigate } from "react-router-dom";
+import "../css/AppointmentSelect.css";
 
-function AppointmentsSelect() {
-  const location = useLocation();
-  const counselor = location.state?.counselor;
-  const [selectedDate, setSelectedDate] = useState(new Date()); // No need for TypeScript types
+function AppointmentSelect() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
-  const navigate = useNavigate();
-  const Booking = () => {
-    navigate("/appointmentform", {
-      state: {
-        counselor,
-        selectedDate: selectedDate.toDateString(), 
-        selectedTime, 
-      },
-    });
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  
+  const formatDate = (date) => {
+    const options = { weekday: 'long', day: 'numeric', month: 'long' };
+    return date.toLocaleDateString('en-US', options);
+  };
+  
+  const monthYearFormat = (date) => {
+    const options = { month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+  
+  const goToPreviousMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
+  };
+  
+  const goToNextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1));
+  };
+  
+  const handleDateSelect = (day) => {
+    setSelectedDate(new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day));
+  };
+  
+  const handleBooking = () => {
+    // Handle booking logic
+    console.log("Booking confirmed for:", formatDate(selectedDate), "at", selectedTime);
   };
 
-  const timeSlots = [];
-  let startTime = new Date();
-  startTime.setHours(10, 30, 0, 0); // 10:30 AM
+  // Time slots
+  const timeSlots = ["10:30am", "11:30am", "02:30pm", "03:00pm", "03:30pm", "04:30pm", "05:00pm", "05:30pm"];
 
-  for (let i = 0; i < 9; i++) {
-    let timeString = startTime.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-    timeSlots.push(timeString);
-    startTime.setMinutes(startTime.getMinutes() + 30); // Increase by 30 minutes
-  }
+  // Generate calendar data
+  const getCalendarDays = () => {
+    const daysInMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1,
+      0
+    ).getDate();
+    
+    const firstDayOfMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      1
+    ).getDay();
+    
+    const days = [];
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1); i++) {
+      days.push({ day: null, isEmpty: true });
+    }
+    
+    // Add cells for each day of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+      const isSelected = 
+        selectedDate.getDate() === day &&
+        selectedDate.getMonth() === currentMonth.getMonth() &&
+        selectedDate.getFullYear() === currentMonth.getFullYear();
+      
+      // Determine if the date is in the past
+      const isPast = date < new Date(new Date().setHours(0, 0, 0, 0));
+      
+      days.push({
+        day,
+        isSelected,
+        isPast,
+        isEmpty: false
+      });
+    }
+    
+    return days;
+  };
+  
+  const calendarDays = getCalendarDays();
 
   return (
-    <>
-      <Navbar />
-      <div>
-        <h1>Book an Appointment</h1>
-        <h2>{counselor.name}</h2>
-        <h3>{counselor.specialization}</h3>
-        <h4>{counselor.experience} years experience</h4>
-      </div>
-      <div>
-        <h2>Select Date and Time</h2>
-        <Calendar onChange={setSelectedDate} value={selectedDate} />
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "10px",
-            marginTop: "20px",
-          }}
-        >
-          {timeSlots.map((time, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedTime(time)}
-              style={{
-                padding: "10px 15px",
-                borderRadius: "8px",
-                border:
-                  selectedTime === time
-                    ? "2px solid #007bff"
-                    : "1px solid gray",
-                backgroundColor: selectedTime === time ? "#007bff" : "white",
-                color: selectedTime === time ? "white" : "black",
-                cursor: "pointer",
-                fontWeight: "bold",
-              }}
-            >
-              {time}
-            </button>
-          ))}
+    <div className="appointment-page">
+      <nav className="navbar">
+        <div className="logo">
+          <span className="logo-icon">🔆</span>
+          <h1>SafeSpace</h1>
         </div>
-        <div style={{ marginTop: "20px" }}>
-          <button
-            onClick={Booking}
-            disabled={!selectedTime}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: selectedTime ? "#28a745" : "gray",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: selectedTime ? "pointer" : "not-allowed",
-              fontSize: "16px",
-              fontWeight: "bold",
-            }}
-          >
-            Confirm Appointment
-          </button>
+        <div className="nav-links">
+          <a href="#appointments" className="nav-link">
+            <span className="nav-icon">✏️</span>
+            <span>Appointments</span>
+          </a>
+          <a href="#chat" className="nav-link">
+            <span className="nav-icon">💬</span>
+            <span>Chat</span>
+          </a>
+          <a href="#profile" className="nav-link">
+            <span className="nav-icon">👤</span>
+            <span>Profile</span>
+          </a>
+        </div>
+      </nav>
+      
+      <div className="appointment-container">
+        <div className="appointment-content">
+          <div className="left-side">
+            <div className="back-button-container">
+              <button className="back-button">
+                <span className="back-icon">←</span>
+              </button>
+            </div>
+            
+            <div className="counselor-info">
+              <div className="counselor-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="#333333"/>
+                  <path d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z" fill="#333333"/>
+                </svg>
+              </div>
+              <div className="counselor-details">
+                <h2>Dr. Steven John</h2>
+                <p className="session-duration">30 mins</p>
+              </div>
+            </div>
+            
+            <h3 className="booking-title">Select Date and Time</h3>
+            
+            <div className="selected-date-display">
+              {formatDate(selectedDate)}
+            </div>
+            
+            <div className="time-slots-container">
+              {timeSlots.map(time => (
+                <button
+                  key={time}
+                  className={`time-slot ${selectedTime === time ? "selected" : ""}`}
+                  onClick={() => setSelectedTime(time)}
+                >
+                  {time}
+                </button>
+              ))}
+            </div>
+            
+            <div className="booking-action">
+              <button
+                onClick={handleBooking}
+                disabled={!selectedTime}
+                className="confirm-button"
+              >
+                Confirm Appointment
+              </button>
+            </div>
+          </div>
+          
+          <div className="right-side">
+            <div className="calendar-header">
+              <button onClick={goToPreviousMonth} className="month-nav-button">
+                <span className="month-nav-icon">←</span>
+              </button>
+              <h3 className="month-year">{monthYearFormat(currentMonth)}</h3>
+              <button onClick={goToNextMonth} className="month-nav-button">
+                <span className="month-nav-icon">→</span>
+              </button>
+            </div>
+            
+            <div className="calendar">
+              <div className="weekdays">
+                <div className="weekday">MON</div>
+                <div className="weekday">TUE</div>
+                <div className="weekday">WED</div>
+                <div className="weekday">THU</div>
+                <div className="weekday">FRI</div>
+                <div className="weekday">SAT</div>
+                <div className="weekday">SUN</div>
+              </div>
+              
+              <div className="calendar-grid">
+                {calendarDays.map((day, index) => (
+                  <div
+                    key={`day-${index}`}
+                    className={`calendar-day ${day.isEmpty ? "empty" : ""} ${day.isSelected ? "selected" : ""} ${day.isPast ? "past" : ""}`}
+                    onClick={() => !day.isEmpty && !day.isPast && handleDateSelect(day.day)}
+                  >
+                    {day.day}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
-export default AppointmentsSelect;
+export default AppointmentSelect;

@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Public/navbar";
 import CounselorCard from "../components/Appointments/CounsellorCard";
+import "../css/AppointmentsHome.css";
 
 const counselors = [
   {
@@ -79,21 +80,14 @@ const Appointments = () => {
   return (
     <>
       <Navbar />
-      <div>
-        <h1 id="appointments-header">Select a Counselor</h1>
-        <div
-          className="counselor-list"
-          style={{
-            maxHeight: "700px", // Adjust height as needed
-            overflowY: "auto",
-            // border: "1px solid #ccc", // Optional: adds a border for better visibility
-            padding: "10px",
-          }}
-        >
+      <div className="appointments-container">
+        <h1 id="appointments-header">Select a Counsellor</h1>
+        <div className="counselor-list">
           {counselors.map((counselor, index) => (
             <CounselorCard key={index} counselor={counselor} />
           ))}
         </div>
+
       </div>
     </>
   );

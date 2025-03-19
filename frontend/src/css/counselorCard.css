@@ -1,61 +1,69 @@
-.counselor-card-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 16px;
-}
+/* CounselorCard.css - Styles for the counselor cards */
 
 .counselor-card {
-  background-color: white;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ccc;
-  width: 320px;
-  text-align: center;
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.counselor-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
 .counselor-image {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  border: 2px solid #aaa;
-}
-
-.counselor-name {
-  margin-top: 12px;
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #333;
 }
 
 .counselor-info {
+  padding: 15px;
+  flex-grow: 1;
+}
+
+.counselor-name {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.counselor-specialization {
   color: #666;
+  margin: 0 0 8px 0;
   font-size: 0.9rem;
 }
 
-.book-btn {
-  margin-top: 16px;
-  width: 100%;
-  background-color: #ecbc76;
+.counselor-experience {
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 15px;
+}
+
+.book-button {
+  background-color: #f47121; /* SafeSpace orange color */
   color: white;
-  padding: 10px;
-  border-radius: 8px;
   border: none;
+  border-radius: 4px;
+  padding: 8px 15px;
   cursor: pointer;
   font-weight: bold;
+  transition: background-color 0.2s;
 }
 
-.book-btn:hover {
-  background-color: #ecbc76;
+.book-button:hover {
+  background-color: #dd6011;
 }
 
-.counselor-list {
+.counselor-actions {
   display: flex;
-  flex-wrap: wrap; /* Ensures cards wrap if screen is small */
-  gap: 20px; /* Spacing between cards */
-  justify-content: center; /* Centers cards horizontally */
-  padding: 20px;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-right: 15px;
+  padding-bottom: 15px;
 }

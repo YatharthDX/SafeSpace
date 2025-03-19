@@ -1,8 +1,8 @@
 import React from "react";
 import { FaSearch, FaCalendarAlt, FaComments, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import "../../css/navbar.css"; // Import the CSS file
-import logo from "../../assets/logo.png"; // Import the logo image
+import "../../css/navbar.css";
+import logo from "../../assets/logo.png";
 
 const Navbar = () => {
   return (
@@ -17,10 +17,10 @@ const Navbar = () => {
 
       {/* Center Section - Search Bar */}
       <div className="navbar-center">
-        <input type="text" placeholder="Search" className="search-bar" />
-        <button className="search-btn">
-          <FaSearch />
-        </button>
+        <div className="search-container">
+          <input type="text" placeholder="Search" className="search-bar" />
+          {/* <FaSearch className="search-icon" /> */}
+        </div>
       </div>
 
       {/* Right Section - Navigation Links */}
