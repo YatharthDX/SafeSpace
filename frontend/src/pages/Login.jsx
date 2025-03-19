@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import '../css/login.css';
-import safespaceLogoText from '../assets/logo.png'; // Logo text
 import brainFlowerIcon from '../assets/logo.png'; // Brain flower logo in top right
 import leftScooterImage from '../assets/login_left_img.png'; // Person on scooter
 import rightPlayingImage from '../assets/login_right_img.png'; // Person playing with pet
@@ -75,7 +74,7 @@ const Login = () => {
                     
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
-                            <label htmlFor="email">Enter email address</label>
+                            <label htmlFor="email" style={{ textAlign: "left", display: "block" }} >Enter email address</label>
                             <input
                                 id="email"
                                 type="email"
@@ -87,7 +86,7 @@ const Login = () => {
                         </div>
                         
                         <div className="form-group">
-                            <label htmlFor="password">Enter Password</label>
+                            <label htmlFor="password" style={{ textAlign: "left", display: "block" }}>Enter Password</label>
                             <div className="password-field">
                                 <input
                                     id="password"
