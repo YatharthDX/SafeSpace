@@ -9,7 +9,7 @@ import Chat from "./pages/Chat.jsx";
 import Profile from "./pages/Profile.jsx";
 import AppointmentsSelect from "./pages/AppointmentsSelect.jsx";
 import Signup from "./pages/Signup";
-
+import CreatePostPage from "./pages/CreatePost";
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
           <Route path="/appointselect" element={<AppointmentsSelect />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/createpost" element={<CreatePostPage/>} />
         </Routes>
       
       
