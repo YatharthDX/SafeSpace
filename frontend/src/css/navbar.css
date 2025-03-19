@@ -1,91 +1,154 @@
 /* Navbar Container */
 .navbar {
-  position: fixed; /* ✅ Stays visible while scrolling */
+  position: fixed; /* Stays fixed at the top while scrolling */
   top: 0;
   left: 0;
   width: 100%;
   height: 10vh;
-  background-color: #eec296;
+  background-color: #fbe8cf; /* Warm beige color from reference image */
   display: flex;
-  justify-content: space-between; /* ✅ Space between elements */
+  justify-content: space-between;
   align-items: center;
-  padding: 1vh 2vw; /* ✅ Responsive padding */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* ✅ Soft shadow */
-  z-index: 1000; /* ✅ Ensures it's above other elements */
+  padding: 1vh 2vw;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Ensures navbar stays above other elements */
 }
 
-/* Left Section */
+/* Left Section - Logo & Brand Name */
 .navbar-left {
-  text-align: center;
   display: flex;
   align-items: center;
-  width: 20%; /* ✅ Responsive width */
+  width: 20%;
   justify-content: flex-start;
 }
+
 .logo {
-  padding-top: 2vh; /* ✅ Adjusted for visibility */
-  height: 3vh; /* ✅ Adjusted for visibility */
-  /* max-width: 6vw; ✅ Ensures proper scaling */
-  /* margin-right: 1vw; */
+  height: 10vh; /* Doubled the size from 5vh to 10vh */
+  width: auto;
+  margin-right: 1vw;
+  object-fit: contain;
 }
 
 .brand-name {
-  font-size: 4vh; /* ✅ Increased font size */
+  font-size: 4vh;
   font-weight: bold;
-  color: #a24524;
+  color: #d97462; /* Coral/reddish color from reference */
+  margin: 0;
 }
 
-/* Center Section (Search Bar) */
+/* Center Section - Search Bar */
 .navbar-center {
   display: flex;
   align-items: center;
-  width: 50%; /* ✅ Responsive width */
+  width: 50%;
   justify-content: center;
+  position: relative;
 }
 
 .search-bar {
-  width: 80%; /* ✅ Responsive width */
-  padding: 1vh;
-  border: 1px solid #ccc;
+  width: 80%;
+  padding: 1vh 1vh 1vh 6vh; /* Increased left padding to make room for the icon */
+  border: 1px solid #e0e0e0;
   border-radius: 2vh;
   outline: none;
   font-size: 1.8vh;
+  background-color: white;
 }
 
 .search-btn {
+  position: absolute;
+  left: 12%;
   background: none;
   border: none;
   cursor: pointer;
-  margin-left: -6vh; /* ✅ Positions icon inside the search box */
+  color: #a0a0a0;
   font-size: 2vh;
+  display: flex;
+  align-items: center;
+  /* Added some horizontal padding to ensure no text overlap */
+  padding: 0 1vh;
 }
 
-/* Right Section */
+/* Right Section - Navigation Links */
 .navbar-right {
-  /* max-height: fit-content; */
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  width: 30%; /* ✅ Responsive width */
-  gap: 2vw; /* ✅ Space between links */
+  width: 30%;
+  gap: 2vw;
   padding-right: 3.5%;
 }
 
 .nav-link {
   text-decoration: none;
-  color: black;
-  font-size: 2.5vh; /* ✅ Adjusted font size */
+  color: #333;
+  font-size: 2.5vh;
   display: flex;
   align-items: center;
   gap: 0.5vw;
-  /* font-weight: bold; */
 }
 
 .nav-link:hover {
-  color: #a24524;
+  color: #d97462; /* Matches brand color on hover */
 }
 
 /* Prevent Content Overlap */
 body {
-  padding-top: 9vh; /* ✅ Prevents content from hiding under navbar */
+  padding-top: 11vh; /* Prevents content from hiding under navbar */
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar-left {
+    width: 25%;
+  }
+  
+  .logo {
+    height: 8vh; /* Slightly smaller on medium screens but still large */
+  }
+  
+  .navbar-center {
+    width: 40%;
+  }
+  
+  .navbar-right {
+    width: 35%;
+    gap: 1.5vw;
+  }
+  
+  .nav-link {
+    font-size: 2vh;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    height: 8vh;
+  }
+  
+  .navbar-left {
+    width: 40%;
+  }
+  
+  .logo {
+    height: 6vh; /* Further reduced on small screens for balance */
+  }
+  
+  .navbar-center {
+    display: none;
+  }
+  
+  .navbar-right {
+    width: 60%;
+    gap: 3vw;
+  }
+  
+  .brand-name {
+    font-size: 3vh;
+  }
+  
+  body {
+    padding-top: 9vh;
+  }
 }

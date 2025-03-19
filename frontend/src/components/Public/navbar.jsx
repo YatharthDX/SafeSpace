@@ -14,7 +14,7 @@ const Navbar = () => {
       </div>
 
       {/* Center Section - Search Bar */}
-      <div className="navbar-center">
+      <div className="navbar-center"> 
         <input type="text" placeholder="Search" className="search-bar" />
         <button className="search-btn">
           <FaSearch />

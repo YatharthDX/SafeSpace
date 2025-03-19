@@ -1,320 +1,216 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
+/* Reset and base styles */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
 }
 
-html, body {
+body, html {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  font-family: Arial, sans-serif;
 }
 
 /* Main container */
 .login-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-/* Left section with logo text and scooter illustration */
+/* Left section with orange background */
 .left-section {
-  width: 50%;
-  height: 100%;
-  background-color: #e9bf7f; /* Matches the beige color in the image */
+  background-color: #f2b76e;
   position: relative;
-  overflow: hidden;
+  height: 100%;
 }
 
+/* SafeSpace logo text */
 .logo-text {
   position: absolute;
-  top: 5%;
-  left: 5%;
+  top: 40px;
+  left: 40px;
 }
 
-.logo-text img {
-  width: 40%;
-  max-width: 250px;
-  height: auto;
-}
-
-/* Fallback if no logo image is available */
 .logo-text h1 {
-  color: #c85c44; /* Matches the reddish-brown text color in the image */
-  font-size: 2.5rem;
-  font-weight: 700;
+  color: #e05e34;
+  font-size: 42px;
+  font-weight: bold;
 }
 
+/* Left illustration - person on scooter */
 .left-illustration {
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  max-width: 450px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  bottom: 60px;
+  left: 80px; /* Moved further to the left */
 }
 
 .left-illustration img {
-  width: 100%;
+  width: 300px;
   height: auto;
 }
 
-/* Right section with brain flower icon and playing illustration */
+/* Right section */
 .right-section {
-  width: 50%;
-  height: 100%;
-  background-color: #fff; /* Matches the white background on the right */
+  background-color: #ffffff;
   position: relative;
+  height: 100%;
 }
 
-.brain-flower-icon {
-  position: absolute;
-  top: 5%;
-  right: 5%;
-  width: 15%;
-  max-width: 120px;
-}
-
-.brain-flower-icon img {
-  width: 100%;
-  height: auto;
-}
-
+/* Right illustration - person playing */
 .right-illustration {
   position: absolute;
-  bottom: 5%;
-  right: 5%;
-  width: 45%;
-  max-width: 300px;
+  bottom: 60px;
+  right: 40px; /* Moved further to the right */
 }
 
 .right-illustration img {
-  width: 100%;
+  width: 300px;
   height: auto;
 }
 
-/* Center login form */
-.login-form-wrapper {
+/* Brain flower icon in top right */
+.brain-flower-icon {
   position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.brain-flower-icon img {
+  width: 200px; /* Adjust size as needed */
+  height: auto;
+}
+
+/* Login form wrapper */
+.login-form-wrapper {
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 480px;
   z-index: 10;
-  width: 40%;
-  max-width: 450px;
-  min-width: 320px;
 }
 
+/* Login form styling */
 .login-form {
   background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
-  width: 100%;
-  padding: 8%;
-  text-align: center;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
+/* Form header */
 .form-header {
-  margin-bottom: 8%;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .welcome-text {
-  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
-  color: #333;
-  margin-bottom: 2%;
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 10px;
 }
 
 .sign-in-heading {
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  font-weight: 600;
-  color: #212121;
+  font-size: 36px;
+  font-weight: bold;
+  color: #000;
+  margin: 0;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
+/* Form fields */
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-align: left;
+  margin-bottom: 24px;
 }
 
-label {
-  font-size: clamp(0.8rem, 1vw, 0.9rem);
+.form-group label {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #ffffff;
   color: #333;
 }
 
-input {
-  padding: 4% 3%;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: clamp(0.9rem, 1vw, 1rem);
-  outline: none;
-  transition: border-color 0.3s;
-  width: 100%;
-}
-
-input:focus {
-  border-color: #d88c4a;
-}
-
+/* Password field */
 .password-field {
   position: relative;
-  width: 100%;
 }
 
 .toggle-password {
   position: absolute;
-  right: 4%;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
   color: #777;
-  font-size: 1.2rem;
 }
 
+/* Forgot password link */
 .forgot-password {
   text-align: right;
-  margin-top: -0.5rem;
+  margin-bottom: 24px;
 }
 
 .forgot-password a {
-  color: #c85c44; /* Matches the reddish-brown link color in the image */
+  color: #e05e34;
   text-decoration: none;
-  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  font-size: 14px;
 }
 
-.error-message {
-  color: #e74c3c;
-  font-size: clamp(0.8rem, 1vw, 0.9rem);
-  text-align: center;
-}
-
+/* Sign in button */
 .sign-in-btn {
-  background-color: #d88c4a; /* Matches the orange button in the image */
+  width: 100%;
+  padding: 16px;
+  background-color: #e67e22;
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 4% 0;
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
-  width: 100%;
-  margin-top: 3%;
 }
 
-.sign-in-btn:hover {
-  background-color: #c27b3a;
-}
-
-.sign-in-btn:disabled {
-  background-color: #e0e0e0;
-  cursor: not-allowed;
-}
-
+/* No account section */
 .no-account {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.no-account span {
   color: #777;
-  margin-top: 5%;
+  margin-right: 5px;
 }
 
 .no-account a {
-  color: #d88c4a; /* Matches the orange link color in the image */
+  color: #e67e22;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: bold;
 }
 
-/* Responsive styles */
+/* Ensure proper spacing in responsive mode */
 @media (max-width: 1200px) {
-  .login-form-wrapper {
-    width: 50%;
-  }
-}
-
-@media (max-width: 992px) {
-  .login-form-wrapper {
-    width: 60%;
-  }
-  
-  .left-illustration img, .right-illustration img {
-    max-width: 80%;
-  }
-}
-
-@media (max-width: 768px) {
-  .login-container {
-    flex-direction: column;
-  }
-  
-  .left-section {
-    width: 100%;
-    height: 50%;
-  }
-  
-  .right-section {
-    width: 100%;
-    height: 50%;
-  }
-  
-  .login-form-wrapper {
-    width: 90%;
-    max-width: 400px;
-  }
-  
-  .brain-flower-icon {
-    top: 3%;
-    right: 5%;
-    width: 15%;
+  .left-illustration {
+    left: 40px;
   }
   
   .right-illustration {
-    bottom: 5%;
-    right: 5%;
-    width: 35%;
-  }
-}
-
-@media (max-width: 480px) {
-  .login-form {
-    padding: 10% 6%;
-  }
-  
-  .right-illustration {
-    display: none;
-  }
-  
-  .brain-flower-icon {
-    width: 20%;
-  }
-}
-
-@media (max-height: 700px) {
-  .login-form {
-    padding: 5%;
-  }
-  
-  .form-header {
-    margin-bottom: 4%;
-  }
-  
-  form {
-    gap: 1rem;
+    right: 20px;
   }
 }

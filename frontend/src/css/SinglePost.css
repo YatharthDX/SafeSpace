@@ -1,17 +1,13 @@
 /* Post Container */
 .post-container {
   background: white;
-  border: 1.5px solid #e0a878;
+  border: 1px solid #e0a878;
   border-radius: 12px;
-  padding: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
   width: 100%;
-  max-width: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   font-family: "Arial", sans-serif;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
 }
 
 /* Post Header */
@@ -19,73 +15,99 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  margin-bottom: 10px;
 }
 
 /* Author and Time */
 .post-info {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  width: 100%;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .profile-icon {
-  font-size: 1.2rem;
-  color: black;
+  width: 24px;
+  height: 24px;
+  color: #333;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  padding: 2px;
 }
 
 .post-author {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: bold;
+  margin: 0;
 }
 
 .post-time {
-  font-size: 0.9rem;
-  color: gray;
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0;
 }
 
 /* Title */
 .post-title {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  margin-top: 5px;
+  margin: 8px 0;
 }
 
 /* Content */
 .post-content {
-  font-size: 1rem;
-  color: #333;
+  font-size: 0.95rem;
   line-height: 1.5;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Post Footer */
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Post Actions */
+.post-actions {
+  display: flex;
+  gap: 20px;
+}
+
+.action-icon {
+  font-size: 1.1rem;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-icon:hover {
+  color: #e0a878;
+  transform: scale(1.1);
 }
 
 /* Tags */
 .post-tags {
   display: flex;
-  gap: 5px;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 .tag {
-  background-color: #e6be96;
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: bold;
-}
-
-/* Post Actions (Bottom Left) */
-.post-actions {
-  display: flex;
-  gap: 15px;
-  margin-top: 10px;
-}
-
-.action-icon {
-  font-size: 1.4rem;
+  background-color: #f5e6d8;
   color: #333;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-}
-
-.action-icon:hover {
-  transform: scale(1.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #e0a878;
 }
