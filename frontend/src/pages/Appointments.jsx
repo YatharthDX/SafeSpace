@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../components/Public/navbar";
+// import Navbar from "../components/Public/navbar";
 import CounselorCard from "../components/Appointments/CounsellorCard";
 
 const counselors = [
