@@ -1,0 +1,102 @@
+import React from "react";
+import Navbar from "../components/Public/navbar";
+import CounselorCard from "../components/Appointments/CounsellorCard";
+
+const counselors = [
+  {
+    id: 1,
+    name: "Dr. John Doe",
+    specialization: "Psychologist",
+    experience: 10,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 2,
+    name: "Dr. Sarah Smith",
+    specialization: "Therapist",
+    experience: 8,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 3,
+    name: "Dr. Mark Johnson",
+    specialization: "Counselor",
+    experience: 12,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 4,
+    name: "Dr. Emily Davis",
+    specialization: "Clinical Psychologist",
+    experience: 15,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 5,
+    name: "Dr. Robert Brown",
+    specialization: "Mental Health Therapist",
+    experience: 9,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 6,
+    name: "Dr. Olivia Wilson",
+    specialization: "Marriage Counselor",
+    experience: 11,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 7,
+    name: "Dr. William Taylor",
+    specialization: "Child Psychologist",
+    experience: 13,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 8,
+    name: "Dr. Sophia Martinez",
+    specialization: "Behavioral Therapist",
+    experience: 7,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 9,
+    name: "Dr. James Anderson",
+    specialization: "Substance Abuse Counselor",
+    experience: 14,
+    image: "https://avatar.iran.liara.run/public",
+  },
+  {
+    id: 10,
+    name: "Dr. Charlotte Thomas",
+    specialization: "Cognitive Behavioral Therapist",
+    experience: 10,
+    image: "https://avatar.iran.liara.run/public",
+  },
+];
+
+const Appointments = () => {
+  return (
+    <>
+      <Navbar />
+      <div>
+        <h1 id="appointments-header">Select a Counselor</h1>
+        <div
+          className="counselor-list"
+          style={{
+            maxHeight: "700px", // Adjust height as needed
+            overflowY: "auto",
+            // border: "1px solid #ccc", // Optional: adds a border for better visibility
+            padding: "10px",
+          }}
+        >
+          {counselors.map((counselor, index) => (
+            <CounselorCard key={index} counselor={counselor} />
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Appointments;

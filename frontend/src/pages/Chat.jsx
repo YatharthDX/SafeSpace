@@ -1,15 +1,24 @@
 import Navbar from "../components/Public/navbar";
-import React from "react";
-
+import React, { useState } from "react";
+import ChatBox from "/src/components/Chat/ChatBox.jsx";
+import Messages from "/src/components/Chat/Messages.jsx";
+import "/src/css/Chat.css"; // Import Chat.css
 const Chat = () => {
+  const [chats, setChats] = useState([
+    { id: 1, name: "Counselor1", message: "Hello", unread: 0, avatar: "avatar1.png" },
+    { id: 2, name: "Counselor2", message: "Hello", unread: 0, avatar: "avatar2.png" },
+    { id: 3, name: "Counselor3", message: "Hello", unread: 3, avatar: "avatar3.png" },
+  ]);
+  const [selectedChat, setSelectedChat] = useState(null);
+
   return (
-    <>
+    <div className="chat-body">
       <Navbar />
-      <div>
-        <h1>Chat</h1>
-        <p>Welcome to the Chat page!</p>
-      </div>
-    </>
+      <div className="chat-container">
+      <ChatBox chats={chats} setSelectedChat={setSelectedChat} selectedChat={selectedChat} />
+      <Messages selectedChat={selectedChat} />
+    </div>
+    </div>
   );
 };
 
