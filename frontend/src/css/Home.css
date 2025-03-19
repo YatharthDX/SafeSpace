@@ -1,76 +1,321 @@
-/* Main Container (Divides Left Sidebar & Right Section) */
+/* Base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f4ef;
+  color: #333;
+  overflow-x: hidden;
+}
+
 .home-container {
-  display: flex;
   width: 100%;
-  height: 100vh; /* Full viewport height */
-  overflow: hidden;
+  min-height: 100vh;
+  position: relative;
 }
 
-/* Left Sidebar (Fixed, 25% width) */
+/* Main content layout */
+.main-content {
+  display: flex;
+  padding-top: 70px; /* Space for navbar */
+  width: 100%;
+  height: calc(100vh - 70px);
+  overflow: hidden; /* Ensure content doesn't overflow */
+}
+
+/* Left sidebar styles */
 .left-sidebar {
-  width: 25%;
-  background-color: #f9f2eb;
-  padding: 20px;
-  border-right: 2px solid #e0a878;
-  height: 100vh; /* Fixed height */
+  width: 220px;
+  flex-shrink: 0;
+  padding: 20px 15px;
+  background-color: #f9f4ef;
   position: fixed;
+  top: 70px;
   left: 0;
-  top: 0;
-  overflow-y: auto; /* In case there are too many tags */
-}
-
-/* Tags Style */
-.tags {
+  height: calc(100vh - 70px);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid rgba(224, 168, 120, 0.2);
+  overflow-y: hidden; /* Prevent scrolling in the sidebar */
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: calc(100% - 70px); /* Make room for the button */
+}
+
+.tag-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.tag-icon {
+  width: 20px;
+  height: 20px;
+  color: #333;
+}
+
+.left-sidebar h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.tags-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: calc(100% - 40px); /* Leave space for the header */
+}
+
+.tag-item {
+  background-color: #e6be96;
+  color: #333;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag-item:hover {
+  background-color: #e0a878;
+}
+
+/* Severity tags */
+.severity-low {
+  background-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.severity-medium {
+  background-color: #fff9c4;
+  color: #f57f17;
+}
+
+.severity-high {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+
+/* Create post button */
+.create-post-btn {
+  background-color: #e0a878;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%; /* Make sure it takes full width of the sidebar */
+}
+
+.create-post-btn:hover {
+  background-color: #d49c67;
+  transform: scale(1.03);
+}
+
+.plus-icon {
+  font-size: 16px;
+}
+
+/* Posts container */
+.posts-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 20px 0 20px; /* Remove top and bottom padding */
+  overflow-y: auto; /* Enable scrolling */
+  margin-left: 220px; /* Match the width of the sidebar */
+  height: 100%; /* Full height */
+  width: calc(100% - 220px); /* Adjust width to account for the sidebar */
+  background-color: #f9f4ef; /* Match the background color */
+}
+
+/* Post styles */
+.post {
+  background-color: white;
+  border-radius: 12px;
+  border: 1.5px solid #e0a878;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  max-width: 800px;
+  margin: 0 auto 20px auto; /* Add bottom margin to posts instead */
+  width: 100%;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.post-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.post-time {
+  font-size: 12px;
+  color: #777;
+}
+
+.post-content {
+  text-align: left;
+}
+
+.post-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.post-text {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.post-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  color: #e0a878;
+}
+
+.action-button.active {
+  color: #e0a878;
+}
+
+.post-tags {
+  display: flex;
   gap: 10px;
 }
 
 .tag {
   background-color: #e6be96;
-  padding: 5px 12px;
-  border-radius: 15px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  display: inline-block;
-}
-
-/* Create Post Button */
-.create-post {
-  background-color: #e0a878;
-  color: black;
-  border: none;
-  padding: 10px 15px;
+  color: #333;
+  padding: 5px 15px;
   border-radius: 20px;
-  font-size: 1rem;
-  margin-top: 20px;
-  cursor: pointer;
-  display: block;
+  font-size: 12px;
+  font-weight: 500;
 }
 
-/* Right Section (Scrollable, 75% width) */
-/* Remove height restriction so the main scrollbar handles scrolling */
-.posts-section {
-  width: 75%;
-  /* margin-left: 25%; */
-  overflow-y: visible; /* Change from 'auto' */
-  padding: 20px;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .left-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    border-right: none;
+    border-bottom: 1px solid rgba(224, 168, 120, 0.2);
+  }
+  
+  .main-content {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .posts-container {
+    margin-left: 0;
+    width: 100%;
+    height: auto;
+  }
+  
+  .tags-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-height: none;
+  }
+  
+  .tag-item {
+    width: auto;
+  }
 }
 
-/* Posts Container */
-.posts-container {
-  width: 100%;
-  /* max-width: 800px; Ensures posts don’t stretch too much */
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+/* Scrollbar styling */
+.posts-container::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* Navbar Fix */
-.posts-section nav {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 10;
-  padding-bottom: 10px;
+.posts-container::-webkit-scrollbar-track {
+  background: #f9f4ef;
+}
+
+.posts-container::-webkit-scrollbar-thumb {
+  background-color: #e0a878;
+  border-radius: 4px;
+}
+
+.posts-container::-webkit-scrollbar-thumb:hover {
+  background-color: #d49c67;
 }
