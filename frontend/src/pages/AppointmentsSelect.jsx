@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/AppointmentSelect.css";
+import "../css/AppointmentsSelect.css";
 
 function AppointmentSelect() {
   const [selectedDate, setSelectedDate] = useState(new Date());
