@@ -21,7 +21,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/auth/login', {
+            const response = await fetch('http://localhost:8000/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -46,9 +46,10 @@ const Login = () => {
         <div className="login-container">
             {/* Left section with logo text and scooter illustration */}
             <div className="left-section">
-                <div className="logo-text">
-                    <img src={safespaceLogoText} alt="SafeSpace Logo" />
+            <div className="logo-text">
+                <h1>SafeSpace</h1>
                 </div>
+
                 <div className="left-illustration">
                     <img src={leftScooterImage} alt="Person on scooter" />
                 </div>

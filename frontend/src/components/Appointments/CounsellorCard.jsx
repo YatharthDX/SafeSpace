@@ -1,23 +1,19 @@
 import React from "react";
+import "../../css/counselorCard.css"; // Import CSS file
 
-const CounselorCard = (counselor) => {
+const CounselorCard = ({ counselor }) => {
   return (
-    <div className="CounselorCard bg-white p-4 rounded-lg shadow-lg text-center">
-      <img
-        src={counselor.image}
-        alt={counselor.name}
-        className="w-16 h-16 rounded-full mx-auto object-cover"
-      />
-      <h2 className="mt-2 text-lg font-semibold">{counselor.name}</h2>
-      <p className="text-gray-600 text-sm">
-        {counselor.specialization} | {counselor.experience} years experience
-      </p>
-      <button
-        className="mt-4 w-full bg-yellow-400 text-white py-2 rounded-lg hover:bg-yellow-500 transition"
-        onClick={showTimings}
-      >
-        Book an Appointment
-      </button>
+    <div className="counselor-card-container">
+      <div className="counselor-card">
+        <img src={counselor.image} alt={counselor.name} className="counselor-image" />
+        <h2 className="counselor-name">{counselor.name}</h2>
+        <p className="counselor-info">
+          {counselor.specialization} | {counselor.experience} years experience
+        </p>
+        <button className="book-btn" onClick={() => alert(`Booking appointment with ${counselor.name}`)}>
+          Book an Appointment
+        </button>
+      </div>
     </div>
   );
 };

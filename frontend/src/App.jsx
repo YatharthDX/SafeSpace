@@ -1,7 +1,7 @@
 import React from "react";
-import { BrowserRouter,Route,Routes } from "react-router-dom"; //  Wrap the app with BrowserRouter
+import { BrowserRouter, Route, Routes } from "react-router-dom"; //  Wrap the app with BrowserRouter
 import Login from "./pages/Login"; // Ensure correct path to Navbar
-import Navbar from "./components/Public/navbar";
+// import Navbar from "./components/Public/navbar";
 import "./App.css"; // Import global styles
 import Home from "./pages/Home.jsx"; // Import Home page
 import Appointments from "./pages/Appointments.jsx"; // Import the Appointments page
@@ -12,7 +12,9 @@ import Signup from "./pages/Signup";
 
 function App() {
   return (
-    <BrowserRouter> {/* Required for React Router to work */}
+    <BrowserRouter>
+      {" "}
+      {/* Required for React Router to work */}
       <div>
       
       <Routes>
