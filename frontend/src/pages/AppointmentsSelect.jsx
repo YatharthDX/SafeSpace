@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "../css/AppointmentSelect.css";
+import "../css/AppointmentsSelect.css";
+import Navbar from "../components/Public/navbar";
 
 function AppointmentSelect() {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -83,26 +84,7 @@ function AppointmentSelect() {
 
   return (
     <div className="appointment-page">
-      <nav className="navbar">
-        <div className="logo">
-          <span className="logo-icon">🔆</span>
-          <h1>SafeSpace</h1>
-        </div>
-        <div className="nav-links">
-          <a href="#appointments" className="nav-link">
-            <span className="nav-icon">✏️</span>
-            <span>Appointments</span>
-          </a>
-          <a href="#chat" className="nav-link">
-            <span className="nav-icon">💬</span>
-            <span>Chat</span>
-          </a>
-          <a href="#profile" className="nav-link">
-            <span className="nav-icon">👤</span>
-            <span>Profile</span>
-          </a>
-        </div>
-      </nav>
+      <Navbar />
       
       <div className="appointment-container">
         <div className="appointment-content">
