@@ -14,4 +14,4 @@ EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
 EMAIL_USERNAME = os.getenv("EMAIL_USERNAME", "")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
-ADMIN_EMAILS = ["vivek23@iitk.ac.in"]
+ADMIN_EMAILS = ["safespaceiitk@gmail.com"]
