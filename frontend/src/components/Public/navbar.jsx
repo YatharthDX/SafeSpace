@@ -1,20 +1,20 @@
 import React from "react";
 import { FaSearch, FaCalendarAlt, FaComments, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import "../../css/navbar.css"; // Import the CSS file
-import logo from "../../assets/logo.png"; // Import the logo image
-
+import "../../css/navbar.css";
+import logo from "../../assets/logo.png";
 const Navbar = () => {
   return (
     <nav className="navbar">
-      {/* Left Section - Logo & Brand Name */}
       <div className="navbar-left">
-        <img src={logo} alt="SafeSpace Logo" className="logo" />
+        <Link to="/home">
+          <img src={logo} alt="SafeSpace Logo" className="logo" />
+        </Link>
         <h1 className="brand-name">SafeSpace</h1>
       </div>
 
       {/* Center Section - Search Bar */}
-      <div className="navbar-center"> 
+      <div className="navbar-center">
         <input type="text" placeholder="Search" className="search-bar" />
         <button className="search-btn">
           <FaSearch />

@@ -5,7 +5,7 @@
   left: 0;
   width: 100%;
   height: 10vh;
-  background-color: #fbe8cf; /* Warm beige color from reference image */
+  background-color: #f2b76e; /* Warm beige color from reference image */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -103,20 +103,20 @@ body {
   .navbar-left {
     width: 25%;
   }
-  
+
   .logo {
     height: 8vh; /* Slightly smaller on medium screens but still large */
   }
-  
+
   .navbar-center {
     width: 40%;
   }
-  
+
   .navbar-right {
     width: 35%;
     gap: 1.5vw;
   }
-  
+
   .nav-link {
     font-size: 2vh;
   }
@@ -126,28 +126,28 @@ body {
   .navbar {
     height: 8vh;
   }
-  
+
   .navbar-left {
     width: 40%;
   }
-  
+
   .logo {
     height: 6vh; /* Further reduced on small screens for balance */
   }
-  
+
   .navbar-center {
     display: none;
   }
-  
+
   .navbar-right {
     width: 60%;
     gap: 3vw;
   }
-  
+
   .brand-name {
     font-size: 3vh;
   }
-  
+
   body {
     padding-top: 9vh;
   }
