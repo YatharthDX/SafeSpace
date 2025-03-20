@@ -1,203 +1,258 @@
 /* AvailabilityCalendar.css */
 
 .safespace-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    background-color: #f5ead9;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Content layout */
-  .content-container {
-    margin-top: 60px; /* Same as navbar height */
-    padding: 20px;
-    display: flex;
-    flex: 1;
-  }
-  
-  /* Sidebar styles */
-  .sidebar {
-    width: 180px;
-    background-color: #f5ead9;
-    padding: 20px 0;
-    border-right: 1px solid #e0d6c2;
-  }
-  
-  .sidebar-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    margin-bottom: 5px;
-    cursor: pointer;
-  }
-  
-  .sidebar-item:hover {
-    background-color: #e0d6c2;
-  }
-  
-  .sidebar-icon {
-    margin-right: 10px;
-  }
-  
-  /* Main content styles */
-  .main-content {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-  }
-  
-  .header h1 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
-  .header h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  /* Calendar styles */
-  .calendar-container {
-    background-color: #fff;
-    border-radius: 4px; /* Reduced from 8px for more rectangular look */
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  
-  .calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    background-color: #f5ead9;
-  }
-  
-  .calendar-header h3 {
-    margin: 0;
-    color: #333;
-    font-size: 1.2rem;
-  }
-  
-  .navigation {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .nav-button {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    width: 30px;
-    height: 30px;
-    border-radius: 0; /* Changed from 50% to 0 for rectangular shape */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  .nav-button:hover {
-    background-color: #f5f5f5;
-  }
-  
-  .calendar-weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: #e3b27c;
-    color: #fff;
-  }
-  
-  .weekday {
-    padding: 10px;
-    text-align: center;
-    font-weight: bold;
-  }
-  
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: #fff;
-  }
-  
-  .calendar-day {
-    border: 1px solid #eee;
-    min-height: 80px;
-    padding: 5px;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    border-radius: 0; /* Added for rectangular shape */
-  }
-  
-  .calendar-day:hover:not(.inactive):not(.past) {
-    background-color: #f9f5eb;
-  }
-  
-  .calendar-day.selected {
-    background-color: #f7efe0;
-    border: 1px solid #e3b27c;
-  }
-  
-  .day-number {
-    display: block;
-    padding: 5px;
-    color: #333;
-    border-radius: 0; /* Added for rectangular shape */
-  }
-  
-  .calendar-day.inactive {
-    background-color: #f9f9f9;
-    cursor: default;
-  }
-  
-  .calendar-day.inactive .day-number {
-    color: #aaa;
-  }
-  
-  .calendar-day.past {
-    background-color: #f2f2f2;
-    cursor: default;
-  }
-  
-  .calendar-day.past .day-number {
-    color: #999;
-  }
-  
-  .slot-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
-  }
-  
-  .slot {
-    background-color: #e3b27c;
-    color: #fff;
-    padding: 3px 5px;
-    border-radius: 0; /* Changed from 3px to 0 for rectangular shape */
-    font-size: 0.8rem;
-    margin-bottom: 2px;
-  }
-  
-  .slot-01 {
-    background-color: #e3b27c;
-  }
-  
-  .slot-02 {
-    background-color: #d4a76a;
-  }
-  
-  .slot-03 {
-    background-color: #c79b5e;
-  }
-  
-  /* Right sidebar styles */
-  .right-sidebar {
-    width: 280px;
-    background-color: #f5ead9;
-    padding: 20
-  }
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: #f5ead9;
+  font-family: Arial, sans-serif;
+}
+
+/* Content layout */
+.content-container {
+  margin-top: 60px; /* Same as navbar height */
+  padding: 20px;
+  display: flex;
+  flex: 1;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 180px;
+  background-color: #f5ead9;
+  padding: 20px 0;
+  border-right: 1px solid #e0d6c2;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.sidebar-item:hover {
+  background-color: #e0d6c2;
+}
+
+.sidebar-icon {
+  margin-right: 10px;
+}
+
+/* Main content styles */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.header h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Calendar styles */
+.calendar-container {
+  background-color: #fff;
+  border-radius: 4px; /* Reduced from 8px for more rectangular look */
+  overflow-y: auto; /* Added scrolling */
+  max-height: calc(100vh - 200px); /* Set max height with room for header */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: #f5ead9;
+  position: sticky; /* Keep header visible while scrolling */
+  top: 0;
+  z-index: 1;
+}
+
+.calendar-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.navigation {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-button {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  width: 30px;
+  height: 30px;
+  border-radius: 0; /* Changed from 50% to 0 for rectangular shape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.nav-button:hover {
+  background-color: #f5f5f5;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: #e3b27c;
+  color: #fff;
+}
+
+.weekday {
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: #fff;
+}
+
+.calendar-day {
+  border: 1px solid #eee;
+  min-height: 80px;
+  padding: 5px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 0; /* Added for rectangular shape */
+}
+
+.calendar-day:hover:not(.inactive):not(.past) {
+  background-color: #f9f5eb;
+}
+
+.calendar-day.selected {
+  background-color: #f7efe0;
+  border: 1px solid #e3b27c;
+}
+
+.day-number {
+  display: block;
+  padding: 5px;
+  color: #333;
+  border-radius: 0; /* Added for rectangular shape */
+}
+
+.calendar-day.inactive {
+  background-color: #f9f9f9;
+  cursor: default;
+}
+
+.calendar-day.inactive .day-number {
+  color: #aaa;
+}
+
+.calendar-day.past {
+  background-color: #f2f2f2;
+  cursor: default;
+}
+
+.calendar-day.past .day-number {
+  color: #999;
+}
+
+.slot-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.slot {
+  background-color: #e3b27c;
+  color: #fff;
+  padding: 3px 5px;
+  border-radius: 0; /* Changed from 3px to 0 for rectangular shape */
+  font-size: 0.8rem;
+  margin-bottom: 2px;
+}
+
+.slot-01 {
+  background-color: #e3b27c;
+}
+
+.slot-02 {
+  background-color: #d4a76a;
+}
+
+.slot-03 {
+  background-color: #c79b5e;
+}
+
+/* Right sidebar styles */
+.right-sidebar {
+  width: 280px;
+  background-color: #f5ead9;
+  padding: 20;
+}
+
+.slot-button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  margin-left: 10px;
+}
+
+.slot-button:hover {
+  border-color: #4a90e2;
+  background-color: #f8f9fa;
+}
+
+.slot-button.selected {
+  border-color: #4a90e2;
+  background-color: #e3f2fd;
+}
+
+.slot-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slot-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.slot-time {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Availability Panel Date Header */
+.avalability-panel-date {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e3b27c;
+  letter-spacing: -0.3px;
+  text-align: center;
+}

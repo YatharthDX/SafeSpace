@@ -289,43 +289,55 @@ const AvailabilityCalendar = () => {
       
       <div className="content-container">
         <div className="main-content">
-          <div className="header">
-            <h1>Counselor Dashboard</h1>
-            <h2>Manage Your Availability</h2>
+          <div className="sidebar">
+            <div className="sidebar-item">
+              <span className="sidebar-icon">📊</span>
+              <span>Dashboard</span>
+            </div>
+            <div className="sidebar-item">
+              <span className="sidebar-icon">📝</span>
+              <span>Requests</span>
+            </div>
           </div>
-          
-          <div className="calendar-container">
-            <div className="calendar-header">
-              <h3>{currentMonth}</h3>
-              <div className="navigation">
-                <div className="nav-button" onClick={handlePrevMonth}>
-                  &lt;
-                </div>
-                <div className="nav-button" onClick={handleNextMonth}>
-                  &gt;
+
+          <div className="main-content">
+            <div className="calendar-container">
+              <div className="header">
+                <h1>Counselor Dashboard</h1>
+                <h2>Manage Your Availability</h2>
+              </div>
+
+              <div className="calendar-header">
+                <h3>{currentMonth}</h3>
+                <div className="navigation">
+                  <div className="nav-button" onClick={handlePrevMonth}>
+                    &lt;
+                  </div>
+                  <div className="nav-button" onClick={handleNextMonth}>
+                    &gt;
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div className="calendar-weekdays">
-              <div className="weekday">Sun</div>
-              <div className="weekday">Mon</div>
-              <div className="weekday">Tue</div>
-              <div className="weekday">Wed</div>
-              <div className="weekday">Thu</div>
-              <div className="weekday">Fri</div>
-              <div className="weekday">Sat</div>
-            </div>
-            
-            <div className="calendar-grid">
-              {generateCalendarDays()}
+              
+              <div className="calendar-weekdays">
+                <div className="weekday">Sun</div>
+                <div className="weekday">Mon</div>
+                <div className="weekday">Tue</div>
+                <div className="weekday">Wed</div>
+                <div className="weekday">Thu</div>
+                <div className="weekday">Fri</div>
+                <div className="weekday">Sat</div>
+              </div>
+              
+              <div className="calendar-grid">
+                {generateCalendarDays()}
+              </div>
             </div>
           </div>
         </div>
-        
         <div className="right-sidebar">
           <div className="availability-panel">
-            <h3>{currentMonth} {selectedDay}</h3>
+            <h3 className="avalability-panel-date">{selectedDay} {currentMonth} </h3>
             
             {message && <div className="message success">{message}</div>}
             
@@ -333,14 +345,17 @@ const AvailabilityCalendar = () => {
             {[1, 2, 3, 4, 5, 6, 7, 8].map(slotNum => {
               const slotStr = slotNum < 10 ? `0${slotNum}` : `${slotNum}`;
               return (
-                <div
+                <button
                   key={slotNum}
-                  className={`slot-option ${selectedSlots[slotStr] ? 'selected' : ''}`}
+                  className={`slot-button ${selectedSlots[slotStr] ? 'selected' : ''}`}
                   onClick={() => handleSlotClick(slotNum)}
+                  type="button"
                 >
-                  <div className="slot-title">Slot {slotNum}</div>
-                  <div className="slot-time">{getSlotTime(slotNum)}</div>
-                </div>
+                  <div className="slot-content">
+                    <div className="slot-title">Slot {slotNum}</div>
+                    <div className="slot-time">{getSlotTime(slotNum)}</div>
+                  </div>
+                </button>
               );
             })}
             
