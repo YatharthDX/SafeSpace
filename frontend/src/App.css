@@ -4,6 +4,36 @@
   padding: 2rem;
   text-align: center;
 }
+
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Page Container */
+.page-container {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+  
+  .page-container {
+    padding: 1rem;
+  }
+}
+
 /* 
 .logo {
   height: 6em;

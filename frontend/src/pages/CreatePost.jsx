@@ -137,6 +137,7 @@ import { FaImage, FaMicrophone } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
 import { BsTag } from "react-icons/bs";
 import "../css/CreatePost.css";
+import Navbar from "../components/Public/navbar";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -183,6 +184,7 @@ const CreatePost = () => {
   return (
     <div className="create-post-page">
       <div className="main-content">
+        <Navbar />
         {/* Header */}
         <div className="create-post-header">
           <button className="back-button">

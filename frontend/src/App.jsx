@@ -11,6 +11,7 @@ import AppointmentsSelect from "./pages/AppointmentsSelect.jsx";
 import AppointmentForm from "./pages/AppointmentForm";
 import Signup from "./pages/Signup";
 import CreatePostPage from "./pages/CreatePost";
+import AvailabilityCalendar from "./pages/CounselorAvailability";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/appointselect" element={<AppointmentsSelect />} />
           <Route path="/appointmentform" element={<AppointmentForm />} />
+          <Route path="/setappointments" element={<AvailabilityCalendar />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/createpost" element={<CreatePostPage/>} />
