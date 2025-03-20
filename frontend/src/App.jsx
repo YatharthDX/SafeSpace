@@ -20,6 +20,10 @@ function App() {
       {" "}
       {/* Required for React Router to work */}
       <div>
+        <header>
+          <link rel="icon" href="./assets/logo.png" type="image/png"></link>
+          <title>SafeSpace</title>
+        </header>
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/" element={<Login />} />
@@ -27,15 +31,15 @@ function App() {
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/appointselect" element={<AppointmentsSelect />} />
           <Route path="/appointmentform" element={<AppointmentForm />} />
-          <Route path="/counselor/dashboard" element={<AvailabilityCalendar />} />
+          <Route
+            path="/counselor/dashboard"
+            element={<AvailabilityCalendar />}
+          />
           <Route path="/counselor/requests" element={<AppointmentRequests />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/createpost" element={<CreatePostPage/>} />
+          <Route path="/createpost" element={<CreatePostPage />} />
         </Routes>
-      
-      
-        
       </div>
     </BrowserRouter>
   );

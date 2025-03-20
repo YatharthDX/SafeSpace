@@ -8,10 +8,10 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-left">
+        <img src={logo} alt="SafeSpace Logo" className="logo" />
         <Link to="/home">
-          <img src={logo} alt="SafeSpace Logo" className="logo" />
+          <h1 className="brand-name">SafeSpace</h1>
         </Link>
-        <h1 className="brand-name">SafeSpace</h1>
       </div>
 
       {/* Center Section - Search Bar */}

@@ -3,32 +3,33 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../css/AppointmentForm.css";
 import Navbar from "../components/Public/navbar";
 
-
 function add30Minutes(timeStr) {
-    // Convert "12:30 PM" to hours and minutes
-    let [time, modifier] = timeStr.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-  
-    // Convert to 24-hour format
-    if (modifier === "PM" && hours !== 12) hours += 12;
-    if (modifier === "AM" && hours === 12) hours = 0;
-  
-    // Add 30 minutes
-    minutes += 30;
-    if (minutes >= 60) {
-      minutes -= 60;
-      hours += 1;
-    }
-  
-    // Convert back to 12-hour format
-    let newModifier = hours >= 12 ? "PM" : "AM";
-    if (hours > 12) hours -= 12;
-    if (hours === 0) hours = 12;
-  
-    // Format minutes properly (e.g., "2:5" → "2:05")
-    let newTime = `${hours}:${minutes.toString().padStart(2, "0")} ${newModifier}`;
-    return newTime;
+  // Convert "12:30 PM" to hours and minutes
+  let [time, modifier] = timeStr.split(" ");
+  let [hours, minutes] = time.split(":").map(Number);
+
+  // Convert to 24-hour format
+  if (modifier === "PM" && hours !== 12) hours += 12;
+  if (modifier === "AM" && hours === 12) hours = 0;
+
+  // Add 30 minutes
+  minutes += 30;
+  if (minutes >= 60) {
+    minutes -= 60;
+    hours += 1;
   }
+
+  // Convert back to 12-hour format
+  let newModifier = hours >= 12 ? "PM" : "AM";
+  if (hours > 12) hours -= 12;
+  if (hours === 0) hours = 12;
+
+  // Format minutes properly (e.g., "2:5" → "2:05")
+  let newTime = `${hours}:${minutes
+    .toString()
+    .padStart(2, "0")} ${newModifier}`;
+  return newTime;
+}
 
 function AppointmentForm() {
   // 1. Retrieve data from navigate("/appointmentform", { state: { ... } })
@@ -38,8 +39,8 @@ function AppointmentForm() {
   // Destructure the passed-in state (if any)
   const {
     counselor,
-    selectedDate,  // e.g. "Thu Aug 10 2023" (from toDateString())
-    selectedTime,   // e.g. "02:30pm"
+    selectedDate, // e.g. "Thu Aug 10 2023" (from toDateString())
+    selectedTime, // e.g. "02:30pm"
   } = location.state || {};
 
   // 2. Form states
@@ -54,10 +55,10 @@ function AppointmentForm() {
     // Do something with the form data
     alert(
       `Appointment Confirmed!\n\n` +
-      `Counselor: ${counselor?.name || "N/A"}\n` +
-      `Date: ${selectedDate || "N/A"}\n` +
-      `Time: ${selectedTime || "N/A"}\n\n` +
-      `Name: ${name}\nContact: ${contactNumber}\nEmail: ${email}`
+        `Counselor: ${counselor?.name || "N/A"}\n` +
+        `Date: ${selectedDate || "N/A"}\n` +
+        `Time: ${selectedTime || "N/A"}\n\n` +
+        `Name: ${name}\nContact: ${contactNumber}\nEmail: ${email}`
     );
     // Navigate somewhere or make an API call here
     // navigate("/some-other-page");
@@ -82,10 +83,15 @@ function AppointmentForm() {
           </button>
 
           <h2>{counselor?.name || "Dr. Counselor Name"}</h2>
-          <p>{counselor?.experience ? `${counselor.experience} years experience` : "30 mins"}</p>
+          <p>
+            {counselor?.experience
+              ? `${counselor.experience} years experience`
+              : "30 mins"}
+          </p>
           {/* You can combine date & time into a single string, or show them separately */}
           <p>
-            {selectedTime || "02:30pm"} - {add30Minutes(selectedTime)}, {selectedDate || "Thursday, August 10th"}
+            {selectedTime || "02:30pm"} - {add30Minutes(selectedTime)},{" "}
+            {selectedDate || "Thursday, August 10th"}
           </p>
         </div>
 
@@ -129,7 +135,7 @@ function AppointmentForm() {
             <div className="form-group">
               <label>Problem Description</label>
               <textarea
-                placeholder="Please describe your problem"
+                placeholder="Please describe your reason for consultation"
                 value={problemDescription}
                 onChange={(e) => setProblemDescription(e.target.value)}
                 required

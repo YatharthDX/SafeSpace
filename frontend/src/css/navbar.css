@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  height: 60px;
-  background-color: #f9e5c9;
+  height: 4.5rem;
+  /* background-color: #f9e5c9; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
@@ -24,12 +24,13 @@
 }
 
 .logo {
-  height: 36px;
+  align-content: center;
+  height: 5rem;
   width: auto;
 }
 
 .brand-name {
-  font-size: 24px;
+  font-size: xx-large;
   font-weight: bold;
   color: #d86d45;
   text-decoration: none;
@@ -77,6 +78,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  /* font-size: xx-large; */
 }
 
 .nav-link {
@@ -85,7 +87,7 @@
   gap: 5px;
   color: #333;
   text-decoration: none;
-  font-size: 14px;
+  font-size: large;
   font-weight: 500;
   transition: color 0.2s;
 }
