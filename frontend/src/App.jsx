@@ -32,6 +32,7 @@ function App() {
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/appointselect" element={<AppointmentsSelect />} />
           <Route path="/appointmentform" element={<AppointmentForm />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
             path="/counselor/dashboard"
             element={<AvailabilityCalendar />}
