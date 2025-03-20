@@ -158,7 +158,7 @@ body {
 /* Post styles */
 .post {
   background-color: white;
-  border-radius: 8px;
+  border-radius: 30px;
   border: 1px solid #e0d6c2;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -257,6 +257,7 @@ body {
   align-items: center;
   padding: 5px;
   transition: all 0.2s ease;
+  outline:none;
 }
 
 .action-button:hover {
@@ -266,6 +267,11 @@ body {
 
 .action-button.active {
   color: #e3b27c;
+  outline:none;
+}
+
+.action-button:focus {
+  outline: none;       
 }
 
 .post-tags {
