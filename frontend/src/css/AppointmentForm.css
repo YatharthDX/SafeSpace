@@ -1,0 +1,210 @@
+/* Appointment Form Styles */
+.appointment-form-container {
+  min-height: 100vh;
+  background-color: #f5ead9;
+  padding-top: 60px; /* Space for navbar */
+}
+
+.appointment-content {
+  max-width: 1400px; /* Increased from 1200px */
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  gap: 3rem; /* Increased from 2rem */
+}
+
+/* Left Panel - Appointment Info */
+.appointment-info {
+  flex: 0.8; /* Changed from 1 to make it narrower */
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s ease;
+}
+
+.back-button:hover {
+  color: #e3b27c;
+}
+
+.back-arrow {
+  font-size: 1.2rem;
+}
+
+.appointment-info h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.appointment-info p {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* Right Panel - Form */
+.appointment-details {
+  flex: 1.2; /* Changed from 2 to make it wider */
+  background-color: white;
+  padding: 2.5rem; /* Increased padding */
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-details h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+/* Form Input Styling */
+.form-group {
+  margin-bottom: 1.8rem; /* Increased spacing */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.7rem;
+  color: #444;
+  font-weight: 500;
+  font-size: 1.1rem; /* Slightly larger labels */
+}
+
+/* General input styling */
+.form-group input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #e3b27c;
+  box-shadow: 0 0 0 3px rgba(227, 178, 124, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #999;
+}
+
+/* Name and Contact fields */
+.form-group:nth-child(1) input,
+.form-group:nth-child(2) input {
+  max-width: 400px; /* Limit width for name and contact fields */
+}
+
+/* Email field */
+.form-group:nth-child(3) input {
+  max-width: 400px; /* Limit width for email field */
+}
+
+/* Problem Description field */
+.form-group textarea {
+  width: 100%;
+  min-height: 150px; /* Increased height */
+  padding: 1.2rem; /* Increased padding */
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.1rem; /* Slightly larger font */
+  line-height: 1.6;
+  resize: vertical;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: #e3b27c;
+  box-shadow: 0 0 0 3px rgba(227, 178, 124, 0.1);
+}
+
+.form-group textarea::placeholder {
+  color: #999;
+}
+
+.confirm-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #e3b27c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.confirm-button:hover {
+  background-color: #d4a76a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.confirm-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .appointment-content {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .appointment-info {
+    order: 2;
+    flex: none;
+  }
+
+  .appointment-details {
+    order: 1;
+    flex: none;
+  }
+
+  /* Reset max-width for inputs on mobile */
+  .form-group:nth-child(1) input,
+  .form-group:nth-child(2) input,
+  .form-group:nth-child(3) input {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .appointment-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .appointment-info p {
+    font-size: 1rem;
+  }
+
+  .appointment-details h3 {
+    font-size: 1.3rem;
+  }
+
+  .form-group input {
+    padding: 0.7rem 0.9rem;
+  }
+} 

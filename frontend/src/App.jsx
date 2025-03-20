@@ -12,7 +12,7 @@ import AppointmentForm from "./pages/AppointmentForm";
 import Signup from "./pages/Signup";
 import CreatePostPage from "./pages/CreatePost";
 import AvailabilityCalendar from "./pages/CounselorAvailability";
-
+import AppointmentRequests from "./pages/AppointmentRequests";
 
 function App() {
   return (
@@ -27,7 +27,8 @@ function App() {
           <Route path="/appointments" element={<Appointments />} />
           <Route path="/appointselect" element={<AppointmentsSelect />} />
           <Route path="/appointmentform" element={<AppointmentForm />} />
-          <Route path="/setappointments" element={<AvailabilityCalendar />} />
+          <Route path="/counselor/dashboard" element={<AvailabilityCalendar />} />
+          <Route path="/counselor/requests" element={<AppointmentRequests />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/createpost" element={<CreatePostPage/>} />

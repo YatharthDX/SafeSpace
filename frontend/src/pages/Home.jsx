@@ -74,7 +74,7 @@ const Home = () => {
       {/* Navbar will be included from your existing components */}
       <Navbar />
 
-      <div className="main-content">
+      <div className="home-main-content">
         {/* Left sidebar with popular tags and create post button */}
         <div className="left-sidebar">
           <div className="sidebar-section">

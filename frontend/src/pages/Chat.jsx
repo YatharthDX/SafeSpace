@@ -5,9 +5,9 @@ import Messages from "/src/components/Chat/Messages.jsx";
 import "/src/css/Chat.css"; // Import Chat.css
 const Chat = () => {
   const [chats, setChats] = useState([
-    { id: 1, name: "Counselor1", message: "Hello", unread: 0, avatar: "avatar1.png" },
-    { id: 2, name: "Counselor2", message: "Hello", unread: 0, avatar: "avatar2.png" },
-    { id: 3, name: "Counselor3", message: "Hello", unread: 3, avatar: "avatar3.png" },
+    { id: 1, name: "Counselor1", message: "Hello", unread: 0, avatar: "https://avatar.iran.liara.run/public" },
+    { id: 2, name: "Counselor2", message: "Hello", unread: 0, avatar: "https://avatar.iran.liara.run/public" },
+    { id: 3, name: "Counselor3", message: "Hello", unread: 3, avatar: "https://avatar.iran.liara.run/public" },
   ]);
   const [selectedChat, setSelectedChat] = useState(null);
 

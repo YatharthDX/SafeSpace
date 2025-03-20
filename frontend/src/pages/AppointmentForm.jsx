@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-// import "../css/AppointmentForm.css";
+import "../css/AppointmentForm.css";
 import Navbar from "../components/Public/navbar";
 
 
@@ -128,8 +128,7 @@ function AppointmentForm() {
 
             <div className="form-group">
               <label>Problem Description</label>
-              <input
-                type="text"
+              <textarea
                 placeholder="Please describe your problem"
                 value={problemDescription}
                 onChange={(e) => setProblemDescription(e.target.value)}

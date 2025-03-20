@@ -26,7 +26,8 @@ const Profile = () => {
     ]);
 
     const handleRoleRequest = () => {
-        // Here you would typically make an API call to update the role request status
+        //add api request here
+        alert('Role request sent!');
         setHasRequestedRole(true);
     };
 
