@@ -5,3 +5,4 @@ redis
 passlib[bcrypt]
 python-jose
 pydantic[email]
+dotenv
