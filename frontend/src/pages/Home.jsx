@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import {
   FaRegUser,
   FaRegComment,
-  FaRegHeart,
   FaHeart,
+  FaRegHeart,
   FaShareAlt,
   FaPlus,
+  FaTimes,
 } from "react-icons/fa";
 import Navbar from "../components/Public/navbar";
 import "../css/Home.css";
@@ -41,6 +42,79 @@ const Home = () => {
       tags: ["tag 1"],
     },
   ];
+
+  // Sample comments data
+  const sampleComments = {
+    1: [
+      {
+        id: 1,
+        author: "Helpful Panda",
+        time: "2 hours ago",
+        content:
+          "Make sure to take breaks between study sessions! It really helps.",
+      },
+      {
+        id: 2,
+        author: "Caring Cat",
+        time: "1 hour ago",
+        content:
+          "I went through the same thing last semester. Remember to hydrate and get some sleep!",
+      },
+    ],
+    2: [
+      {
+        id: 1,
+        author: "Happy Penguin",
+        time: "45 minutes ago",
+        content: "Same feeling here!",
+      },
+    ],
+    3: [
+      {
+        id: 1,
+        author: "Friendly Owl",
+        time: "10 hours ago",
+        content:
+          "Have you tried joining some campus clubs? That really helped me when I was feeling homesick.",
+      },
+      {
+        id: 2,
+        author: "Gentle Fox",
+        time: "8 hours ago",
+        content:
+          "Schedule regular video calls with your family. It makes a big difference!",
+      },
+      {
+        id: 3,
+        author: "Wise Turtle",
+        time: "5 hours ago",
+        content:
+          "It takes time to adjust, but it does get better. Hang in there!",
+      },
+      {
+        id: 4,
+        author: "Wise Turtle",
+        time: "5 hours ago",
+        content:
+          "It takes time to adjust, but it does get better. Hang in there!",
+      },
+      {
+        id: 5,
+        author: "Wise Turtle",
+        time: "5 hours ago",
+        content:
+          "It takes time to adjust, but it does get better. Hang in there!",
+      },
+      {
+        id: 6,
+        author: "Wise Turtle",
+        time: "5 hours ago",
+        content:
+          "It takes time to adjust, but it does get better. Hang in there!",
+      },
+    ],
+  };
+
   const navigate = useNavigate();
   // Popular tags list
   const popularTags = [
@@ -58,8 +132,15 @@ const Home = () => {
   const HandleCreate = () => {
     navigate("/createpost");
   };
+
   // State for liked posts
   const [likedPosts, setLikedPosts] = useState({});
+
+  // State for active comment section
+  const [activeCommentPost, setActiveCommentPost] = useState(null);
+
+  // State for comment input
+  const [newComment, setNewComment] = useState("");
 
   // Toggle like function
   const toggleLike = (postId) => {
@@ -69,8 +150,38 @@ const Home = () => {
     }));
   };
 
+  // Toggle comment section
+  const toggleCommentSection = (postId) => {
+    if (activeCommentPost === postId) {
+      setActiveCommentPost(null);
+    } else {
+      setActiveCommentPost(postId);
+    }
+  };
+
+  // Handle comment input change
+  const handleCommentChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  // Handle comment submission
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (newComment.trim() === "") return;
+
+    // In a real app, you would send this to your API
+    console.log(`New comment on post ${activeCommentPost}: ${newComment}`);
+
+    // Clear the input
+    setNewComment("");
+  };
+
   return (
-    <div className="home-container">
+    <div
+      className={`home-container ${
+        activeCommentPost ? "with-comments-open" : ""
+      }`}
+    >
       {/* Navbar will be included from your existing components */}
       <Navbar />
 
@@ -106,7 +217,6 @@ const Home = () => {
           </div>
 
           {/* Create post button in the sidebar */}
-
           <button className="create-post-btn" onClick={HandleCreate}>
             <FaPlus className="plus-icon" />
             <span>Create Post</span>
@@ -144,12 +254,17 @@ const Home = () => {
                   >
                     {likedPosts[post.id] ? <FaHeart /> : <FaRegHeart />}
                   </button>
-                  <button className="action-button">
+                  <button
+                    className={`action-button ${
+                      activeCommentPost === post.id ? "active" : ""
+                    }`}
+                    onClick={() => toggleCommentSection(post.id)}
+                  >
                     <FaRegComment />
                   </button>
-                  <button className="action-button">
+                  {/* <button className="action-button">
                     <FaShareAlt />
-                  </button>
+                  </button> */}
                 </div>
                 {post.tags && post.tags.length > 0 && (
                   <div className="post-tags">
@@ -164,6 +279,85 @@ const Home = () => {
             </div>
           ))}
         </div>
+
+        {/* Comment Section (Instagram-style) */}
+        {activeCommentPost && (
+          <div className="comments-panel">
+            <div className="comments-header">
+              <h3>Comments</h3>
+              <button
+                className="close-comments"
+                onClick={() => setActiveCommentPost(null)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="post-preview">
+              <div className="post-user">
+                <div className="user-avatar">
+                  <FaRegUser />
+                </div>
+                <div className="user-info">
+                  <span className="username">
+                    {
+                      posts.find((post) => post.id === activeCommentPost)
+                        ?.author
+                    }
+                  </span>
+                  <span className="post-time">
+                    {posts.find((post) => post.id === activeCommentPost)?.time}
+                  </span>
+                </div>
+              </div>
+              <p className="post-text-preview">
+                {posts
+                  .find((post) => post.id === activeCommentPost)
+                  ?.content.substring(0, 100)}
+                {posts.find((post) => post.id === activeCommentPost)?.content
+                  .length > 100
+                  ? "..."
+                  : ""}
+              </p>
+            </div>
+
+            <div className="comments-list">
+              {sampleComments[activeCommentPost]?.map((comment) => (
+                <div key={comment.id} className="comment">
+                  <div className="comment-header">
+                    <div className="post-user">
+                      <div className="user-avatar">
+                        <FaRegUser />
+                      </div>
+                      <div className="user-info">
+                        <span className="username">{comment.author}</span>
+                        <span className="post-time">{comment.time}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="comment-text">{comment.content}</p>
+                </div>
+              ))}
+            </div>
+
+            <form className="comment-form" onSubmit={handleCommentSubmit}>
+              <input
+                type="text"
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={handleCommentChange}
+                className="comment-input"
+              />
+              <button
+                type="submit"
+                className="post-comment-btn"
+                disabled={newComment.trim() === ""}
+              >
+                Post
+              </button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

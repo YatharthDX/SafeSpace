@@ -23,16 +23,10 @@
   gap: 10px;
 }
 
-/* .logo1 {
-  align-content:center;
-  height: 0%;
-  width: 0%;
-} */
-
-.logo2 {
-  align-content:center;
-  width: 150px;
-  height: auto;
+.logo {
+  align-content: center;
+  height: 3rem;
+  width: auto;
 }
 
 .brand-name {
