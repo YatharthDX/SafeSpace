@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../components/Public/navbar";
+import Navbar2 from "../components/Public/navbar2";
 import CounselorCard from "../components/Appointments/CounsellorCard";
 import "../css/AppointmentsHome.css";
 
@@ -79,7 +79,7 @@ const counselors = [
 const Appointments = () => {
   return (
     <>
-      <Navbar />
+      <Navbar2 />
       <div className="appointments-container">
         <h1 id="appointments-header">Select a Counsellor</h1>
         <div className="counselor-list">

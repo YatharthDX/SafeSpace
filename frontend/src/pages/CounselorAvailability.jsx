@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/AvailabilityCalendar.css";
-import Navbar from "../components/Public/navbar";
+import Navbar2 from "../components/Public/navbar2";
 import { useNavigate } from "react-router-dom";
 
 const AvailabilityCalendar = () => {
@@ -316,7 +316,7 @@ const AvailabilityCalendar = () => {
 
   return (
     <div className="safespace-container">
-      <Navbar />
+      <Navbar2 />
       <div className="content-container">
         <div className="sidebar">
           <div className="sidebar-item active" onClick={() => handleNavigation("/counselor/dashboard")}>
