@@ -1,6 +1,6 @@
 import React from "react";
 
-const RequestCard = ({ request }) => {
+const RequestCard = ({ request, onApprove, onReject }) => {
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "pending":
@@ -45,8 +45,18 @@ const RequestCard = ({ request }) => {
       <div className="request-actions">
         {request.status === "pending" && (
           <>
-            <button className="action-button approve">Approve</button>
-            <button className="action-button reject">Reject</button>
+            <button 
+              className="action-button approve"
+              onClick={onApprove}
+            >
+              Approve
+            </button>
+            <button 
+              className="action-button reject"
+              onClick={onReject}
+            >
+              Reject
+            </button>
           </>
         )}
       </div>

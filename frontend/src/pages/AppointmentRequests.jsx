@@ -1,14 +1,13 @@
-import React from "react";
-import "../css/Requests.css";
+import React, { useState } from "react";
+import "../css/AppointmentRequests.css";
 import Navbar from "../components/Public/navbar";
-import RequestCard from "../components/RequestCard";
+import RequestCard from "../components/Appointments/RequestCard";
 import { useNavigate } from "react-router-dom";
 
 const AppointmentRequests = () => {
   const navigate = useNavigate();
-  
-  // Mock data for requests
-  const requests = [
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [requests, setRequests] = useState([
     {
       id: 1,
       studentName: "John Doe",
@@ -27,41 +26,91 @@ const AppointmentRequests = () => {
       type: "Personal",
       description: "Career guidance session"
     },
-    // Add more mock requests as needed
-  ];
+  ]);
 
   const handleNavigation = (path) => {
     navigate(path);
   };
 
+  const handleApprove = (requestId) => {
+    setRequests(requests.map(request => 
+      request.id === requestId 
+        ? { ...request, status: "approved" }
+        : request
+    ));
+  };
+
+  const handleReject = (requestId) => {
+    setRequests(requests.map(request => 
+      request.id === requestId 
+        ? { ...request, status: "rejected" }
+        : request
+    ));
+  };
+
+  const filteredRequests = requests.filter(request => {
+    if (activeFilter === "all") return true;
+    return request.status === activeFilter;
+  });
+
   return (
     <div className="safespace-container">
       <Navbar />
       <div className="content-container">
-        <div className="main-content">
-          <div className="sidebar">
-            <div className="sidebar-item" onClick={() => handleNavigation("/counselor/dashboard")}>
-              <span className="sidebar-icon">📊</span>
-              <span>Dashboard</span>
-            </div>
-            <div className="sidebar-item active" onClick={() => handleNavigation("/counselor/requests")}>
-              <span className="sidebar-icon">📝</span>
-              <span>Requests</span>
-            </div>
+        <div className="sidebar">
+          <div className="sidebar-item" onClick={() => handleNavigation("/counselor/dashboard")}>
+            <span className="sidebar-icon">📊</span>
+            <span>Dashboard</span>
           </div>
+          <div className="sidebar-item active" onClick={() => handleNavigation("/counselor/requests")}>
+            <span className="sidebar-icon">📝</span>
+            <span>Requests</span>
+          </div>
+        </div>
 
-          <div className="main-content">
-            <div className="requests-container">
-              <div className="header">
-                <h1>Counselor Dashboard</h1>
-                <h2>Counseling Requests</h2>
-              </div>
+        <div className="main-content">
+          <div className="requests-container">
+            <div className="header">
+              <h1>Counselor Dashboard</h1>
+              <h2>Counseling Requests</h2>
+            </div>
 
-              <div className="requests-grid">
-                {requests.map((request) => (
-                  <RequestCard key={request.id} request={request} />
-                ))}
-              </div>
+            <div className="filter-navbar">
+              <button 
+                className={`filter-button ${activeFilter === "all" ? "active" : ""}`}
+                onClick={() => setActiveFilter("all")}
+              >
+                All Requests
+              </button>
+              <button 
+                className={`filter-button ${activeFilter === "pending" ? "active" : ""}`}
+                onClick={() => setActiveFilter("pending")}
+              >
+                Pending
+              </button>
+              <button 
+                className={`filter-button ${activeFilter === "approved" ? "active" : ""}`}
+                onClick={() => setActiveFilter("approved")}
+              >
+                Approved
+              </button>
+              <button 
+                className={`filter-button ${activeFilter === "rejected" ? "active" : ""}`}
+                onClick={() => setActiveFilter("rejected")}
+              >
+                Rejected
+              </button>
+            </div>
+
+            <div className="requests-grid">
+              {filteredRequests.map((request) => (
+                <RequestCard 
+                  key={request.id} 
+                  request={request} 
+                  onApprove={() => handleApprove(request.id)}
+                  onReject={() => handleReject(request.id)}
+                />
+              ))}
             </div>
           </div>
         </div>
