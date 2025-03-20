@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../css/AppointmentRequests.css";
-import Navbar from "../components/Public/navbar";
+import Navbar2 from "../components/Public/navbar2";
 import RequestCard from "../components/Appointments/RequestCard";
 import { useNavigate } from "react-router-dom";
 
@@ -55,7 +55,7 @@ const AppointmentRequests = () => {
 
   return (
     <div className="safespace-container">
-      <Navbar />
+      <Navbar2 />
       <div className="content-container">
         <div className="sidebar">
           <div className="sidebar-item" onClick={() => handleNavigation("/counselor/dashboard")}>
