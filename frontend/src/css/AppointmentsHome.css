@@ -4,30 +4,44 @@
 #appointments-header {
   padding-top: 0px;
   text-align: left;
-  margin: 2rem 0 1rem 0;
+  margin: 2rem 0 2rem 0;
   padding-left: 80px;
-  color: #333;
-  font-size: 1.5rem;
-  font-weight: 600;
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  position: relative;
+}
+
+#appointments-header::after {
+  content: '';
+  position: absolute;
+  left: 80px;
+  bottom: -8px;
+  width: 60px;
+  height: 4px;
+  background-color: #e3b27c;
+  border-radius: 2px;
 }
 
 .appointments-container {
   width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 0;
+  max-width: 1800px;
+  margin: 80px auto 0;
+  padding: 20px;
+  background-color: #f5ead9;
+  min-height: calc(100vh - 80px);
 }
 
 .counselor-list {
-  max-height: 700px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding: 20px;
+  max-height: calc(100vh - 180px);
   overflow-y: auto;
-  padding: 0;
-  padding-bottom: 30px;
-  width: 100%;
-  margin: 0;
-
   scrollbar-width: thin;
-  scrollbar-color: #f47121 #f1f1f1;
+  scrollbar-color: #e3b27c #f5ead9;
 }
 
 /* Additional padding for the last counselor card */
@@ -35,24 +49,34 @@
   margin-bottom: 100px;
 }
 
+/* Responsive layout */
+@media (max-width: 1200px) {
+  .counselor-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-/* Webkit browser scrollbar styling (Chrome, Safari, Edge) */
+@media (max-width: 768px) {
+  .counselor-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Webkit browser scrollbar styling */
 .counselor-list::-webkit-scrollbar {
-  width: 10px;
-  position: absolute;
-  right: 0; /* Ensures it's at the rightmost part of the container */
+  width: 8px;
 }
 
 .counselor-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 5px;
+  background: #f5ead9;
+  border-radius: 4px;
 }
 
 .counselor-list::-webkit-scrollbar-thumb {
-  background-color: #f47121; /* SafeSpace orange color */
-  border-radius: 5px;
+  background-color: #e3b27c;
+  border-radius: 4px;
 }
 
 .counselor-list::-webkit-scrollbar-thumb:hover {
-  background-color: #dd6011;
+  background-color: #d4a76a;
 }
