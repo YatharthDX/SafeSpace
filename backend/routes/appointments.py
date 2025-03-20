@@ -3,8 +3,7 @@ from database.models import Appointment
 from services.appointment_service import get_counselors_service, get_available_slots_service, create_appointment_service, update_appointment_status_service, get_pending_requests_service, update_available_slots_service
 from utils.jwt import get_current_user
 from typing import List
-import base64
-from database.connection import users_collection
+
 
 router = APIRouter()
 
@@ -33,10 +32,3 @@ def update_available_slots(counselor_email: str, date: str, time_slots: List[str
     return update_available_slots_service(counselor_email, date, time_slots, current_user)
 
 
-@router.post("/upload-profile-picture/")
-async def upload_profile_picture(username: str, file: UploadFile = File(...)):
-    image_data = await file.read()
-    encoded_image = base64.b64encode(image_data).decode("utf-8")
-
-    users_collection.update_one({"name": username}, {"$set": {"profile_picture": encoded_image}}, upsert=True)
-    return {"message": "Profile picture uploaded successfully"}

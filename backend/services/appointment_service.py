@@ -12,10 +12,10 @@ def get_counselors_service():
         {
             "email": user["email"],
             "name": user["name"],
-            "profile": user.get("profile", ""),
+            "profile_picture": user.get("profile_picture", ""),
             "description": user.get("description", "")
         }
-        for user in users_collection.find({"role": "Counsellor"})
+        for user in users_collection.find({"role": "counsellor"})
     ]
     return counselors
 
