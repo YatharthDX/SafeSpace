@@ -7,9 +7,28 @@ import AppointmentsList from '../components/Profile/AppointmentsList';
 import '../css/profile.css';
 
 const Profile = () => {
-    const [activeTab, setActiveTab] = useState('appointments');
+    const [activeTab, setActiveTab] = useState('posts');
     const [hasRequestedRole, setHasRequestedRole] = useState(false);
-    const [posts, setPosts] = useState([]);
+    
+    // Sample posts data - you can set this to [] to test the empty state
+    const [posts, setPosts] = useState([
+        {
+            id: 1,
+            author: 'Playful Raccoon',
+            time: '2 hours ago',
+            title: 'My healthcare journey',
+            content: 'Just had a great appointment with Dr. Smith. The new treatment plan looks promising!',
+            tags: ['healthcare', 'wellness']
+        },
+        {
+            id: 2,
+            author: 'Playful Raccoon',
+            time: '2 days ago',
+            content: 'Does anyone have recommendations for good nutrition resources?',
+            tags: ['nutrition', 'advice']
+        }
+    ]);
+    
     const [pastAppointments] = useState([
         {
             id: 1,
@@ -31,6 +50,12 @@ const Profile = () => {
         setHasRequestedRole(true);
     };
 
+    const handleDeletePost = (postId) => {
+        // Filter out the deleted post
+        setPosts(posts.filter(post => post.id !== postId));
+        // In a real application, you would also make an API call here
+    };
+
     return (
         <div className="profile-page">
             <Navbar2 />
@@ -49,7 +74,10 @@ const Profile = () => {
 
                 <div className="profile-content">
                     {activeTab === 'posts' ? (
-                        <PostsList posts={posts} />
+                        <PostsList 
+                            posts={posts} 
+                            onDeletePost={handleDeletePost} 
+                        />
                     ) : (
                         <AppointmentsList appointments={pastAppointments} />
                     )}
