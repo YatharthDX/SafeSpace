@@ -5,8 +5,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  height: 60px;
-  background-color: #f9e5c9;
+  height: 4.5rem;
+  /* background-color: #f9e5c9; */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
@@ -24,19 +24,20 @@
 }
 
 .logo {
-  height: 60px;
+  align-content: center;
+  height: 5rem;
   width: auto;
 }
 
 .brand-name {
-  font-size: 24px;
+  font-size: xx-large;
   font-weight: bold;
   color: #d86d45;
   text-decoration: none;
   font-family: sans-serif;
 }
-.brand-name:hover{
-  color:#eca084;
+.brand-name:hover {
+  color: #eca084;
 }
 /* Center section - Search Bar */
 .navbar-center {
@@ -79,6 +80,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
+  /* font-size: xx-large; */
 }
 
 .nav-link {
@@ -87,7 +89,7 @@
   gap: 5px;
   color: #333;
   text-decoration: none;
-  font-size: 14px;
+  font-size: large;
   font-weight: 500;
   transition: color 0.2s;
 }
@@ -101,7 +103,7 @@
   .navbar-center {
     width: 30%;
   }
-  
+
   .nav-link span {
     display: none;
   }
@@ -111,15 +113,15 @@
   .navbar {
     padding: 0 10px;
   }
-  
+
   .brand-name {
     font-size: 20px;
   }
-  
+
   .navbar-center {
     width: 40%;
   }
-  
+
   .navbar-right {
     gap: 10px;
   }

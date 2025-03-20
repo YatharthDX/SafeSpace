@@ -84,7 +84,7 @@ const CreatePost = () => {
                     <button type="button" className="media-button">
                       <FaImage />
                     </button>
-                    <button type="button" className="media-button">
+                    <button type="button" className="media-button-2">
                       <FaMicrophone />
                     </button>
                   </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/login.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import brainFlowerIcon from '../assets/logo.png';
 import leftScooterImage from '../assets/login_left_img.png';
 import rightPlayingImage from '../assets/login_right_img.png';
@@ -12,6 +13,8 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [showOtpModal, setShowOtpModal] = useState(false);
     const [otp, setOtp] = useState('');
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -236,31 +239,49 @@ const Signup = () => {
                                 
                                 <div className="form-group">
                                     <label htmlFor="password" style={{ textAlign: "left", display: "block" }}>Password</label>
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                    />
+                                    <div className="password-field">
+                                        <input
+                                            id="password"
+                                            type={showPassword ? 'text' : 'password'}
+                                            placeholder="Password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            required
+                                        />
+                                        <button 
+                                            type="button" 
+                                            className="toggle-password" 
+                                            onClick={() => setShowPassword(!showPassword)}
+                                        >
+                                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </button>
+                                    </div>
                                     <br />
                                     <br />
-                                    <input
-                                        id="confirm-password"
-                                        type="password"
-                                        placeholder="Confirm Password"
-                                        value={confirmPassword}
-                                        onChange={(e) => {
-                                            setConfirmPassword(e.target.value);
-                                            if (password && e.target.value !== password) {
-                                                setError('Passwords do not match');
-                                            } else {
-                                                setError('');
-                                            }
-                                        }}
-                                        required
-                                    />
+                                    <div className="password-field">
+                                        <input
+                                            id="confirm-password"
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            placeholder="Confirm Password"
+                                            value={confirmPassword}
+                                            onChange={(e) => {
+                                                setConfirmPassword(e.target.value);
+                                                if (password && e.target.value !== password) {
+                                                    setError('Passwords do not match');
+                                                } else {
+                                                    setError('');
+                                                }
+                                            }}
+                                            required
+                                        />
+                                        <button 
+                                            type="button" 
+                                            className="toggle-password" 
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        >
+                                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </button>    
+                                    </div>                            
                                 </div>
                                 
                                 {error && <div className="error-message">{error}</div>}
