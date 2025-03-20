@@ -1,4 +1,4 @@
-import Navbar from "../components/Public/navbar";
+import Navbar2 from "../components/Public/navbar2";
 import React, { useState } from "react";
 import ChatBox from "/src/components/Chat/ChatBox.jsx";
 import Messages from "/src/components/Chat/Messages.jsx";
@@ -13,7 +13,7 @@ const Chat = () => {
 
   return (
     <div className="chat-body">
-      <Navbar />
+      <Navbar2 />
       <div className="chat-container">
       <ChatBox chats={chats} setSelectedChat={setSelectedChat} selectedChat={selectedChat} />
       <Messages selectedChat={selectedChat} />

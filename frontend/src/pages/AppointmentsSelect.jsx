@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../css/AppointmentsSelect.css";
-import Navbar from "../components/Public/navbar";
+import Navbar2 from "../components/Public/navbar2";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function AppointmentSelect() {
@@ -121,7 +121,7 @@ function AppointmentSelect() {
 
   return (
     <div className="appointment-page">
-      <Navbar />
+      <Navbar2 />
 
       <div className="appointment-container">
         <div className="appointment-content">

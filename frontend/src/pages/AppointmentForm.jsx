@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../css/AppointmentForm.css";
-import Navbar from "../components/Public/navbar";
+import Navbar2 from "../components/Public/navbar2";
 
 function add30Minutes(timeStr) {
   // Convert "12:30 PM" to hours and minutes
@@ -72,7 +72,7 @@ function AppointmentForm() {
   return (
     <div className="appointment-form-container">
       {/* ---------- NAVBAR ---------- */}
-      <Navbar />
+      <Navbar2 />
 
       {/* ---------- MAIN CONTENT AREA ---------- */}
       <div className="appointment-content">

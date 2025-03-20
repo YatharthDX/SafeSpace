@@ -36,7 +36,9 @@
   text-decoration: none;
   font-family: sans-serif;
 }
-
+.brand-name:hover {
+  color: #eca084;
+}
 /* Center section - Search Bar */
 .navbar-center {
   display: flex;

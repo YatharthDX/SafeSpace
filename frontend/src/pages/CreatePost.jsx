@@ -3,7 +3,7 @@ import { FaImage, FaMicrophone } from "react-icons/fa";
 import { IoMdArrowBack } from "react-icons/io";
 import { BsTag } from "react-icons/bs";
 import "../css/CreatePost.css";
-import Navbar from "../components/Public/navbar";
+import Navbar2 from "../components/Public/navbar2";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -49,7 +49,7 @@ const CreatePost = () => {
 
   return (
     <div className="create-post-page">
-      <Navbar />
+      <Navbar2 />
       <div className="create-post-content">
         <div className="create-post-container">
           {/* Header */}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Public/navbar';
+import Navbar2 from '../components/Public/navbar2';
 import ProfileHeader from '../components/Profile/ProfileHeader';
 import ProfileTabs from '../components/Profile/ProfileTabs';
 import PostsList from '../components/Profile/PostsList';
@@ -33,7 +33,7 @@ const Profile = () => {
 
     return (
         <div className="profile-page">
-            <Navbar />
+            <Navbar2 />
 
             <div className="profile-container">
                 <ProfileHeader 

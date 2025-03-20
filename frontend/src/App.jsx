@@ -13,6 +13,7 @@ import Signup from "./pages/Signup";
 import CreatePostPage from "./pages/CreatePost";
 import AvailabilityCalendar from "./pages/CounselorAvailability";
 import AppointmentRequests from "./pages/AppointmentRequests";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
