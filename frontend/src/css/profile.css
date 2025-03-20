@@ -1,13 +1,17 @@
 .profile-page {
     min-height: 100vh;
-    background-color: #FFFFFF;
+    background-color: #f5ead9;
+    padding-top: 70px; /* Account for fixed navbar */
 }
 
 /* Profile Section */
 .profile-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    height: calc(100vh - 70px);
+    display: flex;
+    flex-direction: column;
 }
 
 .profile-header {
@@ -15,12 +19,17 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e0d6c2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .profile-info {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .profile-picture {
@@ -28,30 +37,31 @@
     height: 96px;
     border-radius: 50%;
     overflow: hidden;
-    background-color: #F5F5F5;
+    background-color: #f5ead9;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 2px solid #e0d6c2;
 }
 
 .profile-icon {
     width: 100%;
     height: 100%;
-    color: #CCCCCC;
+    color: #e3b27c;
 }
 
 .profile-name {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #333333;
+    color: #333;
     margin: 0;
 }
 
 .request-role-btn {
-    background-color: #E9B997;
-    color: #333333;
+    background-color: #e3b27c;
+    color: white;
     border: none;
-    border-radius: 50px;
+    border-radius: 8px;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     font-weight: 500;
@@ -59,17 +69,18 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
 }
 
 .request-role-btn:hover {
-    background-color: #E5A97D;
+    background-color: #d4a76a;
+    transform: translateY(-1px);
 }
 
 .role-status {
-    background-color: #E9B997;
-    color: #333333;
-    border-radius: 50px;
+    background-color: #e3b27c;
+    color: white;
+    border-radius: 8px;
     padding: 0.75rem 2.5rem;
     font-size: 1rem;
     font-weight: 500;
@@ -80,32 +91,51 @@
 /* Profile Navigation */
 .profile-nav {
     display: flex;
-    gap: 2rem;
-    border-bottom: 1px solid #E5E5E5;
+    gap: 1rem;
+    border-bottom: 1px solid #e0d6c2;
     margin-bottom: 2rem;
+    background-color: white;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #e0d6c2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .nav-tab {
     background: none;
     border: none;
-    padding: 1rem 2rem;
+    padding: 0.75rem 1.5rem;
     font-size: 1rem;
     font-weight: 500;
-    color: #666666;
+    color: #666;
     cursor: pointer;
     position: relative;
-    border-radius: 50px;
+    border-radius: 6px;
     transition: all 0.2s ease;
 }
 
+.nav-tab:hover {
+    background-color: #f5ead9;
+}
+
 .nav-tab.active {
-    color: #333333;
-    background-color: #E9B997;
+    color: #333;
+    background-color: #e3b27c;
+    color: white;
 }
 
 /* Content Sections */
 .profile-content {
-    min-height: 400px;
+    flex: 1;
+    overflow-y: auto;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #e0d6c2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    min-width: 800px;
+    margin: 0 auto;
+    width: 100%;
 }
 
 .posts-section,
@@ -114,92 +144,196 @@
 }
 
 .empty-state {
-    color: #666666;
+    color: #666;
     font-size: 1rem;
     text-align: left;
     padding: 1rem 0;
 }
 
 /* Appointments Section */
+.appointments-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0.25rem;
+}
+
+.appointments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e0d6c2;
+}
+
+.appointments-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.appointment-count {
+    background-color: #f5ead9;
+    color: #666;
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.appointments-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .appointment-item {
     display: flex;
     align-items: flex-start;
-    gap: 2rem;
-    padding: 1.5rem;
-    border-radius: 12px;
-    background-color: #FFFFFF;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 1rem;
-    position: relative;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background-color: white;
+    border: 1px solid #e0d6c2;
+    transition: all 0.2s ease;
+}
+
+.appointment-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .appointment-index {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #333333;
-    min-width: 2rem;
-}
-
-.appointment-details {
-    flex: 1;
+    width: 28px;
+    height: 28px;
+    background-color: #f5ead9;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #e3b27c;
+    flex-shrink: 0;
 }
 
 .appointment-info {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
 }
 
-.time-slot,
-.doctor-name {
+.info-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    width: 100%;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: 100px 20px 1fr;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.info-label {
+    color: #666;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.info-divider {
+    color: #666;
+    text-align: center;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 0.875rem;
+    color: #333;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: #333333;
-    font-size: 1rem;
+    gap: 0.375rem;
 }
 
-.time-slot .icon,
-.doctor-name .icon {
-    color: #666666;
-    font-size: 1rem;
+.info-value.highlighted {
+    background-color: #f5ead9;
+    padding: 0.375rem 0.625rem;
+    border-radius: 12px;
+    display: inline-block;
 }
 
-.appointment-actions {
-    margin-top: 0.5rem;
-}
-
-.view-documents {
-    color: #0066CC;
-    text-decoration: none;
-    font-size: 1rem;
-}
-
-.view-documents:hover {
-    text-decoration: underline;
-}
-
-.appointment-date {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    color: #666666;
+.view-documents-btn {
+    background: none;
+    border: none;
+    color: #e3b27c;
     font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0;
+    margin-left: auto;
+    transition: all 0.2s ease;
+}
+
+.view-documents-btn:hover {
+    color: #d4a76a;
+}
+
+.icon {
+    color: #e3b27c;
+    font-size: 1rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #666;
+    font-size: 1rem;
+    background-color: #f5ead9;
+    border-radius: 8px;
+    border: 1px dashed #e0d6c2;
+}
+
+/* Scrollbar styling */
+.profile-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.profile-content::-webkit-scrollbar-track {
+    background: #f5ead9;
+}
+
+.profile-content::-webkit-scrollbar-thumb {
+    background-color: #e3b27c;
+    border-radius: 4px;
+}
+
+.profile-content::-webkit-scrollbar-thumb:hover {
+    background-color: #d4a76a;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .profile-container {
-        padding: 0 1rem;
+        padding: 1rem;
+        height: auto;
     }
 
     .profile-header {
         flex-direction: column;
         gap: 1rem;
         align-items: flex-start;
+        padding: 1rem;
     }
 
     .request-role-btn,
@@ -212,18 +346,49 @@
         padding: 0.75rem 1.5rem;
     }
 
+    .appointments-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
     .appointment-item {
         flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
+        gap: 0.75rem;
+        padding: 0.75rem;
     }
 
-    .appointment-date {
-        position: static;
-        margin-top: 0.5rem;
-    }
-
-    .appointment-details {
+    .appointment-info {
         width: 100%;
+    }
+
+    .info-row {
+        grid-template-columns: 80px 20px 1fr;
+        gap: 0.25rem;
+    }
+
+    .info-value.highlighted {
+        padding: 0.25rem 0.5rem;
+    }
+
+    .view-documents-btn {
+        margin-left: 0;
+        margin-top: 0.375rem;
+    }
+
+    .appointment-index {
+        width: 28px;
+        height: 28px;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 1200px) {
+    .profile-content {
+        min-width: unset;
+    }
+    
+    .appointments-section {
+        max-width: 100%;
     }
 } 
