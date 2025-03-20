@@ -1,0 +1,229 @@
+.profile-page {
+    min-height: 100vh;
+    background-color: #FFFFFF;
+}
+
+/* Profile Section */
+.profile-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-picture {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-icon {
+    width: 100%;
+    height: 100%;
+    color: #CCCCCC;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+}
+
+.request-role-btn {
+    background-color: #E9B997;
+    color: #333333;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.request-role-btn:hover {
+    background-color: #E5A97D;
+}
+
+.role-status {
+    background-color: #E9B997;
+    color: #333333;
+    border-radius: 50px;
+    padding: 0.75rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    min-width: 150px;
+}
+
+/* Profile Navigation */
+.profile-nav {
+    display: flex;
+    gap: 2rem;
+    border-bottom: 1px solid #E5E5E5;
+    margin-bottom: 2rem;
+}
+
+.nav-tab {
+    background: none;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #666666;
+    cursor: pointer;
+    position: relative;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+}
+
+.nav-tab.active {
+    color: #333333;
+    background-color: #E9B997;
+}
+
+/* Content Sections */
+.profile-content {
+    min-height: 400px;
+}
+
+.posts-section,
+.appointments-section {
+    padding: 1rem 0;
+}
+
+.empty-state {
+    color: #666666;
+    font-size: 1rem;
+    text-align: left;
+    padding: 1rem 0;
+}
+
+/* Appointments Section */
+.appointment-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.appointment-index {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333333;
+    min-width: 2rem;
+}
+
+.appointment-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.appointment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.time-slot,
+.doctor-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #333333;
+    font-size: 1rem;
+}
+
+.time-slot .icon,
+.doctor-name .icon {
+    color: #666666;
+    font-size: 1rem;
+}
+
+.appointment-actions {
+    margin-top: 0.5rem;
+}
+
+.view-documents {
+    color: #0066CC;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.view-documents:hover {
+    text-decoration: underline;
+}
+
+.appointment-date {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    color: #666666;
+    font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 0 1rem;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .request-role-btn,
+    .role-status {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-tab {
+        padding: 0.75rem 1.5rem;
+    }
+
+    .appointment-item {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .appointment-date {
+        position: static;
+        margin-top: 0.5rem;
+    }
+
+    .appointment-details {
+        width: 100%;
+    }
+} 
