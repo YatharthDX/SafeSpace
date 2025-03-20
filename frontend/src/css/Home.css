@@ -251,6 +251,7 @@ body {
   align-items: center;
   padding: 5px;
   transition: all 0.2s ease;
+  outline:none;
 }
 
 .action-button:hover {
@@ -260,6 +261,11 @@ body {
 
 .action-button.active {
   color: #e3b27c;
+  outline:none;
+}
+
+.action-button:focus {
+  outline: none;       
 }
 
 .post-tags {
