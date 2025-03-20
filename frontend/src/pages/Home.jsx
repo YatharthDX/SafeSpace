@@ -7,6 +7,7 @@ import {
   FaShareAlt,
   FaPlus,
   FaTimes,
+  FaTag,
 } from "react-icons/fa";
 import Navbar from "../components/Public/navbar";
 import "../css/Home.css";
@@ -128,6 +129,9 @@ const Home = () => {
     "tag 8",
     "tag 9",
   ];
+  
+  // State for selected tags
+  const [selectedTags, setSelectedTags] = useState([]);
 
   const HandleCreate = () => {
     navigate("/createpost");
@@ -175,7 +179,27 @@ const Home = () => {
     // Clear the input
     setNewComment("");
   };
+  //for selected tags
+  // Handle tag selection
+  const toggleTagSelection = (tag) => {
+    setSelectedTags(prevSelectedTags => {
+      if (prevSelectedTags.includes(tag)) {
+        return prevSelectedTags.filter(t => t !== tag);
+      } else {
+        return [...prevSelectedTags, tag];
+      }
+    });
+  };
 
+
+  // Remove a tag from selected tags
+  const removeSelectedTag = (tag) => {
+    setSelectedTags(prevSelectedTags => 
+      prevSelectedTags.filter(t => t !== tag)
+    );
+  };
+  //for selected tags ends
+  
   return (
     <div
       className={`home-container ${
@@ -209,11 +233,40 @@ const Home = () => {
 
             <div className="tags-list">
               {popularTags.map((tag, index) => (
-                <div key={index} className="tag-item">
+                <div 
+                  key={index} 
+                  className={`tag-item ${selectedTags.includes(tag) ? 'active' : ''}`}
+                  onClick={() => toggleTagSelection(tag)}
+                >
                   {tag}
                 </div>
               ))}
             </div>
+            
+            {/* Selected Tags Section */}
+            {selectedTags.length > 0 && (
+              <div className="selected-tags-section">
+                <div className="selected-tags-header">
+                  <div className="tag-icon">
+                    <FaTag />
+                  </div>
+                  <h2>Selected Tags</h2>
+                </div>
+                <div className="selected-tags-list">
+                  {selectedTags.map((tag, index) => (
+                    <div key={index} className="selected-tag-item">
+                      <span>{tag}</span>
+                      <button 
+                        className="remove-tag-btn" 
+                        onClick={() => removeSelectedTag(tag)}
+                      >
+                        <FaTimes />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Create post button in the sidebar */}
@@ -269,7 +322,10 @@ const Home = () => {
                 {post.tags && post.tags.length > 0 && (
                   <div className="post-tags">
                     {post.tags.map((tag, index) => (
-                      <span key={index} className="tag">
+                      <span 
+                        key={index} 
+                        className="tag"
+                      >
                         {tag}
                       </span>
                     ))}

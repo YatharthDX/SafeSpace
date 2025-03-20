@@ -481,3 +481,108 @@ body {
     width: auto;
   }
 }
+
+
+/* this is styling for selected tags */
+/* Add these new styles to your existing CSS file */
+
+/* Active tag styling - only affects the tag list, not post tags */
+.tag-item.active {
+  background-color: #e3b27c;
+  color: white;
+  border-color: #e3b27c;
+}
+
+/* Selected Tags Section */
+.selected-tags-section {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #e0d6c2;
+}
+
+.selected-tags-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.selected-tags-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.selected-tag-item {
+  background-color: #e3b27c;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: default;
+  border: 1px solid #e3b27c;
+}
+
+.remove-tag-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.remove-tag-btn:hover {
+  transform: scale(1.2);
+}
+
+/* Responsive adjustments for selected tags section */
+@media (max-width: 768px) {
+  .selected-tags-section {
+    margin-top: 15px;
+  }
+  
+  .selected-tags-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    max-height: none;
+  }
+  
+  .selected-tag-item {
+    width: auto;
+  }
+}
+
+/* Scrollbar styling */
+.selected-tags-list::-webkit-scrollbar,
+.left-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.selected-tags-list::-webkit-scrollbar-track,
+.left-sidebar::-webkit-scrollbar-track {
+  background: #f5ead9;
+}
+
+.selected-tags-list::-webkit-scrollbar-thumb,
+.left-sidebar::-webkit-scrollbar-thumb {
+  background-color: #f3dcc1;
+  border-radius: 4px;
+}
+
+.selected-tags-list::-webkit-scrollbar-thumb:hover,
+.left-sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #d4a76a;
+}
+/* seleceted tags ends */
