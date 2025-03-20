@@ -7,7 +7,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #f9f4ef;
+  background-color: #f5ead9;
   color: #333;
   overflow-x: hidden;
 }
@@ -16,15 +16,17 @@ body {
   width: 100%;
   min-height: 100vh;
   position: relative;
+  padding-top: 70px; /* Add padding to account for fixed navbar */
 }
 
 /* Main content layout */
-.main-content {
+.home-main-content {
   display: flex;
-  padding-top: 70px; /* Space for navbar */
   width: 100%;
-  height: calc(100vh - 70px);
-  overflow: hidden; /* Ensure content doesn't overflow */
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  position: relative;
+  padding-left: 220px; /* Add padding to account for sidebar width */
 }
 
 /* Left sidebar styles */
@@ -32,7 +34,7 @@ body {
   width: 220px;
   flex-shrink: 0;
   padding: 20px 15px;
-  background-color: #f9f4ef;
+  background-color: #f5ead9;
   position: fixed;
   top: 70px;
   left: 0;
@@ -40,15 +42,16 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid rgba(224, 168, 120, 0.2);
-  overflow-y: hidden; /* Prevent scrolling in the sidebar */
+  border-right: 1px solid #e0d6c2;
+  overflow-y: auto;
+  z-index: 1;
 }
 
 .sidebar-section {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  height: calc(100% - 70px); /* Make room for the button */
+  height: calc(100% - 70px);
 }
 
 .tag-header {
@@ -67,6 +70,7 @@ body {
 .left-sidebar h2 {
   font-size: 18px;
   font-weight: bold;
+  color: #333;
 }
 
 .tags-list {
@@ -74,65 +78,58 @@ body {
   flex-direction: column;
   gap: 10px;
   overflow-y: auto;
-  max-height: calc(100% - 40px); /* Leave space for the header */
+  max-height: calc(100% - 40px);
 }
 
 .tag-item {
-  background-color: #e6be96;
+  background-color: #fff;
   color: #333;
   padding: 8px 15px;
-  border-radius: 20px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  border: 1px solid #e0d6c2;
 }
 
 .tag-item:hover {
-  background-color: #e0a878;
+  background-color: #e3b27c;
+  color: white;
+  border-color: #e3b27c;
 }
 
-/* Severity tags */
-.severity-low {
-  background-color: #c8e6c9;
-  color: #2e7d32;
-}
-
-.severity-medium {
-  background-color: #fff9c4;
-  color: #f57f17;
-}
-
-.severity-high {
-  background-color: #ffcdd2;
-  color: #c62828;
+.tag-item.active {
+  background-color: #e3b27c;
+  color: white;
+  border-color: #e3b27c;
 }
 
 /* Create post button */
 .create-post-btn {
-  background-color: #e0a878;
+  background-color: #e3b27c;
   color: white;
   border: none;
-  border-radius: 25px;
-  padding: 10px 15px;
+  border-radius: 8px;
+  padding: 12px 20px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
   margin-top: 20px;
   margin-bottom: 20px;
-  width: 100%; /* Make sure it takes full width of the sidebar */
+  width: 100%;
 }
 
 .create-post-btn:hover {
-  background-color: #d49c67;
-  transform: scale(1.03);
+  background-color: #d4a76a;
+  transform: translateY(-1px);
 }
 
 .plus-icon {
@@ -145,24 +142,29 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 20px 20px 0 20px; /* Remove top and bottom padding */
-  overflow-y: auto; /* Enable scrolling */
-  /* margin-left: 220px; Match the width of the sidebar */
-  height: 100%; /* Full height */
-  width: calc(100% - 220px); /* Adjust width to account for the sidebar */
-  background-color: #f9f4ef; /* Match the background color */
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%; /* Take full width of main-content */
+  background-color: #f5ead9;
 }
 
 /* Post styles */
 .post {
   background-color: white;
-  border-radius: 12px;
-  border: 1.5px solid #e0a878;
+  border-radius: 8px;
+  border: 1px solid #e0d6c2;
   padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  max-width: 800px;
-  margin: 0 auto 20px auto; /* Add bottom margin to posts instead */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
+  max-width: 100%;
+  margin: 0 0 20px 0; /* Remove left margin */
+  transition: all 0.2s ease;
+}
+
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .post-header {
@@ -179,13 +181,15 @@ body {
 }
 
 .user-avatar {
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #333;
+  background-color: #f5ead9;
+  border: 2px solid #e0d6c2;
 }
 
 .user-info {
@@ -195,13 +199,14 @@ body {
 }
 
 .username {
-  font-weight: bold;
+  font-weight: 600;
   font-size: 16px;
+  color: #333;
 }
 
 .post-time {
   font-size: 12px;
-  color: #777;
+  color: #666;
 }
 
 .post-content {
@@ -209,37 +214,39 @@ body {
 }
 
 .post-title {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 1.2rem;
+  font-weight: 600;
   margin-bottom: 10px;
-  text-align: left;
+  color: #333;
 }
 
 .post-text {
-  font-size: 14px;
+  font-size: 0.95rem;
   line-height: 1.5;
+  color: #555;
   margin-bottom: 15px;
-  text-align: left;
 }
 
 .post-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0d6c2;
 }
 
 .post-actions {
   display: flex;
-  gap: 15px;
+  gap: 20px;
 }
 
 .action-button {
   background: none;
   border: none;
   cursor: pointer;
-  color: #555;
-  font-size: 16px;
+  color: #666;
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
   padding: 5px;
@@ -247,45 +254,74 @@ body {
 }
 
 .action-button:hover {
-  color: #e0a878;
+  color: #e3b27c;
+  transform: scale(1.1);
 }
 
 .action-button.active {
-  color: #e0a878;
+  color: #e3b27c;
 }
 
 .post-tags {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .tag {
-  background-color: #e6be96;
+  background-color: #f5ead9;
   color: #333;
-  padding: 5px 15px;
+  padding: 4px 12px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 0.8rem;
   font-weight: 500;
+  border: 1px solid #e0d6c2;
+}
+
+/* Scrollbar styling */
+.posts-container::-webkit-scrollbar,
+.left-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.posts-container::-webkit-scrollbar-track,
+.left-sidebar::-webkit-scrollbar-track {
+  background: #f5ead9;
+}
+
+.posts-container::-webkit-scrollbar-thumb,
+.left-sidebar::-webkit-scrollbar-thumb {
+  background-color: #e3b27c;
+  border-radius: 4px;
+}
+
+.posts-container::-webkit-scrollbar-thumb:hover,
+.left-sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #d4a76a;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .home-container {
+    padding-top: 60px;
+  }
+
+  .main-content {
+    flex-direction: column;
+    height: auto;
+    padding-left: 0; /* Remove padding on mobile */
+  }
+
   .left-sidebar {
     position: static;
     width: 100%;
     height: auto;
     padding: 15px;
     border-right: none;
-    border-bottom: 1px solid rgba(224, 168, 120, 0.2);
-  }
-  
-  .main-content {
-    flex-direction: column;
-    height: auto;
+    border-bottom: 1px solid #e0d6c2;
+    max-height: 200px;
   }
   
   .posts-container {
-    margin-left: 0;
     width: 100%;
     height: auto;
   }
@@ -300,22 +336,4 @@ body {
   .tag-item {
     width: auto;
   }
-}
-
-/* Scrollbar styling */
-.posts-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-.posts-container::-webkit-scrollbar-track {
-  background: #f9f4ef;
-}
-
-.posts-container::-webkit-scrollbar-thumb {
-  background-color: #e0a878;
-  border-radius: 4px;
-}
-
-.posts-container::-webkit-scrollbar-thumb:hover {
-  background-color: #d49c67;
 }
