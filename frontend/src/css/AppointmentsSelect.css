@@ -184,6 +184,7 @@ html, body {
   border-radius: 8px;
   cursor: pointer;
   text-align: center;
+  text-justify: center;
   font-size: 0.9rem;
   transition: all 0.2s ease;
 }

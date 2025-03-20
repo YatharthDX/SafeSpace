@@ -7,6 +7,7 @@
   height: 100vh;
   background-color: #f5ead9;
   font-family: Arial, sans-serif;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 /* Content layout */
@@ -15,6 +16,8 @@
   padding: 20px;
   display: flex;
   flex: 1;
+  gap: 20px;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 /* Sidebar styles */
@@ -23,29 +26,40 @@
   background-color: #f5ead9;
   padding: 20px 0;
   border-right: 1px solid #e0d6c2;
+  flex-shrink: 0;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
-  padding: 10px 20px;
+  padding: 12px 20px;
   margin-bottom: 5px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .sidebar-item:hover {
   background-color: #e0d6c2;
 }
 
+.sidebar-item.active {
+  background-color: #e3b27c;
+  color: white;
+}
+
 .sidebar-icon {
   margin-right: 10px;
+  font-size: 1.2rem;
 }
 
 /* Main content styles */
 .main-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevent flex item from overflowing */
   padding: 20px;
-  overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .header h1 {
@@ -63,11 +77,13 @@
 /* Calendar styles */
 .calendar-container {
   background-color: #fff;
-  border-radius: 4px; /* Reduced from 8px for more rectangular look */
-  overflow-y: auto; /* Added scrolling */
-  max-height: calc(100vh - 200px); /* Set max height with room for header */
+  border-radius: 4px;
+  overflow: hidden;
+  max-height: calc(100vh - 200px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 800px; /* Limit maximum width */
 }
 
 .calendar-header {
@@ -114,28 +130,35 @@
   grid-template-columns: repeat(7, 1fr);
   background-color: #e3b27c;
   color: #fff;
+  width: 100%;
 }
 
 .weekday {
-  padding: 10px;
+  padding: 8px; /* Reduced from 10px */
   text-align: center;
   font-weight: bold;
+  box-sizing: border-box;
+  font-size: 0.9rem; /* Added smaller font size */
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   background-color: #fff;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .calendar-day {
   border: 1px solid #eee;
-  min-height: 80px;
-  padding: 5px;
+  min-height: 60px; /* Reduced from 80px */
+  padding: 3px; /* Reduced from 5px */
   position: relative;
   cursor: pointer;
   transition: background-color 0.2s;
-  border-radius: 0; /* Added for rectangular shape */
+  border-radius: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .calendar-day:hover:not(.inactive):not(.past) {
@@ -149,9 +172,10 @@
 
 .day-number {
   display: block;
-  padding: 5px;
+  padding: 3px; /* Reduced from 5px */
   color: #333;
-  border-radius: 0; /* Added for rectangular shape */
+  border-radius: 0;
+  font-size: 0.9rem; /* Added smaller font size */
 }
 
 .calendar-day.inactive {
@@ -175,16 +199,16 @@
 .slot-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 2px;
+  gap: 1px; /* Reduced from 2px */
 }
 
 .slot {
   background-color: #e3b27c;
   color: #fff;
-  padding: 3px 5px;
-  border-radius: 0; /* Changed from 3px to 0 for rectangular shape */
-  font-size: 0.8rem;
-  margin-bottom: 2px;
+  padding: 2px 4px; /* Reduced from 3px 5px */
+  border-radius: 0;
+  font-size: 0.7rem; /* Reduced from 0.8rem */
+  margin-bottom: 1px; /* Reduced from 2px */
 }
 
 .slot-01 {
@@ -201,9 +225,10 @@
 
 /* Right sidebar styles */
 .right-sidebar {
-  width: 280px;
+  width: 280px; /* Increased from 280px */
   background-color: #f5ead9;
-  padding: 20;
+  padding: 20px;
+  flex-shrink: 0; /* Prevent right sidebar from shrinking */
 }
 
 .slot-button {
