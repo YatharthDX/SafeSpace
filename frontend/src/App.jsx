@@ -13,6 +13,7 @@ import Signup from "./pages/Signup";
 import CreatePostPage from "./pages/CreatePost";
 import AvailabilityCalendar from "./pages/CounselorAvailability";
 import AppointmentRequests from "./pages/AppointmentRequests";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/createpost" element={<CreatePostPage/>} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
+
         </Routes>
       
       
