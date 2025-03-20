@@ -1,12 +1,68 @@
 /* ChatPage.css */
-.chat-body{
-    display: flex;
-    height: 100%;
+.chat-body {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+  flex-direction: column;
 }
+
 .chat-container {
-    display: flex;
-    height: 100vh;
-  }
+  display: flex;
+  margin-top: 60px; /* Adjust based on navbar height */
+  height: calc(100vh - 60px); /* Ensure it takes remaining space */
+  overflow: hidden;
+}
+
+/* Chat List (Left Sidebar) */
+.chat-list {
+  width: 30%;
+  background: #f8f8f8;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Chat Window (Right Section) */
+.chat-window {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-left: 1px solid #ddd;
+  height: 100%;
+}
+
+/* Chat Header */
+.chat-header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: #f8f8f8;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Messages Section */
+.chat-messages {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+/* Input Box */
+.chat-input {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background: white;
+  position: sticky;
+  bottom: 0;
+}
   
   /* Chat List (Left Sidebar) */
   .chat-list {

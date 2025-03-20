@@ -77,7 +77,7 @@ html, body {
 }
 
 .appointment-container {
-  max-width: 1800px; /* Increased from 1200px */
+  max-width: 1800px; 
   margin: 0 auto;
   padding: 6rem 2rem 2rem 2rem; /* Added top padding (4rem) */
   flex: 1;

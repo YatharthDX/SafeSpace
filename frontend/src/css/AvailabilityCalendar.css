@@ -11,6 +11,8 @@
   
   /* Content layout */
   .content-container {
+    margin-top: 60px; /* Same as navbar height */
+    padding: 20px;
     display: flex;
     flex: 1;
   }
