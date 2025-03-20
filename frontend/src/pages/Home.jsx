@@ -11,8 +11,6 @@ import Navbar from "../components/Public/navbar";
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 
-
-
 const Home = () => {
   // Sample posts data based on your screenshot
   const posts = [
@@ -57,9 +55,9 @@ const Home = () => {
     "tag 9",
   ];
 
-  const HandleCreate=() => {
+  const HandleCreate = () => {
     navigate("/createpost");
-  }  
+  };
   // State for liked posts
   const [likedPosts, setLikedPosts] = useState({});
 
@@ -108,12 +106,11 @@ const Home = () => {
           </div>
 
           {/* Create post button in the sidebar */}
-          
-         
+
           <button className="create-post-btn" onClick={HandleCreate}>
             <FaPlus className="plus-icon" />
             <span>Create Post</span>
-          </Link>
+          </button>
         </div>
 
         {/* Main posts area */}

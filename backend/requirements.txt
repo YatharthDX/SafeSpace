@@ -3,5 +3,6 @@ uvicorn
 pymongo
 redis
 passlib[bcrypt]
-pyjwt
+python-jose
 pydantic[email]
+dotenv
