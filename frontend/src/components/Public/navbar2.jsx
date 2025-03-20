@@ -2,7 +2,7 @@ import React from "react";
 import { FaSearch, FaCalendarAlt, FaComments, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "../../css/navbar.css";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo_edited.png";
 
 const Navbar2 = () => {
   return (
