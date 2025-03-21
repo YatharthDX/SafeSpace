@@ -53,4 +53,9 @@ class AvailableSlot(BaseModel):
 
 class RoleRequest(BaseModel):
     email: str
+
+class SlotUpdate(BaseModel):
+    counselor_email: str
+    date: str
+    time_slots: List[str]
     
