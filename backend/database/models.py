@@ -37,11 +37,13 @@ class LoginRequest(BaseModel):
     password: str
 
 class Appointment(BaseModel):
+    user_name: str
     user_email: EmailStr
     counselor_email: EmailStr
     date: datetime
     time_slot: str
     description: str
+    contact_no: str
     status: str = "pending"
 
 class AvailableSlot(BaseModel):

@@ -26,7 +26,7 @@ const CounselorCard = ({ counselor }) => {
       <div className="counselor-info">
         <h3 className="counselor-name">{counselor.name}</h3>
         <p className="counselor-specialization">{counselor.description }</p>
-        <p className="counselor-experience">{counselor.experience} years experience</p>
+        {/* <p className="counselor-experience">{counselor.experience} years experience</p> */}
       </div>
       <div className="counselor-actions">
         <button onClick={handleBooking} className="book-button">
