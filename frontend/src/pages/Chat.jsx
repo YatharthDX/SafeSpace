@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import ChatBox from "/src/components/Chat/ChatBox.jsx";
 import Messages from "/src/components/Chat/Messages.jsx";
 import { getUsers } from "../services/api";
+import socketService from "../services/socket";
 import "/src/css/Chat.css"; // Import Chat.css
 
 const Chat = () => {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -33,6 +35,24 @@ const Chat = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    // Get the current user's ID from localStorage or your auth context
+    const currentUserId = localStorage.getItem('userId'); // Adjust this based on how you store the user ID
+    if (currentUserId) {
+      socketService.connect(currentUserId);
+    }
+
+    // Listen for online users updates
+    socketService.onOnlineUsers((users) => {
+      setOnlineUsers(users);
+    });
+
+    // Cleanup on unmount
+    return () => {
+      socketService.disconnect();
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="chat-body">
@@ -52,6 +72,7 @@ const Chat = () => {
           chats={chats}
           setSelectedChat={setSelectedChat}
           selectedChat={selectedChat}
+          onlineUsers={onlineUsers}
         />
         <Messages selectedChat={selectedChat} />
       </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaImage } from "react-icons/fa";
 import { getMessages, sendMessage } from "../../services/api";
+import socketService from "../../services/socket";
 
 const Messages = ({ selectedChat }) => {
   const [messages, setMessages] = useState([]);
@@ -34,6 +35,20 @@ const Messages = ({ selectedChat }) => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    // Listen for new messages
+    socketService.onNewMessage((newMessage) => {
+      if (selectedChat && (newMessage.senderId === selectedChat.id || newMessage.receiverId === selectedChat.id)) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    });
+
+    // Cleanup on unmount
+    return () => {
+      socketService.socket?.off("newMessage");
+    };
+  }, [selectedChat]);
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !selectedChat) return;
@@ -41,10 +56,13 @@ const Messages = ({ selectedChat }) => {
     try {
       const messageData = {
         text: newMessage,
+        receiverId: selectedChat.id,
       };
       const sentMessage = await sendMessage(selectedChat.id, messageData);
       setMessages([...messages, sentMessage]);
       setNewMessage("");
+      // Emit the message through socket
+      socketService.sendMessage(messageData);
     } catch (error) {
       console.error("Error sending message:", error);
     }
