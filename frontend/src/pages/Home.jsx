@@ -179,8 +179,8 @@ const Home = () => {
     // Clear the input
     setNewComment("");
   };
-  //for selected tags
-  // Handle tag selection
+  
+  // Handle tag selection (toggle)
   const toggleTagSelection = (tag) => {
     setSelectedTags(prevSelectedTags => {
       if (prevSelectedTags.includes(tag)) {
@@ -190,15 +190,6 @@ const Home = () => {
       }
     });
   };
-
-
-  // Remove a tag from selected tags
-  const removeSelectedTag = (tag) => {
-    setSelectedTags(prevSelectedTags => 
-      prevSelectedTags.filter(t => t !== tag)
-    );
-  };
-  //for selected tags ends
   
   return (
     <div
@@ -242,31 +233,6 @@ const Home = () => {
                 </div>
               ))}
             </div>
-            
-            {/* Selected Tags Section */}
-            {selectedTags.length > 0 && (
-              <div className="selected-tags-section">
-                <div className="selected-tags-header">
-                  <div className="tag-icon">
-                    <FaTag />
-                  </div>
-                  <h2>Selected Tags</h2>
-                </div>
-                <div className="selected-tags-list">
-                  {selectedTags.map((tag, index) => (
-                    <div key={index} className="selected-tag-item">
-                      <span>{tag}</span>
-                      <button 
-                        className="remove-tag-btn" 
-                        onClick={() => removeSelectedTag(tag)}
-                      >
-                        <FaTimes />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Create post button in the sidebar */}
