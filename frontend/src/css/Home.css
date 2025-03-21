@@ -100,9 +100,9 @@ body {
 }
 
 .tag-item:hover {
-  background-color: #e3b27c;
+  background-color: #e2b98c;
   color: white;
-  border-color: #e3b27c;
+  border-color: #e2b98c;
 }
 
 .tag-item.active {
@@ -482,8 +482,3 @@ body {
   }
 }
 
-.tag-item.active {
-  background-color: #e3b27c;
-  color: white;
-  border-color: #e3b27c;
-}
