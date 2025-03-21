@@ -45,8 +45,6 @@
 
 // export default SinglePost;
 
-
-
 // import React, { useState } from "react";
 // import { FaRegUser, FaRegComment, FaHeart, FaRegHeart } from "react-icons/fa";
 // import "../../css/SinglePost.css";
@@ -91,10 +89,14 @@
 
 // export default SinglePost;
 
-
-
 import React, { useState } from "react";
-import { FaRegUser, FaRegComment, FaHeart, FaRegHeart, FaShareAlt } from "react-icons/fa";
+import {
+  FaRegUser,
+  FaRegComment,
+  FaHeart,
+  FaRegHeart,
+  FaShareAlt,
+} from "react-icons/fa";
 import "../../css/SinglePost.css";
 
 const SinglePost = ({ author, time, title, content, tags = [] }) => {

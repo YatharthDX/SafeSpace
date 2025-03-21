@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, UploadFile, File
 from database.models import Appointment
 from services.appointment_service import get_counselors_service, get_available_slots_service, create_appointment_service, update_appointment_status_service, get_pending_requests_service, update_available_slots_service
 from utils.jwt import get_current_user
 from typing import List
+
 
 router = APIRouter()
 
@@ -29,3 +30,5 @@ def get_pending_requests(current_user: dict = Depends(get_current_user)):
 @router.post("/counselors/available_slots")
 def update_available_slots(counselor_email: str, date: str, time_slots: List[str] = Body(...), current_user: dict = Depends(get_current_user)):
     return update_available_slots_service(counselor_email, date, time_slots, current_user)
+
+

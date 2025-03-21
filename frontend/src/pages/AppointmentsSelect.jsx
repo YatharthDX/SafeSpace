@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../css/AppointmentsSelect.css";
-import Navbar from "../components/Public/navbar";
+import Navbar2 from "../components/Public/navbar2";
 import { useNavigate, useLocation } from "react-router-dom";
 
 function AppointmentSelect() {
@@ -55,10 +55,16 @@ function AppointmentSelect() {
 
   // Time slots
   const timeSlots = [
-    "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", 
-    "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM"
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "12:00 PM",
+    "12:30 PM",
+    "1:00 PM",
+    "1:30 PM",
+    "2:00 PM",
+    "2:30 PM",
   ];
-  
 
   // Generate calendar data
   const getCalendarDays = () => {
@@ -115,7 +121,7 @@ function AppointmentSelect() {
 
   return (
     <div className="appointment-page">
-      <Navbar />
+      <Navbar2 />
 
       <div className="appointment-container">
         <div className="appointment-content">

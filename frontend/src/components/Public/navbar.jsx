@@ -7,11 +7,10 @@ import logo from "../../assets/logo_edited.png";
 const Navbar = () => {
   return (
     <nav className="navbar">
-      {/* Left Section - Logo & Brand Name */}
       <div className="navbar-left">
         <img src={logo} alt="SafeSpace Logo" className="logo" />
-        <Link to="/home" className="brand-name">
-          SafeSpace
+        <Link to="/home">
+          <h1 className="brand-name">SafeSpace</h1>
         </Link>
       </div>
 
