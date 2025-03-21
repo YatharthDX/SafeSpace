@@ -55,7 +55,7 @@ def create_appointment_service(appointment: Appointment, current_user: dict):
 def update_appointment_status_service(appointment_id: str, status: str, current_user: dict):
     if appointments_collection is None:
         raise HTTPException(status_code=503, detail="Service unavailable")
-    if current_user["role"] != "counselor":
+    if current_user["role"] != "counsellor":
         raise HTTPException(status_code=403, detail="Only counselors can update appointment status")
     if status not in ["accepted", "rejected"]:
         raise HTTPException(status_code=400, detail="Invalid status. Use 'accepted' or 'rejected'.")
@@ -73,7 +73,7 @@ def update_appointment_status_service(appointment_id: str, status: str, current_
 def get_pending_requests_service(current_user: dict):
     if appointments_collection is None:
         raise HTTPException(status_code=503, detail="Service unavailable")
-    if current_user["role"] != "counselor":
+    if current_user["role"] != "counsellor":
         raise HTTPException(status_code=403, detail="Only counselors can view appointment requests")
     pending_requests = [
         {**appt, "_id": str(appt["_id"])}

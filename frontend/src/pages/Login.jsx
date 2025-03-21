@@ -27,6 +27,11 @@ const Login = () => {
                 credentials: 'include',
             });
 
+            const data = await response.json();
+            if (data.access_token) {
+                localStorage.setItem("token", data.access_token);
+            }
+
             if (!response.ok) {
                 const data = await response.json();
                 throw new Error(data.message || 'Invalid email or password');

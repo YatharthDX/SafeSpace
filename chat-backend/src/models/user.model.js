@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    fullName: {
+    name: {
       type: String,
       required: true,
     },
@@ -16,14 +16,20 @@ const userSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
-    profilePic: {
+    role: {
       type: String,
-      default: "",
+      default: "student",
     },
+    // created_at: {
+    //   type: String,
+    // },
+    // updated_at: {
+    //   type: String,
+    // },
   },
-  { timestamps: true }
+  { timestamps: false }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema,"users");
 
 export default User;

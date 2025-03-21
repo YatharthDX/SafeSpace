@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Body, UploadFile, File
+from fastapi import APIRouter, Depends, Body
 from database.models import Appointment
 from services.appointment_service import get_counselors_service, get_available_slots_service, create_appointment_service, update_appointment_status_service, get_pending_requests_service, update_available_slots_service
 from utils.jwt import get_current_user
