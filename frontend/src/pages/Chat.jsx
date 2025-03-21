@@ -17,7 +17,7 @@ const Chat = () => {
         // Transform users data to match your chat format
         const transformedUsers = users.map(user => ({
           id: user._id,
-          name: user.username,
+          name: user.name,
           message: "Click to start chatting",
           unread: 0,
           avatar: user.profilePic || "https://avatar.iran.liara.run/public",
