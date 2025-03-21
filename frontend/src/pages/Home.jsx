@@ -14,7 +14,6 @@ import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  // Sample posts data based on your screenshot
   const posts = [
     {
       id: 1,
