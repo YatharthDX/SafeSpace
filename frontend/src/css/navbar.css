@@ -43,7 +43,7 @@
 .navbar-center {
   display: flex;
   align-items: center;
-  position: relative;
+  position:relative;
   width: 40%;
   max-width: 600px;
   margin-top: 10px; /* Shifts the search bar downward */
@@ -56,7 +56,7 @@
   border: 1px solid #e0e0e0;
   font-size: 14px;
   outline: none;
-  background-color: white; /* Ensures the search bar is white */
+  background-color: white; /* Ensures the search bar is white */;
 }
 
 .search-btn {
