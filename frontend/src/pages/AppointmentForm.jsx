@@ -48,23 +48,112 @@ function AppointmentForm() {
   const [contactNumber, setContactNumber] = useState("");
   const [email, setEmail] = useState("");
   const [problemDescription, setProblemDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  // 3. Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Do something with the form data
-    alert(
-      `Appointment Confirmed!\n\n` +
-        `Counselor: ${counselor?.name || "N/A"}\n` +
-        `Date: ${selectedDate || "N/A"}\n` +
-        `Time: ${selectedTime || "N/A"}\n\n` +
-        `Name: ${name}\nContact: ${contactNumber}\nEmail: ${email}`
-    );
-    // Navigate somewhere or make an API call here
-    // navigate("/some-other-page");
+  // Format time slot as expected by backend
+  const formatTimeForBackend = (timeStr) => {
+    if (!timeStr) return "";
+    return timeStr;
   };
 
-  // 4. Optionally handle "Back" button
+  // Format date as expected by backend (YYYY-MM-DD)
+  const formatDateForBackend = (dateStr) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    return date.toISOString(); // Returns YYYY-MM-DD
+  };
+
+  // 3. Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      // Prepare appointment data
+      const appointmentData = {
+        counselor_email: counselor?.email || "counsellor1@iitk.ac.in",
+        date: formatDateForBackend(selectedDate),
+        time_slot: formatTimeForBackend(selectedTime),
+        user_name: name,
+        contact_no: contactNumber,
+        user_email: email,
+        description: problemDescription,
+        status: "pending"
+      };
+      // user_name: str
+      // user_email: EmailStr
+      // counselor_email: EmailStr
+      // date: datetime
+      // time_slot: str
+      // description: str
+      // contact_no: str
+      // status: str = "pending"
+
+      console.log("Sending appointment data:", appointmentData);
+
+      const token = localStorage.getItem("token");
+
+      // Send POST request to backend with credentials to include HttpOnly cookies
+      const response = await fetch("http://127.0.0.1:8000/appointments/appointments", {
+        method: "POST",
+        credentials: "include", // This ensures cookies are sent with the request
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // Ensure token is available
+        },
+        body: JSON.stringify(appointmentData)
+      });
+
+      console.log("Response status:", response.status);
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      if (!response.ok) {
+        // If the error is due to authentication, redirect to login
+        if (response.status === 401) {
+          setError("You must be logged in to book an appointment");
+          setTimeout(() => {
+            navigate("/", { 
+              state: { 
+                redirectAfterLogin: "/appointmentform",
+                appointmentData: { counselor, selectedDate, selectedTime }
+              } 
+            });
+          }, 2000);
+          return;
+        }
+        throw new Error(data.detail || "Failed to book appointment");
+      }
+
+      // Success - show message and redirect
+      alert(
+        `Appointment Confirmed!\n\n` +
+          `Counselor: ${counselor?.name || "N/A"}\n` +
+          `Date: ${selectedDate || "N/A"}\n` +
+          `Time: ${selectedTime || "N/A"}\n\n` +
+          `Appointment ID: ${data.appointment_id || "Generated"}`
+      );
+      
+      // Navigate to a confirmation page or dashboard
+      navigate("/appointments/confirmation", { 
+        state: { 
+          appointmentId: data.appointment_id,
+          counselorName: counselor?.name,
+          date: selectedDate,
+          time: selectedTime
+        } 
+      });
+    } catch (err) {
+      setError(err.message || "An error occurred while booking the appointment");
+      console.error("Appointment booking error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 4. Handle "Back" button
   const handleBack = () => {
     navigate(-1); // Go back one page
   };
@@ -90,7 +179,7 @@ function AppointmentForm() {
           </p>
           {/* You can combine date & time into a single string, or show them separately */}
           <p>
-            {selectedTime || "02:30pm"} - {add30Minutes(selectedTime)},{" "}
+            {selectedTime || "02:30pm"} - {add30Minutes(selectedTime || "02:30 PM")},{" "}
             {selectedDate || "Thursday, August 10th"}
           </p>
         </div>
@@ -98,6 +187,7 @@ function AppointmentForm() {
         {/* RIGHT PANEL - Form to collect user details */}
         <div className="appointment-details">
           <h3>Enter Details</h3>
+          {error && <div className="error-message">{error}</div>}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Name</label>
@@ -142,8 +232,12 @@ function AppointmentForm() {
               />
             </div>
 
-            <button type="submit" className="confirm-button">
-              Confirm
+            <button 
+              type="submit" 
+              className="confirm-button" 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Processing..." : "Confirm"}
             </button>
           </form>
         </div>
