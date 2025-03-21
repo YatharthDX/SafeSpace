@@ -16,6 +16,7 @@ def get_counselors():
     return get_counselors_service()
 
 @router.get("/counselors/available_slots")
+@router.get("/counselors/available_slots")
 def get_available_slots(counselor_email: str, date: str):
     return get_available_slots_service(counselor_email, date)
 

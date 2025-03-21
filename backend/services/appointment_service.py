@@ -32,7 +32,7 @@ def get_available_slots_service(counselor_email: str, date: str):
     if available_slots_collection is None:
         raise HTTPException(status_code=503, detail="Service unavailable")
     try:
-        date_obj = datetime.strptime(date, "%Y-%m-%d")
+        date_obj = datetime.strptime(date, "%d-%m-%Y")
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD.")
     available_slots = available_slots_collection.find_one({
@@ -96,10 +96,11 @@ def get_pending_requests_service(current_user: dict):
 def update_available_slots_service(counselor_email: str, date: str, time_slots: List[str], current_user: dict):
     if available_slots_collection is None:
         raise HTTPException(status_code=503, detail="Service unavailable")
-    if current_user["role"] != "counsellor" or current_user["email"] != counselor_email:
+    if current_user["role"] != "counsellor":
+        # print(current_user)
         raise HTTPException(status_code=403, detail="Only counselors can update their own slots")
     try:
-        date_obj = datetime.strptime(date, "%Y-%m-%d")
+        date_obj = datetime.strptime(date, "%d-%m-%Y")
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD.")
     available_slots_collection.update_one(
@@ -108,3 +109,5 @@ def update_available_slots_service(counselor_email: str, date: str, time_slots: 
         upsert=True
     )
     return {"message": "Available slots updated successfully"}
+
+
