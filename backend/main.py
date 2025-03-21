@@ -8,9 +8,8 @@ from database.connection import users_collection, appointments_collection, avail
 from utils.config import EMAIL_USERNAME, EMAIL_PASSWORD
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("pymongo").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
-
 app = FastAPI()
 
 # Add CORS middleware first
