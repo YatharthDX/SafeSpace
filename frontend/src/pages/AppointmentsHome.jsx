@@ -30,6 +30,7 @@ const Appointments = () => {
                         return {
                             id: index + 1,
                             name: counselor.name,
+                            email: counselor.email,
                             description: counselor.description || "No specialization",
                             // experience: Math.floor(Math.random() * 10) + 5, // Dummy experience
                             profile_picture: profilePicture,
