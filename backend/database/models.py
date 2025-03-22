@@ -59,6 +59,7 @@ class BlogCreate(BaseModel):
     title: str
     content: str
     author: str
+    author_id: str
     relevance_tags: List[str] = []
     severity_tag: str
     image_url: Optional[str] = None
@@ -68,6 +69,7 @@ class Blog(BaseModel):
     title: str
     content: str
     author: str
+    author_id: str
     relevance_tags: List[str] = []
     severity_tag: str
     image_url: Optional[str] = None
@@ -95,12 +97,14 @@ class Blog(BaseModel):
 class CommentCreate(BaseModel):
     content: str
     author: str
+    author_id: str
 
 class Comment(BaseModel):
     id: str = Field(alias="_id")
     blog_id: str
     content: str
     author: str
+    author_id: str
     created_at: datetime
 
     class Config:
@@ -111,6 +115,7 @@ class Comment(BaseModel):
                 "blog_id": "60d21b4967d0d8992e610c85",
                 "content": "Thank you for sharing your story",
                 "author": "Jane Smith",
+                "author_id": "60d21b4967d0d8992e610c85",
                 "created_at": "2021-06-22T19:40:09.603Z"
             }
         }
@@ -125,4 +130,7 @@ class SlotUpdate(BaseModel):
 
 class StatusUpdate(BaseModel):
     status: str
-    
+
+class LikedPosts(BaseModel):
+    user_id: str
+    post_ids: List[str]

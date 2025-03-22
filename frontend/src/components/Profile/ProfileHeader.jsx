@@ -2,6 +2,7 @@ import React from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 
 const ProfileHeader = ({ username, hasRequestedRole, onRoleRequest }) => {
+    
     return (
         <div className="profile-header">
             <div className="profile-info">
