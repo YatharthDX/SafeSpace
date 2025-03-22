@@ -2,21 +2,22 @@ import Navbar2 from "../components/Public/navbar2";
 import React, { useState, useEffect } from "react";
 import ChatBox from "/src/components/Chat/ChatBox.jsx";
 import Messages from "/src/components/Chat/Messages.jsx";
+import { getCurrentUser } from "../services/pyapi";
 import { getUsers } from "../services/api";
 import socketService from "../services/socket";
-import "/src/css/Chat.css"; // Import Chat.css
+import "/src/css/Chat.css";
 
 const Chat = () => {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [loading, setLoading] = useState(true);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const users = await getUsers();
-        // Transform users data to match your chat format
         const transformedUsers = users.map(user => ({
           id: user._id,
           name: user.name,
@@ -26,7 +27,7 @@ const Chat = () => {
         }));
         setChats(transformedUsers);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('❌ Error fetching users:', error);
       } finally {
         setLoading(false);
       }
@@ -36,19 +37,34 @@ const Chat = () => {
   }, []);
 
   useEffect(() => {
-    // Get the current user's ID from localStorage or your auth context
-    const currentUserId = localStorage.getItem('userId'); // Adjust this based on how you store the user ID
-    if (currentUserId) {
-      socketService.connect(currentUserId);
-    }
+    const setupSocket = async () => {
+      try {
+        // Get current user's MongoDB ID from the server
+        const currentUser = await getCurrentUser();
+        console.log("🔗 Current user data:", currentUser);
+        
+        if (!currentUser._id) {
+          console.error("⚠️ No MongoDB ID found for current user");
+          return;
+        }
 
-    // Listen for online users updates
-    socketService.onOnlineUsers((users) => {
-      setOnlineUsers(users);
-    });
+        console.log("🔗 Connecting to socket with userId:", currentUser._id);
+        socketService.connect(currentUser._id);
+        setCurrentUserId(currentUser._id);
 
-    // Cleanup on unmount
+        socketService.onOnlineUsers((users) => {
+          console.log("✅ Online users received:", users);
+          setOnlineUsers(users);
+        });
+      } catch (error) {
+        console.error("❌ Error setting up socket:", error);
+      }
+    };
+
+    setupSocket();
+
     return () => {
+      console.log("🔌 Disconnecting from socket...");
       socketService.disconnect();
     };
   }, []);

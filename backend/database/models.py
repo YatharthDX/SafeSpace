@@ -44,7 +44,7 @@ class Appointment(BaseModel):
     time_slot: str
     description: str
     contact_no: str
-    status: str = "pending"
+    status: str
 
 class AvailableSlot(BaseModel):
     counselor_email: EmailStr

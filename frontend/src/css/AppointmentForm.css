@@ -243,3 +243,127 @@
     transform: rotate(360deg);
   }
 }
+
+/* SafeSpace Custom Alert Modal CSS */
+.safespace-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.safespace-modal {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  max-width: 450px;
+  width: 90%;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.safespace-modal-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.safespace-modal-title {
+  font-size: 1.8rem;
+  color: #333;
+  font-weight: 700;
+  margin: 0;
+}
+
+.safespace-modal-body {
+  margin-bottom: 2rem;
+}
+
+.safespace-appointment-info {
+  background-color: #f5ead9;
+  border-radius: 8px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.safespace-info-item {
+  margin-bottom: 0.8rem;
+  display: flex;
+}
+
+.safespace-info-label {
+  font-weight: 500;
+  width: 100px;
+  color: #444;
+}
+
+.safespace-info-value {
+  flex: 1;
+  color: #333;
+}
+
+.safespace-appointment-id {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.8rem;
+  text-align: center;
+}
+
+.safespace-modal-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #e3b27c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.safespace-modal-button:hover {
+  background-color: #d4a76a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.safespace-modal-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 576px) {
+  .safespace-modal {
+    padding: 1.5rem;
+  }
+  
+  .safespace-modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .safespace-info-item {
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+  
+  .safespace-info-label {
+    width: 100%;
+    margin-bottom: 0.3rem;
+  }
+}
