@@ -16,6 +16,7 @@ try:
     role_requests_collection = db["role_requests"]
     blogs_collection = db["blogs_collection"]
     comments_collection = db["comments_collection"]
+    liked_posts_collection = db["liked_posts"]
     logger.info("MongoDB connection successful")
 except Exception as e:
     logger.error(f"MongoDB connection error: {e}")

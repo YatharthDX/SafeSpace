@@ -4,16 +4,25 @@ import { IoMdArrowBack } from "react-icons/io";
 import { BsTag } from "react-icons/bs";
 import "../css/CreatePost.css";
 import Navbar2 from "../components/Public/navbar2";
+import { createPost, uploadPostImage } from "../api/posts";
+import { useNavigate } from "react-router-dom";
+import { Fetch } from "socket.io-client";
+import { getCurrentUser } from "../chat-services/pyapi";
 
 const CreatePost = () => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
+  const [severityTag, setSeverityTag] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   // Available tags
   const availableTags = [
-    "tag 1", "tag 2", "tag 3", "tag 4", "tag 5",
-    "tag 6", "tag 7", "tag 8", "tag 9"
+    "anxiety", "depression", "stress", "academic", "social",
+    "relationships", "family", "health", "career"
   ];
 
   // Handle tag selection
@@ -25,26 +34,53 @@ const CreatePost = () => {
     }
   };
 
+  // Handle image selection
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+    }
+  };
+
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
 
-    // Create post object
-    const newPost = {
-      author: "Current User", // Would normally come from auth context
-      time: new Date().toLocaleString(),
-      title,
-      content,
-      tags: selectedTags
-    };
+    try {
+      // Create post data
+      const currentUser = await getCurrentUser();
+      console.log(currentUser);
+      const postData = {
+        title,
+        content,
+        author_id: currentUser._id,
+        author: currentUser.name, // This should come from auth context
+        relevance_tags: selectedTags,
+        severity_tag: severityTag
+      };
 
-    console.log("New post:", newPost);
-    // Here you would typically send this to your API
+      // Create the post
+      const newPost = await createPost(postData);
 
-    // Reset form
-    setTitle("");
-    setContent("");
-    setSelectedTags([]);
+      // If there's an image, upload it
+      if (imageFile) {
+        await uploadPostImage(newPost._id, imageFile);
+      }
+
+      // Reset form and navigate to home
+      setTitle("");
+      setContent("");
+      setSelectedTags([]);
+      setSeverityTag("");
+      setImageFile(null);
+      navigate("/home");
+    } catch (err) {
+      setError(err.message || "Failed to create post. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -54,7 +90,7 @@ const CreatePost = () => {
         <div className="create-post-container">
           {/* Header */}
           <div className="create-post-header">
-            <button className="back-button">
+            <button className="back-button" onClick={() => navigate("/home")}>
               <IoMdArrowBack />
             </button>
             <h2>Create Post</h2>
@@ -64,12 +100,15 @@ const CreatePost = () => {
             {/* Post Form */}
             <div className="post-form-section">
               <form onSubmit={handleSubmit}>
+                {error && <div className="error-message">{error}</div>}
+                
                 <input
                   type="text"
                   className="post-title-input"
                   placeholder="Title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  required
                 />
 
                 <div className="post-content-container">
@@ -78,17 +117,27 @@ const CreatePost = () => {
                     placeholder="How are you feeling....."
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
+                    required
                   ></textarea>
 
                   <div className="post-media-actions">
-                    <button type="button" className="media-button">
+                    <label className="media-button">
                       <FaImage />
-                    </button>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageSelect}
+                        style={{ display: 'none' }}
+                      />
+                    </label>
                     <button type="button" className="media-button-2">
                       <FaMicrophone />
                     </button>
                   </div>
                 </div>
+
+                {/* Severity Tag Selection */}
+                
 
                 {/* Selected Tags Display */}
                 <div className="selected-tags-section">
@@ -103,8 +152,12 @@ const CreatePost = () => {
                 </div>
 
                 <div className="post-submit-container">
-                  <button type="submit" className="post-submit-button">
-                    Post
+                  <button 
+                    type="submit" 
+                    className="post-submit-button"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Posting..." : "Post"}
                   </button>
                 </div>
               </form>

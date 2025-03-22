@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaRegUser,
   FaRegComment,
@@ -12,129 +12,24 @@ import {
 import Navbar from "../components/Public/navbar";
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
+import { getPosts, likePost, unlikePost, getComments, addComment } from "../api/posts";
+import { getCurrentUser } from "../chat-services/pyapi";
 
 const Home = () => {
-  const posts = [
-    {
-      id: 1,
-      author: "Single Sock",
-      time: "3 hours ago",
-      title: "4 exams in 3 days, I'm exhausted.",
-      content:
-        "I'm completely drained. I've been studying non-stop for the past week, trying to prepare for four exams that are scheduled within three days. No matter how much I study, I feel like I'm not ready and it's making me anxious. I can't sleep properly and when I do I just dream about the exams. I'm worried I'll burn out before I even get through them all.",
-      tags: ["tag 3", "tag 8"],
-    },
-    {
-      id: 2,
-      author: "Playful Raccoon",
-      time: "1 hour ago",
-      title: "",
-      content: "us bhai us",
-      tags: [],
-    },
-    {
-      id: 3,
-      author: "Skipping Stone",
-      time: "17 hours ago",
-      title: "Feeling homesick.",
-      content:
-        "Ever since I came to college I miss my family, friends back home and even the little things like meals together. It's hard to focus on classes or make new friends because I keep thinking about how much I wish I were home. I thought it would get better with time, but it hasn't and I feel really alone.",
-      tags: ["tag 1"],
-    },
-  ];
-
-  // Sample comments data
-  const sampleComments = {
-    1: [
-      {
-        id: 1,
-        author: "Helpful Panda",
-        time: "2 hours ago",
-        content:
-          "Make sure to take breaks between study sessions! It really helps.",
-      },
-      {
-        id: 2,
-        author: "Caring Cat",
-        time: "1 hour ago",
-        content:
-          "I went through the same thing last semester. Remember to hydrate and get some sleep!",
-      },
-    ],
-    2: [
-      {
-        id: 1,
-        author: "Happy Penguin",
-        time: "45 minutes ago",
-        content: "Same feeling here!",
-      },
-    ],
-    3: [
-      {
-        id: 1,
-        author: "Friendly Owl",
-        time: "10 hours ago",
-        content:
-          "Have you tried joining some campus clubs? That really helped me when I was feeling homesick.",
-      },
-      {
-        id: 2,
-        author: "Gentle Fox",
-        time: "8 hours ago",
-        content:
-          "Schedule regular video calls with your family. It makes a big difference!",
-      },
-      {
-        id: 3,
-        author: "Wise Turtle",
-        time: "5 hours ago",
-        content:
-          "It takes time to adjust, but it does get better. Hang in there!",
-      },
-      {
-        id: 4,
-        author: "Wise Turtle",
-        time: "5 hours ago",
-        content:
-          "It takes time to adjust, but it does get better. Hang in there!",
-      },
-      {
-        id: 5,
-        author: "Wise Turtle",
-        time: "5 hours ago",
-        content:
-          "It takes time to adjust, but it does get better. Hang in there!",
-      },
-      {
-        id: 6,
-        author: "Wise Turtle",
-        time: "5 hours ago",
-        content:
-          "It takes time to adjust, but it does get better. Hang in there!",
-      },
-    ],
-  };
-
   const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [comments, setComments] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  
   // Popular tags list
   const popularTags = [
-    "tag 1",
-    "tag 2",
-    "tag 3",
-    "tag 4",
-    "tag 5",
-    "tag 6",
-    "tag 7",
-    "tag 8",
-    "tag 9",
+    "anxiety", "depression", "stress", "academic", "social",
+    "relationships", "family", "health", "career"
   ];
   
   // State for selected tags
   const [selectedTags, setSelectedTags] = useState([]);
-
-  const HandleCreate = () => {
-    navigate("/createpost");
-  };
 
   // State for liked posts
   const [likedPosts, setLikedPosts] = useState({});
@@ -145,20 +40,66 @@ const Home = () => {
   // State for comment input
   const [newComment, setNewComment] = useState("");
 
+  const HandleCreate = () => {
+    navigate("/createpost");
+  };
+
+  // Fetch posts on component mount
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  // Fetch posts from API
+  const fetchPosts = async () => {
+    try {
+      const fetchedPosts = await getPosts();
+      setPosts(fetchedPosts);
+      // Initialize comments state for each post
+      const commentsState = {};
+      for (const post of fetchedPosts) {
+        const postComments = await getComments(post._id);
+        commentsState[post._id] = postComments;
+      }
+      setComments(commentsState);
+    } catch (err) {
+      setError(err.message || "Failed to fetch posts. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Toggle like function
-  const toggleLike = (postId) => {
-    setLikedPosts((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
+  const toggleLike = async (postId) => {
+    try {
+      if (likedPosts[postId]) {
+        await unlikePost(postId);
+        setLikedPosts(prev => ({ ...prev, [postId]: false }));
+      } else {
+        await likePost(postId);
+        setLikedPosts(prev => ({ ...prev, [postId]: true }));
+      }
+      // Refresh posts to get updated likes count
+      fetchPosts();
+    } catch (err) {
+      setError(err.message || "Failed to update like status. Please try again.");
+    }
   };
 
   // Toggle comment section
-  const toggleCommentSection = (postId) => {
+  const toggleCommentSection = async (postId) => {
     if (activeCommentPost === postId) {
       setActiveCommentPost(null);
     } else {
       setActiveCommentPost(postId);
+      // Fetch comments if not already loaded
+      if (!comments[postId]) {
+        try {
+          const postComments = await getComments(postId);
+          setComments(prev => ({ ...prev, [postId]: postComments }));
+        } catch (err) {
+          setError(err.message || "Failed to fetch comments. Please try again.");
+        }
+      }
     }
   };
 
@@ -168,15 +109,29 @@ const Home = () => {
   };
 
   // Handle comment submission
-  const handleCommentSubmit = (e) => {
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim() === "") return;
 
-    // In a real app, you would send this to your API
-    console.log(`New comment on post ${activeCommentPost}: ${newComment}`);
-
-    // Clear the input
-    setNewComment("");
+    try {
+      const currentUser = await getCurrentUser();
+      const commentData = {
+        content: newComment,
+        author: currentUser.name, // This should come from auth context
+        author_id: currentUser._id,
+      };
+      
+      await addComment(activeCommentPost, commentData);
+      
+      // Refresh comments
+      const updatedComments = await getComments(activeCommentPost);
+      setComments(prev => ({ ...prev, [activeCommentPost]: updatedComments }));
+      
+      // Clear the input
+      setNewComment("");
+    } catch (err) {
+      setError(err.message || "Failed to add comment. Please try again.");
+    }
   };
   
   // Handle tag selection (toggle)
@@ -244,7 +199,7 @@ const Home = () => {
         {/* Main posts area */}
         <div className="posts-container">
           {posts.map((post) => (
-            <div key={post.id} className="post">
+            <div key={post._id} className="post">
               <div className="post-header">
                 <div className="post-user">
                   <div className="user-avatar">
@@ -266,17 +221,17 @@ const Home = () => {
                 <div className="post-actions">
                   <button
                     className={`action-button ${
-                      likedPosts[post.id] ? "active" : ""
+                      likedPosts[post._id] ? "active" : ""
                     }`}
-                    onClick={() => toggleLike(post.id)}
+                    onClick={() => toggleLike(post._id)}
                   >
-                    {likedPosts[post.id] ? <FaHeart /> : <FaRegHeart />}
+                    {likedPosts[post._id] ? <FaHeart /> : <FaRegHeart />}
                   </button>
                   <button
                     className={`action-button ${
-                      activeCommentPost === post.id ? "active" : ""
+                      activeCommentPost === post._id ? "active" : ""
                     }`}
-                    onClick={() => toggleCommentSection(post.id)}
+                    onClick={() => toggleCommentSection(post._id)}
                   >
                     <FaRegComment />
                   </button>
@@ -322,20 +277,20 @@ const Home = () => {
                 <div className="user-info">
                   <span className="username">
                     {
-                      posts.find((post) => post.id === activeCommentPost)
+                      posts.find((post) => post._id === activeCommentPost)
                         ?.author
                     }
                   </span>
                   <span className="post-time">
-                    {posts.find((post) => post.id === activeCommentPost)?.time}
+                    {posts.find((post) => post._id === activeCommentPost)?.time}
                   </span>
                 </div>
               </div>
               <p className="post-text-preview">
                 {posts
-                  .find((post) => post.id === activeCommentPost)
+                  .find((post) => post._id === activeCommentPost)
                   ?.content.substring(0, 100)}
-                {posts.find((post) => post.id === activeCommentPost)?.content
+                {posts.find((post) => post._id === activeCommentPost)?.content
                   .length > 100
                   ? "..."
                   : ""}
@@ -343,8 +298,8 @@ const Home = () => {
             </div>
 
             <div className="comments-list">
-              {sampleComments[activeCommentPost]?.map((comment) => (
-                <div key={comment.id} className="comment">
+              {comments[activeCommentPost]?.map((comment) => (
+                <div key={comment._id} className="comment">
                   <div className="comment-header">
                     <div className="post-user">
                       <div className="user-avatar">
