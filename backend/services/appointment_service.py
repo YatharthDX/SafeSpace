@@ -51,6 +51,8 @@ def create_appointment_service(appointment: Appointment, current_user: dict):
         "counselor_email": appointment.counselor_email,
         "date": appointment.date
     })
+    if not available_slots:
+        raise HTTPException(status_code=400, detail="No available slots for the selected date")
     if not available_slots or appointment.time_slot not in available_slots["time_slots"]:
         raise HTTPException(status_code=400, detail="Selected time slot is not available.")
     appointment_dict = appointment.dict()
