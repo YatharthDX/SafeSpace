@@ -39,16 +39,16 @@ async def upload_profile_picture(username: str, file: UploadFile = File(...)):
     users_collection.update_one({"name": username}, {"$set": {"profile_picture": encoded_image}}, upsert=True)
     return {"message": "Profile picture uploaded successfully"}
 
-# @router.get("/get-profile-picture/{username}")
-# async def get_profile_picture(username: str):
-#     user = users_collection.find_one({"name": username})
+@router.get("/get-profile-picture/{username}")
+async def get_profile_picture(username: str):
+    user = users_collection.find_one({"name": username})
     
-#     if not user or "profile_picture" not in user:
-#         return {"message": "No profile picture found"}
+    if not user or "profile_picture" not in user:
+        return {"message": "No profile picture found"}
     
-#     image_data = base64.b64decode(user["profile_picture"])
+    image_data = base64.b64decode(user["profile_picture"])
 
-#     return Response(content=image_data, media_type="image/jpeg")
+    return Response(content=image_data, media_type="image/jpeg")
 
 @router.get("/me")
 async def get_current_user(request: Request):
