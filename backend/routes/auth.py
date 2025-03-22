@@ -1,6 +1,9 @@
-from fastapi import APIRouter, Response, UploadFile, File
+# from fastapi import APIRouter, Response, UploadFile, File
+from fastapi import APIRouter, Response, UploadFile, File, Depends
 from database.models import EmailRequest, OTPVerification, UserRegistration, PasswordReset, LoginRequest
-from services.auth_service import send_otp_service, verify_otp_service, register_user_service, reset_password_service, login_service
+# from services.auth_service import send_otp_service, verify_otp_service, register_user_service, reset_password_service, login_service
+from services.auth_service import send_otp_service, verify_otp_service, register_user_service, reset_password_service, login_service, get_user_details_service
+from middleware.auth_middleware import get_current_user
 import base64
 from database.connection import users_collection
 
@@ -35,14 +38,17 @@ async def upload_profile_picture(username: str, file: UploadFile = File(...)):
     users_collection.update_one({"name": username}, {"$set": {"profile_picture": encoded_image}}, upsert=True)
     return {"message": "Profile picture uploaded successfully"}
 
-@router.get("/get-profile-picture/{username}")
-async def get_profile_picture(username: str):
-    user = users_collection.find_one({"name": username})
+# @router.get("/get-profile-picture/{username}")
+# async def get_profile_picture(username: str):
+#     user = users_collection.find_one({"name": username})
     
-    if not user or "profile_picture" not in user:
-        return {"message": "No profile picture found"}
+#     if not user or "profile_picture" not in user:
+#         return {"message": "No profile picture found"}
     
-    image_data = base64.b64decode(user["profile_picture"])
+#     image_data = base64.b64decode(user["profile_picture"])
 
-    return Response(content=image_data, media_type="image/jpeg")
+#     return Response(content=image_data, media_type="image/jpeg")
 
+@router.get("/getuserdetails")
+async def get_user_details(current_user: dict = Depends(get_current_user)):
+    return get_user_details_service(current_user)

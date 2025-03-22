@@ -101,3 +101,19 @@ def login_service(request: LoginRequest, response: Response):
         samesite="Lax"   
     )
     return {"success": True, "access_token": access_token, "token_type": "bearer"}
+
+def get_user_details_service(current_user: dict):
+    if users_collection is None:
+        raise HTTPException(status_code=503, detail="Service unavailable")
+    
+    user = users_collection.find_one({"email": current_user["email"]})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user_details = {
+        "username": user.get("name"),
+        "profile_picture": user.get("profile_picture")
+    }
+    
+    return user_details
+
