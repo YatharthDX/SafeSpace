@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Response, UploadFile, File
+from fastapi import APIRouter, Response, UploadFile, File, Request
 from database.models import EmailRequest, OTPVerification, UserRegistration, PasswordReset, LoginRequest
-from services.auth_service import send_otp_service, verify_otp_service, register_user_service, reset_password_service, login_service
+from services.auth_service import send_otp_service, verify_otp_service, register_user_service, reset_password_service, login_service, get_current_user_service
 import base64
 from database.connection import users_collection
 
@@ -45,4 +45,8 @@ async def get_profile_picture(username: str):
     image_data = base64.b64decode(user["profile_picture"])
 
     return Response(content=image_data, media_type="image/jpeg")
+
+@router.get("/me")
+async def get_current_user(request: Request):
+    return get_current_user_service(request)
 

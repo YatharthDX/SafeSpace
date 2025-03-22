@@ -14,6 +14,8 @@ try:
     appointments_collection = db["appointments"]
     available_slots_collection = db["available_slots"]
     role_requests_collection = db["role_requests"]
+    blogs_collection = db["blogs_collection"]
+    comments_collection = db["comments_collection"]
     logger.info("MongoDB connection successful")
 except Exception as e:
     logger.error(f"MongoDB connection error: {e}")
@@ -23,6 +25,8 @@ except Exception as e:
     appointments_collection = None
     available_slots_collection = None
     role_requests_collection = None
+    blogs_collection = None
+    comments_collection = None
 
 # Redis Connection
 try:
