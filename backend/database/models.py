@@ -120,6 +120,9 @@ class LikesUpdate(BaseModel):
 
 class SlotUpdate(BaseModel):
     counselor_email: str
-    date: str
+    date: datetime
     time_slots: List[str]
+
+class StatusUpdate(BaseModel):
+    status: str
     

@@ -118,8 +118,17 @@ const AvailabilityCalendar = () => {
           const formattedDay = day < 10 ? `0${day}` : `${day}`;
           const formattedMonth = currentMonthNum < 10 ? `0${currentMonthNum}` : `${currentMonthNum}`;
           const dateStr = `${currentYear}-${formattedMonth}-${formattedDay}`;
+          // convert date to ISO format
+          const formatDateForBackend = (dateStr) => {
+            if (!dateStr) return "";
+            
+            const date = new Date(dateStr);
+            return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+              .toISOString();
+          }
+          console.log("Fetching availability for", counselorEmail, formatDateForBackend(dateStr));
           try {
-            const response = await fetch(`http://127.0.0.1:8000/appointments/counselors/available_slots?counselor_email=${encodeURIComponent(counselorEmail)}&date=${dateStr}`);
+            const response = await fetch(`http://127.0.0.1:8000/appointments/counselors/available_slots?counselor_email=${encodeURIComponent(counselorEmail)}&date=${formatDateForBackend(dateStr)}`);
             if (!response.ok) {
               throw new Error(`API returned status: ${response.status}`);
             }
@@ -147,7 +156,6 @@ const AvailabilityCalendar = () => {
         setIsLoading(false);
       }
     };
-
     fetchMonthAvailability();
   }, [currentYear, currentMonthNum, counselorEmail]);
 
@@ -262,8 +270,15 @@ const AvailabilityCalendar = () => {
       const formattedMonth = currentMonthNum < 10 ? `0${currentMonthNum}` : `${currentMonthNum}`;
       const dateStr = `${currentYear}-${formattedMonth}-${formattedDay}`;
 
-      // Call the API to update available slots
-      console.log("Updating availability for", counselorEmail, dateStr, selectedTimeSlots);
+      
+      const formatDateForBackend = (dateStr) => {
+        if (!dateStr) return "";
+        
+        const date = new Date(dateStr);
+        return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+          .toISOString();
+      };
+      console.log("Updating availability for", counselorEmail, formatDateForBackend(dateStr), selectedTimeSlots);
       // Modify your fetch call to something like this:
       const response = await fetch(
         `http://127.0.0.1:8000/appointments/counselors/update_slots`, 
@@ -276,13 +291,16 @@ const AvailabilityCalendar = () => {
           },
           body: JSON.stringify({ 
             counselor_email: counselorEmail,
-            date: dateStr,
+            date: formatDateForBackend(dateStr),
             time_slots: selectedTimeSlots 
           })
         }
       );
 
+
       const data = await response.json();
+
+      console.log("Update response:", data);
 
       // Update local state with slot numbers (not time strings)
       const selectedSlotsArray = Object.entries(selectedSlots)

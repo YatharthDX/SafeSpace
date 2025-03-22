@@ -1,55 +1,139 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/AppointmentRequests.css";
 import Navbar2 from "../components/Public/navbar2";
 import RequestCard from "../components/Appointments/RequestCard";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AppointmentRequests = () => {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("all");
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      studentName: "John Doe",
-      date: "2024-03-20",
-      time: "10:00 AM",
-      status: "pending",
-      type: "Academic",
-      description: "Need help with exam preparation"
-    },
-    {
-      id: 2,
-      studentName: "Jane Smith",
-      date: "2024-03-21",
-      time: "2:00 PM",
-      status: "approved",
-      type: "Personal",
-      description: "Career guidance session"
-    },
-  ]);
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch appointment requests from the backend
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        setLoading(true);
+        // Get the token from localStorage or wherever you store it
+        const token = localStorage.getItem("token");
+        
+        if (!token) {
+          // Redirect to login if there's no token
+          navigate("/");
+          return;
+        }
+
+        const response = await axios.get("http://127.0.0.1:8000/appointments/counselors/appointment_requests", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        // Transform the backend data to match our frontend structure
+        const formattedRequests = response.data.map(appointment => ({
+          id: appointment._id,
+          studentName: appointment.user_name || "Student", // Adjust based on your backend data structure
+          date: appointment.date,
+          time: appointment.time_slot,
+          status: appointment.status,
+          contact_no: appointment.contact_no,
+          description: appointment.description || "No description provided",
+          studentEmail: appointment.user_email
+        }));
+
+        setRequests(formattedRequests);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching appointment requests:", err);
+        setError("Failed to load appointment requests. Please try again later.");
+        
+        // Handle unauthorized errors
+        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+          navigate("/");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRequests();
+  }, [navigate]);
 
   const handleNavigation = (path) => {
     navigate(path);
   };
 
-  const handleApprove = (requestId) => {
-    setRequests(requests.map(request => 
-      request.id === requestId 
-        ? { ...request, status: "approved" }
-        : request
-    ));
+  const handleApprove = async (requestId) => {
+    try {
+      const token = localStorage.getItem("token");
+      
+      await fetch(`http://127.0.0.1:8000/appointments/appointments/${requestId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: "accepted" })
+      });
+
+      // Update local state after successful API call
+      setRequests(requests.map(request => 
+        request.id === requestId 
+          ? { ...request, status: "accepted" }
+          : request
+      ));
+    } catch (err) {
+      console.error("Error approving request:", err);
+      alert("Failed to approve the appointment. Please try again.");
+      
+      // Handle unauthorized errors
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        navigate("/");
+      }
+    }
   };
 
-  const handleReject = (requestId) => {
-    setRequests(requests.map(request => 
-      request.id === requestId 
-        ? { ...request, status: "rejected" }
-        : request
-    ));
+  const handleReject = async (requestId) => {
+    try {
+      const token = localStorage.getItem("token");
+      
+      await fetch(`http://127.0.0.1:8000/appointments/appointments/${requestId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: "rejected" })
+      });
+
+      // Update local state after successful API call
+      setRequests(requests.map(request => 
+        request.id === requestId 
+          ? { ...request, status: "rejected" }
+          : request
+      ));
+    } catch (err) {
+      console.error("Error rejecting request:", err);
+      alert("Failed to reject the appointment. Please try again.");
+      
+      // Handle unauthorized errors
+      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+        navigate("/");
+      }
+    }
   };
 
   const filteredRequests = requests.filter(request => {
     if (activeFilter === "all") return true;
+    
+    // Map the backend status "accepted" to the frontend status "approved" for filtering
+    if (activeFilter === "approved") {
+      return request.status === "accepted" || request.status === "approved";
+    }
+    
     return request.status === activeFilter;
   });
 
@@ -102,16 +186,30 @@ const AppointmentRequests = () => {
               </button>
             </div>
 
-            <div className="requests-grid">
-              {filteredRequests.map((request) => (
-                <RequestCard 
-                  key={request.id} 
-                  request={request} 
-                  onApprove={() => handleApprove(request.id)}
-                  onReject={() => handleReject(request.id)}
-                />
-              ))}
-            </div>
+            {loading ? (
+              <div className="loading-container">
+                <p>Loading appointment requests...</p>
+              </div>
+            ) : error ? (
+              <div className="error-container">
+                <p>{error}</p>
+              </div>
+            ) : filteredRequests.length === 0 ? (
+              <div className="empty-container">
+                <p>No {activeFilter !== "all" ? activeFilter : ""} requests found.</p>
+              </div>
+            ) : (
+              <div className="requests-grid">
+                {filteredRequests.map((request) => (
+                  <RequestCard 
+                    key={request.id} 
+                    request={request} 
+                    onApprove={() => handleApprove(request.id)}
+                    onReject={() => handleReject(request.id)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -119,4 +217,4 @@ const AppointmentRequests = () => {
   );
 };
 
-export default AppointmentRequests; 
+export default AppointmentRequests;
