@@ -54,3 +54,49 @@ class AvailableSlot(BaseModel):
 class RoleRequest(BaseModel):
     email: str
     
+
+
+
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from bson import ObjectId
+
+
+
+class PyObjectId(ObjectId):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        if not ObjectId.is_valid(v):
+            raise ValueError("Invalid ObjectId")
+        return ObjectId(v)
+
+    @classmethod
+    def __modify_schema__(cls, field_schema):
+        field_schema.update(type="string")
+
+class Post(BaseModel):
+    id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
+    title: str
+    content: str
+    relevant_tags: List[str]
+    
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {
+            ObjectId: lambda v: str(v)
+        }
+
+class PostResponse(BaseModel):
+    id: str
+    title: str
+    content: str
+    relevant_tags: List[str]
+
+class PostSearch(BaseModel):
+    text: Optional[str] = ""
+    tags: Optional[List[str]] = []
