@@ -136,3 +136,19 @@ def get_current_user_service(request: Request):
     except Exception as e:
         logger.error(f"Error in get_current_user_service: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
+
+def get_user_details_service(current_user: dict):
+    if users_collection is None:
+        raise HTTPException(status_code=503, detail="Service unavailable")
+    
+    user = users_collection.find_one({"email": current_user["email"]})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user_details = {
+        "username": user.get("name"),
+        "profile_picture": user.get("profile_picture")
+    }
+    
+    return user_details
+

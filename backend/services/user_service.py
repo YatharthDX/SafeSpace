@@ -40,3 +40,5 @@ def update_role_service(email: str, new_role: str, admin_email: str):
     body = f"Your request to become a counselor has been {'approved' if new_role == 'counsellor' else 'rejected'} by the admin."
     send_email(email, subject, body)
     return {"success": True, "message": f"Role updated to {new_role}"}
+
+
