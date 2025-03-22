@@ -42,7 +42,9 @@ function AppointmentForm() {
     selectedDate, // e.g. "Thu Aug 10 2023" (from toDateString())
     selectedTime, // e.g. "02:30pm"
   } = location.state || {};
-
+  console.log("Counselor data:", counselor);
+  console.log("Selected date:", selectedDate);
+  console.log("Selected time:", selectedTime);
   // 2. Form states
   const [name, setName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
@@ -54,18 +56,29 @@ function AppointmentForm() {
   // Format time slot as expected by backend
   const formatTimeForBackend = (timeStr) => {
     if (!timeStr) return "";
-    return timeStr;
+    let timeStr1 = timeStr.split(" ")[0];
+    let [hours, minutes] = timeStr1.split(":").map(Number);
+    if (timeStr.includes("PM") && hours !== 12) hours += 12;
+    if (timeStr.includes("AM") && hours === 12) hours = 0;
+    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
   };
+  console.log("Formatted time:", formatTimeForBackend(selectedTime));
 
   // Format date as expected by backend (YYYY-MM-DD)
   const formatDateForBackend = (dateStr) => {
     if (!dateStr) return "";
+    
     const date = new Date(dateStr);
-    return date.toISOString(); // Returns YYYY-MM-DD
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+      .toISOString();
   };
+  
+  console.log("Selected date:", selectedDate);
+  console.log("Formatted date:", formatDateForBackend(selectedDate));
 
   // 3. Handle form submission
   const handleSubmit = async (e) => {
+    console.log("Submitting form...");
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
@@ -73,23 +86,15 @@ function AppointmentForm() {
     try {
       // Prepare appointment data
       const appointmentData = {
-        counselor_email: counselor?.email || "counsellor1@iitk.ac.in",
+        user_name: name,
+        user_email: email,
+        counselor_email: counselor?.email || "",
         date: formatDateForBackend(selectedDate),
         time_slot: formatTimeForBackend(selectedTime),
-        user_name: name,
         contact_no: contactNumber,
-        user_email: email,
         description: problemDescription,
         status: "pending"
       };
-      // user_name: str
-      // user_email: EmailStr
-      // counselor_email: EmailStr
-      // date: datetime
-      // time_slot: str
-      // description: str
-      // contact_no: str
-      // status: str = "pending"
 
       console.log("Sending appointment data:", appointmentData);
 
@@ -127,17 +132,63 @@ function AppointmentForm() {
         throw new Error(data.detail || "Failed to book appointment");
       }
 
+      function showSafeSpaceAlert(counselor, selectedDate, selectedTime, appointmentId) {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'safespace-modal-overlay';
+        
+        // Create modal
+        const modal = document.createElement('div');
+        modal.className = 'safespace-modal';
+        
+        // Modal content
+        modal.innerHTML = `
+          <div class="safespace-modal-header">
+            <h3 class="safespace-modal-title">Appointment Confirmed!</h3>
+          </div>
+          <div class="safespace-modal-body">
+            <div class="safespace-appointment-info">
+              <div class="safespace-info-item">
+                <div class="safespace-info-label">Counselor:</div>
+                <div class="safespace-info-value">${counselor || "N/A"}</div>
+              </div>
+              <div class="safespace-info-item">
+                <div class="safespace-info-label">Date:</div>
+                <div class="safespace-info-value">${selectedDate || "N/A"}</div>
+              </div>
+              <div class="safespace-info-item">
+                <div class="safespace-info-label">Time:</div>
+                <div class="safespace-info-value">${selectedTime || "N/A"}</div>
+              </div>
+            </div>
+            <div class="safespace-appointment-id">Appointment ID: ${appointmentId || "Generated"}</div>
+          </div>
+          <button class="safespace-modal-button">OK</button>
+        `;
+        
+        // Add to DOM
+        document.body.appendChild(overlay);
+        overlay.appendChild(modal);
+        
+        // Close on button click
+        const button = modal.querySelector('.safespace-modal-button');
+        button.addEventListener('click', () => {
+          document.body.removeChild(overlay);
+          // You can add redirection logic here
+          // window.location.href = '/dashboard';
+        });
+      }
+
       // Success - show message and redirect
-      alert(
-        `Appointment Confirmed!\n\n` +
-          `Counselor: ${counselor?.name || "N/A"}\n` +
-          `Date: ${selectedDate || "N/A"}\n` +
-          `Time: ${selectedTime || "N/A"}\n\n` +
-          `Appointment ID: ${data.appointment_id || "Generated"}`
+      showSafeSpaceAlert(
+        counselor?.name || "N/A",
+        selectedDate || "N/A",
+        selectedTime || "N/A",
+        data.appointment_id || "Generated"
       );
       
       // Navigate to a confirmation page or dashboard
-      navigate("/appointments/confirmation", { 
+      navigate("/appointments", { 
         state: { 
           appointmentId: data.appointment_id,
           counselorName: counselor?.name,

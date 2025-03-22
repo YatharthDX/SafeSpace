@@ -3,10 +3,11 @@ from database.models import EmailRequest, OTPVerification, UserRegistration, Pas
 from utils.otp import generate_otp, send_email
 from utils.hash import pwd_context
 from utils.jwt import create_access_token
-from utils.config import OTP_EXPIRE_MINUTES
-from fastapi import HTTPException, Response
+from utils.config import OTP_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
+from fastapi import HTTPException, Response, Request
 import logging
 from datetime import datetime
+import jwt
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +102,40 @@ def login_service(request: LoginRequest, response: Response):
         samesite="Lax"   
     )
     return {"success": True, "access_token": access_token, "token_type": "bearer"}
+
+def get_current_user_service(request: Request):
+    if users_collection is None:
+        raise HTTPException(status_code=503, detail="Service unavailable")
+    
+    # Get the JWT token from cookies
+    jwt_token = request.cookies.get("jwt")
+    # print("here",jwt_token)
+    if not jwt_token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    try:
+        # Decode the JWT token
+        payload = jwt.decode(jwt_token, options={"verify_signature": False})
+        email = payload.get("sub")
+        if not email:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        # Get user from database
+        user = users_collection.find_one({"email": email})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Remove sensitive information
+        user["_id"] = str(user["_id"])
+        user.pop("password", None)
+        # user.pop("_id", None)  # Convert ObjectId to string
+        
+        return user
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception as e:
+        logger.error(f"Error in get_current_user_service: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 def get_user_details_service(current_user: dict):
     if users_collection is None:
