@@ -155,3 +155,4 @@ def get_user_details_service(current_user: dict):
     
     return user_details
 
+
