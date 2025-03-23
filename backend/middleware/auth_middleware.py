@@ -2,7 +2,7 @@ from fastapi import Request, HTTPException, Depends
 from fastapi.responses import JSONResponse
 import logging
 import traceback
-import jwt
+from jose import jwt
 from database.connection import users_collection
 
 # Configure logging

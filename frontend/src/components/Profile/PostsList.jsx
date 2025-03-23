@@ -1,8 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { FaRegUser, FaTrashAlt } from 'react-icons/fa';
+import { FaRegUser, FaTrashAlt, FaTimes } from 'react-icons/fa';
+
+// Custom delete confirmation modal component
+const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, postTitle }) => {
+  if (!isOpen) return null;
+  
+  return (
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <div className="modal-header">
+          <h3>Delete Post</h3>
+          <button className="close-button" onClick={onClose}>
+            <FaTimes />
+          </button>
+        </div>
+        <div className="modal-content">
+          <p>Are you sure you want to delete this post?</p>
+          {postTitle && <p className="post-preview">"{postTitle}"</p>}
+          <p className="warning-text">This action cannot be undone.</p>
+        </div>
+        <div className="modal-actions">
+          <button className="cancel-button" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="confirm-button" onClick={onConfirm}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const PostsList = ({ posts, onDeletePost }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [modalOpen, setModalOpen] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
 
   // Update the current time every minute
   useEffect(() => {
@@ -58,10 +91,23 @@ const PostsList = ({ posts, onDeletePost }) => {
     }
   };
 
-  const handleDelete = (postId) => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
-      onDeletePost(postId);
+  // Updated delete handler to open modal instead
+  const handleDeleteClick = (post) => {
+    setPostToDelete(post);
+    setModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (postToDelete) {
+      onDeletePost(postToDelete.id);
+      setModalOpen(false);
+      setPostToDelete(null);
     }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setPostToDelete(null);
   };
 
   if (posts.length === 0) {
@@ -94,7 +140,7 @@ const PostsList = ({ posts, onDeletePost }) => {
               </div>
               <button
                 className="delete-button"
-                onClick={() => handleDelete(post.id)}
+                onClick={() => handleDeleteClick(post)}
                 aria-label="Delete post"
               >
                 <FaTrashAlt />
@@ -120,6 +166,14 @@ const PostsList = ({ posts, onDeletePost }) => {
           </div>
         ))}
       </div>
+
+      {/* Custom delete confirmation modal */}
+      <DeleteConfirmationModal 
+        isOpen={modalOpen}
+        onClose={closeModal}
+        onConfirm={confirmDelete}
+        postTitle={postToDelete?.title || postToDelete?.content?.substring(0, 50)}
+      />
     </div>
   );
 };
