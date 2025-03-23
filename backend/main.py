@@ -16,7 +16,7 @@ app = FastAPI()
 # Add CORS middleware first
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000", "http://127.0.0.1:3000"],  # Allow common development ports
+    allow_origins=["http://localhost:5174", "http://127.0.0.1:5173", "http://localhost:3000", "http://127.0.0.1:3000"],  # Allow common development ports
     allow_credentials=True,  # Allows sending cookies
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, OPTIONS, etc.)
     allow_headers=["*"],  # Allow all headers

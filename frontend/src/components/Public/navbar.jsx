@@ -52,6 +52,9 @@ const Navbar = ({ onSearch }) => {
         <Link to="/profile" className="nav-link">
           <FaUser /> Profile
         </Link>
+        <a onClick={() => navigate("/")} className="nav-link">
+          <FaSignOutAlt /> Logout
+        </a>
       </div>
     </nav>
   );
