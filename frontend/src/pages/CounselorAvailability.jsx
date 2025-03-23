@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../css/AvailabilityCalendar.css";
 import Navbar2 from "../components/Public/navbar2";
 import { useNavigate } from "react-router-dom";
+import { FaTachometerAlt, FaCalendarAlt } from "react-icons/fa";
 
 const AvailabilityCalendar = () => {
   const navigate = useNavigate();
@@ -457,11 +458,15 @@ const AvailabilityCalendar = () => {
       <div className="content-container">
         <div className="sidebar">
           <div className="sidebar-item active" onClick={() => handleNavigation("/counselor/dashboard")}>
-            <span className="sidebar-icon">📊</span>
+            <span className="sidebar-icon">
+              <FaTachometerAlt/>
+            </span>
             <span>Dashboard</span>
           </div>
           <div className="sidebar-item" onClick={() => handleNavigation("/counselor/requests")}>
-            <span className="sidebar-icon">📝</span>
+            <span className="sidebar-icon">
+            <FaCalendarAlt/>
+            </span>
             <span>Requests</span>
           </div>
         </div>
@@ -470,11 +475,6 @@ const AvailabilityCalendar = () => {
           <div className="header">
             <h1>Counselor Dashboard</h1>
             <h2>Manage Your Availability</h2>
-            {counselorEmail && (
-              <div className="counselor-info">
-                Logged in as: {counselorEmail}
-              </div>
-            )}
           </div>
 
           {isLoading && !message && (
