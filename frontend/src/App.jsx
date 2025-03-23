@@ -13,7 +13,7 @@ import CreatePostPage from "./pages/CreatePost";
 import AvailabilityCalendar from "./pages/CounselorAvailability";
 import AppointmentRequests from "./pages/AppointmentRequests";
 import ForgotPassword from "./pages/ForgotPassword";
-import ProtectedRoute from "./components/public/ProtectedRoute"; // Import the protected route component
+import ProtectedRoute from "./components/Public/ProtectedRoute"; // Import the protected route component
 
 function App() {
   return (
