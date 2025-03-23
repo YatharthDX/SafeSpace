@@ -23,6 +23,22 @@ export const createPost = async (postData) => {
   }
 };
 
+// Classify a text
+export const classifyText = async (postData) => {
+  try {
+    const response = await axios.post(`${API_URL}/classify`, postData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
 // Get all blog posts
 export const getPosts = async (skip = 0, limit = 20) => {
   try {

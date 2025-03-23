@@ -122,6 +122,9 @@ class BlogCreate(BaseModel):
     severity_tag: str
     image_url: Optional[str] = None
 
+class ClassifyRequest(BaseModel):
+    text: str
+
 class Blog(BaseModel):
     id: str = Field(alias="_id")
     title: str

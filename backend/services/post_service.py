@@ -6,23 +6,27 @@ import uuid
 from datetime import datetime
 from database.connection import blogs_collection, comments_collection ,liked_posts_collection
 from services.auth_service import get_current_user_service
-# from transformers import AutoTokenizer, AutoModelForSequenceClassification
-# from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from transformers import pipeline
 
-# # Load the model and tokenizer
-# model_name = "Hate-speech-CNERG/dehatebert-mono-english"
-# tokenizer = AutoTokenizer.from_pretrained(model_name)
-# model = AutoModelForSequenceClassification.from_pretrained(model_name)
+# Load the model and tokenizer
+model_name = "Hate-speech-CNERG/dehatebert-mono-english"
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
-# classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
+classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
 
 
-from database.models import BlogCreate, Blog, CommentCreate, Comment
+from database.models import BlogCreate, Blog, CommentCreate, Comment, ClassifyRequest
 
 class PostService:
     def __init__(self):
         self.blogs_collection = blogs_collection
         self.comments_collection = comments_collection
+
+    async def classify_text(self, classify_request: ClassifyRequest) -> str:
+        result = classifier(classify_request.text)
+        return result[0]['label']
 
     async def create_blog(self, blog: BlogCreate) -> Blog:
         """Create a new blog post"""
