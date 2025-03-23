@@ -155,3 +155,15 @@ def get_user_details_service(current_user: dict):
     return user_details
 
 
+def logout_service(response: Response):
+    response.set_cookie(
+        key="jwt", 
+        value="", 
+        expires=0,  # Expire immediately
+        max_age=0,  # Ensure immediate expiration
+        path="/",   # Match the original cookie path
+        httponly=True,
+        secure=False,  # Change to True in production
+        samesite="Lax",
+    )
+    return {"success": True, "message": "Logged out successfully"}

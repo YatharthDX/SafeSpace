@@ -6,7 +6,7 @@
   justify-content: space-between;
   padding: 0 20px;
   height: 4.5rem;
-  /* background-color: #f9e5c9; */
+  background-color: #fbd6a0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
@@ -27,6 +27,7 @@
   align-content: center;
   height: 4rem;
   width: auto;
+  /* box-shadow: #e0e0e0; */
 }
 
 .brand-name {
@@ -43,7 +44,7 @@
 .navbar-center {
   display: flex;
   align-items: center;
-  position:relative;
+  position: relative;
   width: 40%;
   max-width: 600px;
   margin-top: 10px; /* Shifts the search bar downward */
@@ -56,7 +57,7 @@
   border: 1px solid #e0e0e0;
   font-size: 14px;
   outline: none;
-  background-color: white; /* Ensures the search bar is white */;
+  background-color: white; /* Ensures the search bar is white */
 }
 
 .search-btn {
@@ -86,12 +87,14 @@
 .nav-link {
   display: flex;
   align-items: center;
+  /* background-color: fbd6a0; */
   gap: 5px;
   color: #333;
   text-decoration: none;
   font-size: large;
   font-weight: 500;
   transition: color 0.2s;
+  cursor: pointer;
 }
 
 .nav-link:hover {

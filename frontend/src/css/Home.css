@@ -108,7 +108,7 @@ body {
 
 /* Create post button */
 .create-post-btn {
-  background-color: #e3b27c;
+  background-color: #f4b471;
   color: white;
   border: none;
   border-radius: 40px;
@@ -146,6 +146,7 @@ body {
   overflow-y: auto;
   height: 100%;
   width: 100%;
+  min-width: 50vw;
   background-color: #f5ead9;
   transition: all 0.3s ease;
   margin-right: 0;
@@ -201,7 +202,7 @@ body {
   align-items: center;
   justify-content: center;
   color: #333;
-  background-color: #f5ead9;
+  background-color: #fbd6a0;
   border: 2px solid #e0d6c2;
 }
 
@@ -268,7 +269,7 @@ body {
 }
 
 .action-button:hover {
-  color: #e3b27c;
+  color: #fbd6a0;
   transform: scale(1.1);
 }
 
@@ -301,7 +302,7 @@ body {
   position: fixed;
   top: 70px;
   right: 0;
-  width: 380px;
+  width: 20vw;
   height: calc(100vh - 70px);
   background-color: white;
   border-left: 1px solid #e0d6c2;
@@ -514,4 +515,3 @@ body {
     width: auto;
   }
 }
-

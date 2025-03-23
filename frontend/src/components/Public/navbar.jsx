@@ -70,6 +70,30 @@ const Navbar = ({ onSearch }) => {
     setShowDropdown(false);
   };
 
+  const handleLogout = async () => {
+    try {
+      // Clear localStorage
+      localStorage.removeItem("token");
+
+      // Clear all cookies
+      document.cookie.split(";").forEach((cookie) => {
+        document.cookie = cookie.replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      await fetch("http://127.0.0.1:8000/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // Ensures cookies are sent
+      });
+  
+
+  
+      // Navigate to login page
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+  
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -133,9 +157,9 @@ const Navbar = ({ onSearch }) => {
         <Link to="/profile" className="nav-link">
           <FaUser /> Profile
         </Link>
-        <button onClick={() => navigate("/")} className="nav-link logout-btn">
+        <a onClick={() => navigate("/")} className="nav-link">
           <FaSignOutAlt /> Logout
-        </button>
+        </a>
       </div>
     </nav>
   );
