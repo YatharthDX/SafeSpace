@@ -28,7 +28,8 @@ function AppointmentSelect() {
     "1:30 PM",
     "2:00 PM",
     "2:30 PM",
-    "3:00 PM"
+    "3:00 PM",
+    "5:00 PM"
   ];
 
   // Fetch available time slots whenever the selected date changes
@@ -36,7 +37,7 @@ function AppointmentSelect() {
     const fetchAvailableSlots = async () => {
       if(!counselor.email) counselor.email = "counsellor1@iitk.ac.in";
       if (!counselor || !counselor.email) return;
-      // console.log("jinga")
+      console.log("jinga")
       setIsLoading(true);
       try {
         // Format date as YYYY-MM-DD for the API

@@ -75,9 +75,9 @@ class Blog(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        allow_population_by_field_name = True
-        schema_extra = {
+    model_config = {
+        "populate_by_name": True,
+        "json_schema_extra": {
             "example": {
                 "_id": "60d21b4967d0d8992e610c85",
                 "title": "My Experience",
@@ -91,6 +91,7 @@ class Blog(BaseModel):
                 "updated_at": "2021-06-22T19:40:09.603Z"
             }
         }
+    }
 
 class CommentCreate(BaseModel):
     content: str
@@ -103,9 +104,9 @@ class Comment(BaseModel):
     author: str
     created_at: datetime
 
-    class Config:
-        allow_population_by_field_name = True
-        schema_extra = {
+    model_config = {
+        "populate_by_name": True,
+        "json_schema_extra": {
             "example": {
                 "_id": "60d21b4967d0d8992e610c86",
                 "blog_id": "60d21b4967d0d8992e610c85",
@@ -114,6 +115,8 @@ class Comment(BaseModel):
                 "created_at": "2021-06-22T19:40:09.603Z"
             }
         }
+    }
+
 
 class LikesUpdate(BaseModel):
     likes: int
