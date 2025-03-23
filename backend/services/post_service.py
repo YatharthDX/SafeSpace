@@ -1,10 +1,11 @@
-from fastapi import UploadFile, HTTPException
+from fastapi import UploadFile, HTTPException, Request
 from typing import List, Optional
 from bson import ObjectId
 import os
 import uuid
 from datetime import datetime
-from database.connection import blogs_collection, comments_collection
+from database.connection import blogs_collection, comments_collection ,liked_posts_collection
+from services.auth_service import get_current_user_service
 
 from database.models import BlogCreate, Blog, CommentCreate, Comment
 
@@ -181,28 +182,42 @@ class PostService:
         
         return {"message": "Likes updated successfully", "likes": likes}
     
-    async def increment_likes(self, blog_id: str) -> dict:
-        """Increment likes count for a blog"""
+    async def increment_likes(self, blog_id: str, user_id: str) -> dict:
+        """Increment likes count for a blog and track user's liked post"""
         if not ObjectId.is_valid(blog_id):
             raise ValueError("Invalid blog ID format")
             
+        # Get current user
+        
+        
         # Check if blog exists
         blog = self.blogs_collection.find_one({"_id": ObjectId(blog_id)})
         if blog is None:
             raise KeyError("Blog not found")
         
+        # Increment likes in blogs collection
         self.blogs_collection.update_one(
             {"_id": ObjectId(blog_id)},
             {"$inc": {"likes": 1}, "$set": {"updated_at": datetime.now()}}
         )
         
+        # Add to user's liked posts
+        liked_posts_collection.update_one(
+            {"user_id": user_id},
+            {"$addToSet": {"post_ids": blog_id}},
+            upsert=True
+        )
+        
         updated_blog = self.blogs_collection.find_one({"_id": ObjectId(blog_id)})
         return {"message": "Blog liked successfully", "likes": updated_blog["likes"]}
     
-    async def decrement_likes(self, blog_id: str) -> dict:
-        """Decrement likes count for a blog"""
+    async def decrement_likes(self, blog_id: str, user_id: str) -> dict:
+        """Decrement likes count for a blog and remove from user's liked posts"""
         if not ObjectId.is_valid(blog_id):
             raise ValueError("Invalid blog ID format")
+            
+        # Get current user
+        
             
         # Check if blog exists
         blog = self.blogs_collection.find_one({"_id": ObjectId(blog_id)})
@@ -215,6 +230,24 @@ class PostService:
                 {"_id": ObjectId(blog_id)},
                 {"$inc": {"likes": -1}, "$set": {"updated_at": datetime.now()}}
             )
+            
+            # Remove from user's liked posts
+            liked_posts_collection.update_one(
+                {"user_id": user_id},
+                {"$pull": {"post_ids": blog_id}}
+            )
         
         updated_blog = self.blogs_collection.find_one({"_id": ObjectId(blog_id)})
         return {"message": "Blog unliked successfully", "likes": updated_blog["likes"]}
+    
+    async def get_user_liked_posts(self, user_id: str) -> List[str]:
+        """Get list of post IDs that a user has liked"""
+        if not ObjectId.is_valid(user_id):
+            raise ValueError("Invalid user ID format")
+            
+        # Get user's liked posts from liked_posts_collection
+        liked_posts = liked_posts_collection.find_one({"user_id": user_id})
+        if not liked_posts:
+            return []
+            
+        return liked_posts.get("post_ids", [])

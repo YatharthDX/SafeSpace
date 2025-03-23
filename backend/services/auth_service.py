@@ -7,7 +7,7 @@ from utils.config import OTP_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from fastapi import HTTPException, Response, Request
 import logging
 from datetime import datetime
-import jwt
+from jose import jwt
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +64,9 @@ def register_user_service(user: UserRegistration):
         "created_at": datetime.utcnow()
     }
     users_collection.insert_one(new_user)
+    user_id = users_collection.find_one({"email": user.email})["_id"]
+    # liked_posts_collection.insert_one({"user_id": user_id, "post_ids": []})
+
     redis_client.delete(verification_key)
     return {"success": True, "message": "User registered successfully"}
 
@@ -109,14 +112,16 @@ def get_current_user_service(request: Request):
     
     # Get the JWT token from cookies
     jwt_token = request.cookies.get("jwt")
-    # print("here",jwt_token)
+    # jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2ZWRhbnRuZWUyM0BpaXRrLmFjLmluIiwicm9sZSI6InN0dWRlbnQiLCJleHAiOjE3NDI2NDg5OTJ9.wjmu848uaGbBDHoFfdSx-ZZLe3IPdd2I08fm5ZleaGA"
+    print("here",jwt_token)
     if not jwt_token:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
     try:
         # Decode the JWT token
-        payload = jwt.decode(jwt_token, options={"verify_signature": False})
+        payload = jwt.decode(jwt_token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
+        print(email)
         if not email:
             raise HTTPException(status_code=401, detail="Invalid token")
         
@@ -131,7 +136,7 @@ def get_current_user_service(request: Request):
         # user.pop("_id", None)  # Convert ObjectId to string
         
         return user
-    except jwt.PyJWTError:
+    except jwt.JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
     except Exception as e:
         logger.error(f"Error in get_current_user_service: {str(e)}")
@@ -151,4 +156,5 @@ def get_user_details_service(current_user: dict):
     }
     
     return user_details
+
 

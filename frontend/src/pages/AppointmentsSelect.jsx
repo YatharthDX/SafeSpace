@@ -38,13 +38,12 @@ function AppointmentSelect() {
     "6:30 PM",
 
   ];
-
   // Fetch available time slots whenever the selected date changes
   useEffect(() => {
     const fetchAvailableSlots = async () => {
-      if(!counselor.email) counselor.email = "counsellor1@iitk.ac.in";
+      console.log("counselor detail ", counselor)
       if (!counselor || !counselor.email) return;
-      // console.log("jinga")
+      console.log("jinga")
       setIsLoading(true);
       try {
         // Format date as YYYY-MM-DD for the API

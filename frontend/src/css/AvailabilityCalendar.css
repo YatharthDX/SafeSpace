@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  /* height: 100vh; */
   background-color: #f5ead9;
   font-family: Arial, sans-serif;
+  overflow-x: auto; /* Prevent horizontal scrolling */
   overflow-x: auto; /* Prevent horizontal scrolling */
 }
 
@@ -60,6 +61,7 @@
   min-width: 0; /* Prevent flex item from overflowing */
   padding: 20px;
   overflow-x: auto; /* Prevent horizontal scrolling */
+  overflow-x: auto; /* Prevent horizontal scrolling */
 }
 
 .header h1 {
@@ -80,10 +82,12 @@
   border-radius: 4px;
   overflow: auto;
   max-height: calc(100vh - 200px);
+  overflow: auto;
+  /* max-height: calc(100vh - 200px); */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
   width: 100%;
-  max-width: 800px; /* Limit maximum width */
+  max-width: 800px;
 }
 
 .calendar-header {
@@ -146,7 +150,7 @@
   grid-template-columns: repeat(7, 1fr);
   background-color: #fff;
   width: 100%;
-  overflow-x: ;
+  overflow-x: auto;
 }
 
 .calendar-day {
