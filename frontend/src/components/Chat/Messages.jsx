@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaImage } from "react-icons/fa";
-import { getMessages, sendMessage } from "../../services/api";
-import socketService from "../../services/socket";
+import { getMessages, sendMessage } from "../../chat-services/api";
+import socketService from "../../chat-services/socket";
 
 const Messages = ({ selectedChat }) => {
   const [messages, setMessages] = useState([]);

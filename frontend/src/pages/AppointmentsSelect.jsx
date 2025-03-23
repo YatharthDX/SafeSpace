@@ -18,33 +18,47 @@ function AppointmentSelect() {
 
   // Time slots that could potentially be available
   const allTimeSlots = [
+    "9:00 AM",
+    "9:30 AM",
     "10:00 AM",
     "10:30 AM",
     "11:00 AM",
     "11:30 AM",
     "12:00 PM",
     "12:30 PM",
-    "1:00 PM",
-    "1:30 PM",
     "2:00 PM",
     "2:30 PM",
     "3:00 PM",
-    "5:00 PM"
-  ];
+    "3:30 PM",
+    "4:00 PM",
+    "4:30 PM",
+    "5:00 PM",
+    "5:30 PM",
+    "6:00 PM",
+    "6:30 PM",
 
+  ];
   // Fetch available time slots whenever the selected date changes
   useEffect(() => {
     const fetchAvailableSlots = async () => {
-      if(!counselor.email) counselor.email = "counsellor1@iitk.ac.in";
+      console.log("counselor detail ", counselor)
       if (!counselor || !counselor.email) return;
       console.log("jinga")
       setIsLoading(true);
       try {
         // Format date as YYYY-MM-DD for the API
-        const formattedDate = `${String(selectedDate.getDate()).padStart(2, '0')}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${selectedDate.getFullYear()}`;
+        // convert date to ISO format
+        const formattedDate = (dateStr) => {
+          if (!dateStr) return "";
+          
+          const date = new Date(dateStr);
+          return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
+            .toISOString();
+        }
+        console.log("Formatted date:", formattedDate(selectedDate));
         // const formattedDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
         
-        const response = await fetch(`http://127.0.0.1:8000/appointments/counselors/available_slots?counselor_email=${counselor.email}&date=${formattedDate}`);
+        const response = await fetch(`http://127.0.0.1:8000/appointments/counselors/available_slots?counselor_email=${counselor.email}&date=${formattedDate(selectedDate)}`);
         if (!response.ok) {
           throw new Error('Failed to fetch available slots');
         }
@@ -52,13 +66,12 @@ function AppointmentSelect() {
         const data = await response.json();
         console.log("Available slots:", data.time_slots);
         const formattedTimeSlots = data.time_slots.map(time => {
-          const hour = parseInt(time.split(':')[0]);
-          if (hour > 12) {
-            return `${hour - 12}:00 PM`;
-          } else {
-            return `${hour === 0 ? 12 : hour}:00 AM`;
-          }
+          const [hour, minute] = time.split(':').map(Number);
+          const period = hour >= 12 ? 'PM' : 'AM';
+          const formattedHour = hour % 12 || 12; // Convert 0 -> 12 and 13+ -> 1+
+          return `${formattedHour}:${minute.toString().padStart(2, '0')} ${period}`;
         });
+        
         setAvailableTimeSlots(formattedTimeSlots);
       } catch (error) {
         console.error("Error fetching available slots:", error);
@@ -238,8 +251,7 @@ function AppointmentSelect() {
               </div>
               <div className="counselor-details">
                 <h2>{counselor?.name}</h2>
-                <p>{counselor?.specialization}</p>
-                <p>{counselor?.experience} years experience</p>
+                <p>{counselor?.description}</p>
                 <p className="session-duration">30 mins</p>
               </div>
             </div>

@@ -2,9 +2,9 @@ import Navbar2 from "../components/Public/navbar2";
 import React, { useState, useEffect } from "react";
 import ChatBox from "/src/components/Chat/ChatBox.jsx";
 import Messages from "/src/components/Chat/Messages.jsx";
-import { getCurrentUser } from "../services/pyapi";
-import { getUsers } from "../services/api";
-import socketService from "../services/socket";
+import { getCurrentUser } from "../chat-services/pyapi";
+import { getUsers } from "../chat-services/api";
+import socketService from "../chat-services/socket";
 import "/src/css/Chat.css";
 
 const Chat = () => {
