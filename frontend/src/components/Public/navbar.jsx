@@ -1,42 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearch, FaCalendarAlt, FaComments, FaUser, FaSignOutAlt, FaHome } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import "../../css/navbar.css";
 import logo from "../../assets/logo_edited.png";
 
-const Navbar = () => {
+const Navbar = ({ onSearch }) => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredResults, setFilteredResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [searchTags, setSearchTags] = useState([]);
+  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
 
-  const data = [
-    "Mental Health Tips",
-    "Stress Management",
-    "Anxiety Support",
-    "Depression Awareness",
-    "Self-care Strategies",
-    "Therapist Recommendations",
-  ];
+  // Fetch all available tags on component mount
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/search_blog/tags/");
+        if (response.ok) {
+          const tags = await response.json();
+          setSearchTags(tags);
+        }
+      } catch (error) {
+        console.error("Error fetching tags:", error);
+      }
+    };
+    fetchTags();
+  }, []);
 
   const handleSearch = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
+
+    // Filter tags based on search input
     if (value.length > 0) {
-      const results = data.filter((item) =>
-        item.toLowerCase().includes(value.toLowerCase())
+      const results = searchTags.filter((tag) =>
+        tag.toLowerCase().includes(value.toLowerCase())
       );
       setFilteredResults(results);
       setShowDropdown(results.length > 0);
+      
+      // Pass search term to parent component for API search
+      if (onSearch) {
+        onSearch(value, []);
+      }
     } else {
       setShowDropdown(false);
+      
+      // Clear search if input is empty
+      if (onSearch) {
+        onSearch("", []);
+      }
     }
   };
 
-  const handleDropdownBlur = (event) => {
-    if (!event.currentTarget.contains(event.relatedTarget)) {
-      setShowDropdown(false);
+  const handleTagSelect = (tag) => {
+    // When a tag is selected from dropdown, search using that tag
+    if (onSearch) {
+      onSearch(searchTerm, [tag]);
     }
+    setShowDropdown(false);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(searchTerm, []);
+    }
+    setShowDropdown(false);
   };
 
   return (
@@ -51,19 +82,37 @@ const Navbar = () => {
       {/* Center Section - Search Bar */}
       <div className="navbar-center">
         <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search"
-            className="search-bar"
-            value={searchTerm}
-            onChange={handleSearch}
-            onFocus={() => setShowDropdown(filteredResults.length > 0)}
-          />
-          <FaSearch className="search-icon" />
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="Search posts..."
+              className="search-bar"
+              value={searchTerm}
+              onChange={handleSearch}
+              onFocus={() => setShowDropdown(filteredResults.length > 0)}
+              onBlur={() => {
+                if (!isDropdownHovered) setShowDropdown(false);
+              }}
+            />
+          </form>
+          
           {showDropdown && (
-            <ul className="search-dropdown" onMouseLeave={() => setShowDropdown(false)}>
+            <ul 
+              className="search-dropdown"
+              onMouseEnter={() => setIsDropdownHovered(true)}
+              onMouseLeave={() => {
+                setIsDropdownHovered(false);
+                setShowDropdown(false);
+              }}
+            >
               {filteredResults.map((result, index) => (
-                <li key={index} className="search-item">{result}</li>
+                <li 
+                  key={index} 
+                  className="search-item"
+                  onClick={() => handleTagSelect(result)}
+                >
+                  {result}
+                </li>
               ))}
             </ul>
           )}
