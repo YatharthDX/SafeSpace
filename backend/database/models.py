@@ -54,6 +54,64 @@ class AvailableSlot(BaseModel):
 class RoleRequest(BaseModel):
     email: str
     
+# search post
+from pydantic import BaseModel, Field, field_serializer, ConfigDict
+from typing import List, Optional, Any
+from bson import ObjectId
+from pydantic_core import core_schema
+
+# PyObjectId for handling MongoDB ObjectId with Pydantic v2
+class PyObjectId(ObjectId):
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls, _source_type: Any, _handler: Any
+    ) -> core_schema.CoreSchema:
+        return core_schema.no_info_plain_validator_function(cls.validate)
+    
+    @classmethod
+    def validate(cls, value: Any) -> ObjectId:
+        """Ensure the value is a valid ObjectId."""
+        if not isinstance(value, ObjectId):
+            try:
+                return ObjectId(value)
+            except Exception:
+                raise ValueError("Invalid ObjectId format")
+        return value
+
+class Post(BaseModel):
+    """Database post model"""
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+    )
+    
+    id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
+    title: str
+    content: str
+    relevant_tags: List[str]
+    
+    @field_serializer('id')
+    def serialize_id(self, id: PyObjectId) -> str:
+        return str(id)
+    
+    def dict(self, *args, **kwargs):
+        """Compatibility method for Pydantic v2"""
+        return self.model_dump(*args, **kwargs)
+
+class PostResponse(BaseModel):
+    """API response model for posts, including tag match count for sorting"""
+    id: str
+    title: str
+    content: str
+    relevant_tags: List[str]
+    tag_match_count: Optional[int] = 0  
+
+class PostSearch(BaseModel):
+    """Search query model"""
+    text: str = ""
+    tags: List[str] = Field(default_factory=list) # Default to empty list
+
+
 # Blog-related models
 class BlogCreate(BaseModel):
     title: str
