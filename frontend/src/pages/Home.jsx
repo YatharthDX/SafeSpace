@@ -12,8 +12,9 @@ import {
 import Navbar from "../components/Public/navbar";
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
-import { getPosts, likePost, unlikePost, getComments, addComment } from "../api/posts";
+import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
 import { getCurrentUser } from "../chat-services/pyapi";
+// import { useAuth } from '../contexts/AuthContext';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -32,13 +33,15 @@ const Home = () => {
   const [selectedTags, setSelectedTags] = useState([]);
 
   // State for liked posts
-  const [likedPosts, setLikedPosts] = useState({});
+  const [likedPosts, setLikedPosts] = useState(new Set());
 
   // State for active comment section
   const [activeCommentPost, setActiveCommentPost] = useState(null);
 
   // State for comment input
   const [newComment, setNewComment] = useState("");
+
+  // const { isAuthenticated } = useAuth();
 
   const HandleCreate = () => {
     navigate("/createpost");
@@ -52,11 +55,29 @@ const Home = () => {
   // Fetch posts from API
   const fetchPosts = async () => {
     try {
+      // First get the current user and their liked posts
+      const currentUser = await getCurrentUser();
+      let likedPostIds = [];
+      if (currentUser) {
+        console.log("currentUser",currentUser)
+        likedPostIds = await getUserLikedPosts();
+        setLikedPosts(new Set(likedPostIds));
+      }
+
+      // Then fetch all posts
       const fetchedPosts = await getPosts();
-      setPosts(fetchedPosts);
+      
+      // Update posts with correct likes count and liked state
+      const updatedPosts = fetchedPosts.map(post => ({
+        ...post,
+        isLiked: likedPostIds.includes(post._id)
+      }));
+      
+      setPosts(updatedPosts);
+
       // Initialize comments state for each post
       const commentsState = {};
-      for (const post of fetchedPosts) {
+      for (const post of updatedPosts) {
         const postComments = await getComments(post._id);
         commentsState[post._id] = postComments;
       }
@@ -71,15 +92,29 @@ const Home = () => {
   // Toggle like function
   const toggleLike = async (postId) => {
     try {
-      if (likedPosts[postId]) {
+      if (likedPosts.has(postId)) {
         await unlikePost(postId);
-        setLikedPosts(prev => ({ ...prev, [postId]: false }));
+        setLikedPosts(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(postId);
+          return newSet;
+        });
       } else {
         await likePost(postId);
-        setLikedPosts(prev => ({ ...prev, [postId]: true }));
+        setLikedPosts(prev => new Set([...prev, postId]));
       }
-      // Refresh posts to get updated likes count
-      fetchPosts();
+      
+      // Update the post's likes count in the posts state
+      setPosts(prevPosts =>
+        prevPosts.map(post =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: likedPosts.has(postId) ? post.likes - 1 : post.likes + 1
+              }
+            : post
+        )
+      );
     } catch (err) {
       setError(err.message || "Failed to update like status. Please try again.");
     }
@@ -221,11 +256,11 @@ const Home = () => {
                 <div className="post-actions">
                   <button
                     className={`action-button ${
-                      likedPosts[post._id] ? "active" : ""
+                      likedPosts.has(post._id) ? "active" : ""
                     }`}
                     onClick={() => toggleLike(post._id)}
                   >
-                    {likedPosts[post._id] ? <FaHeart /> : <FaRegHeart />}
+                    {likedPosts.has(post._id) ? <FaHeart /> : <FaRegHeart />}
                   </button>
                   <button
                     className={`action-button ${

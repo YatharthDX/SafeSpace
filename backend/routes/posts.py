@@ -4,9 +4,11 @@ from bson import ObjectId
 
 from database.models import BlogCreate, Blog, CommentCreate, Comment, LikesUpdate
 from services.post_service import PostService
-
 router = APIRouter(tags=["posts"])
+from pydantic import BaseModel
 
+class LikeRequest(BaseModel):
+    user_id: str
 # Dependency for PostService
 def get_post_service():
     return PostService()
@@ -123,23 +125,37 @@ async def update_likes(
 @router.post("/blogs/{blog_id}/like", response_description="Like a blog post")
 async def like_blog(
     blog_id: str,
+    like_request: LikeRequest,
     post_service: PostService = Depends(get_post_service)
 ):
     try:
-        return await post_service.increment_likes(blog_id)
+        return await post_service.increment_likes(blog_id, like_request.user_id)
     except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid blog ID format")
+        raise HTTPException(status_code=400, detail="Invalid blog ID or user ID format")
     except KeyError:
         raise HTTPException(status_code=404, detail="Blog not found")
 
 @router.post("/blogs/{blog_id}/unlike", response_description="Unlike a blog post")
 async def unlike_blog(
     blog_id: str,
+    like_request: LikeRequest,
     post_service: PostService = Depends(get_post_service)
 ):
     try:
-        return await post_service.decrement_likes(blog_id)
+        return await post_service.decrement_likes(blog_id, like_request.user_id)
     except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid blog ID format")
+        raise HTTPException(status_code=400, detail="Invalid blog ID or user ID format")
     except KeyError:
         raise HTTPException(status_code=404, detail="Blog not found")
+
+@router.get("/user/liked-posts", response_description="Get user's liked posts")
+async def get_user_liked_posts(
+    user_id: str,
+    post_service: PostService = Depends(get_post_service)
+):
+    try:
+        return await post_service.get_user_liked_posts(user_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid user ID format")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
