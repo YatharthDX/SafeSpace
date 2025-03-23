@@ -4,7 +4,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { BsTag } from "react-icons/bs";
 import "../css/CreatePost.css";
 import Navbar2 from "../components/Public/navbar2";
-import { createPost, uploadPostImage, classifyText } from "../api/posts";
+import { createPost, uploadPostImage, classifyText, classifySeverity } from "../api/posts";
 import { useNavigate } from "react-router-dom";
 import { Fetch } from "socket.io-client";
 import { getCurrentUser } from "../chat-services/pyapi";
@@ -80,10 +80,19 @@ const CreatePost = () => {
       }
       // Check for hate speech
       const classification = await classifyText(classifyData);
-      console.log(classifyData);
-      console.log(classification);
+      // console.log(classifyData);
+      // console.log(classification);
       if (classification === "HATE") {
         setError("Please refrain from using hate speech in your post");
+        setIsSubmitting(false);
+        return;
+      }
+      const classifyData2 = {
+        text: title
+      }
+      const classification2 = await classifyText(classifyData2);
+      if (classification2 === "HATE") {
+        setError("Please refrain from using hate speech in your title");
         setIsSubmitting(false);
         return;
       }
@@ -95,7 +104,7 @@ const CreatePost = () => {
         author_id: currentUser._id,
         author: currentUser.name,
         relevance_tags: selectedTags,
-        severity_tag: severityTag || "medium" // Default to medium if not set
+        severity_tag: await classifySeverity(classifyData) || "medium" // Default to medium if not set
       };
 
       // Create the post

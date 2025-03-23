@@ -219,7 +219,7 @@ function AppointmentForm() {
         {/* LEFT PANEL - Info about the appointment */}
         <div className="appointment-info">
           <button className="back-button" onClick={handleBack}>
-            <span className="back-arrow">&#8592;</span> Back
+            <span className="back-arrow">&#8592;</span>
           </button>
 
           <h2>{counselor?.name || "Dr. Counselor Name"}</h2>
@@ -230,7 +230,8 @@ function AppointmentForm() {
           </p>
           {/* You can combine date & time into a single string, or show them separately */}
           <p>
-            {selectedTime || "02:30pm"} - {add30Minutes(selectedTime || "02:30 PM")},{" "}
+            {selectedTime || "02:30pm"} - {add30Minutes(selectedTime || "02:30 PM")},{" "}</p>
+          <p>
             {selectedDate || "Thursday, August 10th"}
           </p>
         </div>

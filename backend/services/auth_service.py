@@ -47,14 +47,12 @@ def verify_otp_service(request: OTPVerification):
     return {"success": True, "message": "OTP verified successfully"}
 
 def register_user_service(user: UserRegistration):
-    if users_collection is None or redis_client is None:
+    if users_collection is None:
         raise HTTPException(status_code=503, detail="Service unavailable")
-    verification_key = f"verified:{user.email}:signup"
-    if not redis_client.get(verification_key):
-        logger.warning("Email not verified, proceeding for testing")
+    
     if users_collection.find_one({"email": user.email}):
-        # return {"success": False, "message": "User already exists"}
         raise HTTPException(status_code=400, detail="User already exists")
+    
     hashed_password = pwd_context.hash(user.password)
     new_user = {
         "email": user.email,
@@ -65,9 +63,7 @@ def register_user_service(user: UserRegistration):
     }
     users_collection.insert_one(new_user)
     user_id = users_collection.find_one({"email": user.email})["_id"]
-    # liked_posts_collection.insert_one({"user_id": user_id, "post_ids": []})
 
-    redis_client.delete(verification_key)
     return {"success": True, "message": "User registered successfully"}
 
 def reset_password_service(request: PasswordReset):
@@ -159,3 +155,15 @@ def get_user_details_service(current_user: dict):
     return user_details
 
 
+def logout_service(response: Response):
+    response.set_cookie(
+        key="jwt", 
+        value="", 
+        expires=0,  # Expire immediately
+        max_age=0,  # Ensure immediate expiration
+        path="/",   # Match the original cookie path
+        httponly=True,
+        secure=False,  # Change to True in production
+        samesite="Lax",
+    )
+    return {"success": True, "message": "Logged out successfully"}

@@ -1,44 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearch, FaCalendarAlt, FaComments, FaUser, FaSignOutAlt, FaHome } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode"; // Fix the import
 import "../../css/navbar.css";
 import logo from "../../assets/logo_edited.png";
 
-const Navbar = () => {
+const Navbar = ({ onSearch }) => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredResults, setFilteredResults] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [role, setRole] = useState(null);
 
-  const data = [
-    "Mental Health Tips",
-    "Stress Management",
-    "Anxiety Support",
-    "Depression Awareness",
-    "Self-care Strategies",
-    "Therapist Recommendations",
-  ];
-
-  const handleSearch = (event) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    if (value.length > 0) {
-      const results = data.filter((item) =>
-        item.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredResults(results);
-      setShowDropdown(results.length > 0);
-    } else {
-      setShowDropdown(false);
+  useEffect(() => {
+    // Decode JWT token and extract role
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token); // Correct usage
+        setRole(decoded.role); // Assuming the role is stored in 'role' key
+      } catch (error) {
+        console.error("Invalid token:", error);
+        localStorage.removeItem("token"); // Remove invalid token
+      }
     }
-  };
-
-  const handleDropdownBlur = (event) => {
-    if (!event.currentTarget.contains(event.relatedTarget)) {
-      setShowDropdown(false);
-    }
-  };
-
+  }, []);
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -48,45 +31,30 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Center Section - Search Bar */}
-      <div className="navbar-center">
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search"
-            className="search-bar"
-            value={searchTerm}
-            onChange={handleSearch}
-            onFocus={() => setShowDropdown(filteredResults.length > 0)}
-          />
-          <FaSearch className="search-icon" />
-          {showDropdown && (
-            <ul className="search-dropdown" onMouseLeave={() => setShowDropdown(false)}>
-              {filteredResults.map((result, index) => (
-                <li key={index} className="search-item">{result}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-
-      {/* Right Section - Navigation Links */}
       <div className="navbar-right">
         <Link to="/home" className="nav-link">
           <FaHome /> Home
         </Link>
-        <Link to="/appointments" className="nav-link">
-          <FaCalendarAlt /> Appointments
-        </Link>
+        {/* Conditional Appointment Redirect */}
+        {role === "counsellor" ? (
+          <Link to="/counselor/dashboard" className="nav-link">
+            <FaCalendarAlt /> Appointments
+          </Link>
+        ) : (
+          <Link to="/appointments" className="nav-link">
+            <FaCalendarAlt /> Appointments
+          </Link>
+        )}
+
         <Link to="/chat" className="nav-link">
           <FaComments /> Chat
         </Link>
         <Link to="/profile" className="nav-link">
           <FaUser /> Profile
         </Link>
-        <button onClick={() => navigate("/")} className="nav-link logout-btn">
+        <a onClick={() => navigate("/")} className="nav-link">
           <FaSignOutAlt /> Logout
-        </button>
+        </a>
       </div>
     </nav>
   );

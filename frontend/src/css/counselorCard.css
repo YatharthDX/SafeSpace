@@ -12,6 +12,7 @@
   max-width: 420px;
   margin: 0 auto;
   width: 100%;
+  height: 90%; /* Ensure all cards have the same height */
 }
 
 .counselor-card:hover {
@@ -19,11 +20,28 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+.counselor-image-container {
+  width: 100%;
+  height: 100%; /* Fixed height for image container */
+  position: relative;
+  border-bottom: 1px solid #e0d6c2;
+}
+
 .counselor-image {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-bottom: 1px solid #e0d6c2;
+  height: 100%;
+  object-fit:fill; /* This will maintain aspect ratio while filling container */
+}
+
+/* Placeholder for cards without images */
+.counselor-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
 }
 
 .counselor-info {
@@ -72,6 +90,7 @@
   border-top: 1px solid #e0d6c2;
   display: flex;
   justify-content: center;
+  margin-top: auto; /* Push to bottom of card */
 }
 
 .book-button {

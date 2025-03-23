@@ -6,27 +6,83 @@ import uuid
 from datetime import datetime
 from database.connection import blogs_collection, comments_collection ,liked_posts_collection
 from services.auth_service import get_current_user_service
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from transformers import pipeline
-
-# Load the model and tokenizer
-model_name = "Hate-speech-CNERG/dehatebert-mono-english"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name)
-
-classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
-
-
+from detoxify import Detoxify
 from database.models import BlogCreate, Blog, CommentCreate, Comment, ClassifyRequest
+from google import genai
+from google.genai import types
+import json 
+model = Detoxify('original')
+
 
 class PostService:
     def __init__(self):
         self.blogs_collection = blogs_collection
         self.comments_collection = comments_collection
 
+    async def classify_severity(self, classify_request: ClassifyRequest) -> dict:
+        client = genai.Client(
+        api_key=os.environ["GENAI_API_KEY"],
+        )
+        input_text = classify_request.text
+        # Set up the conversation for severity detection only.
+        contents = [
+            types.Content(
+                role="user",
+                parts=[
+                    types.Part.from_text(
+                        text=(
+                            f'for the given input "{input_text}"   return the severity of the mental issue from the following options : severe, moderate, mild, none'
+                        )
+                    ),
+                ],
+            ),
+        ]
+
+        generate_content_config = types.GenerateContentConfig(
+            temperature=1,
+            top_p=0.95,
+            top_k=40,
+            max_output_tokens=8192,
+            response_mime_type="application/json",
+            response_schema=genai.types.Schema(
+                type=genai.types.Type.OBJECT,
+                required=["severity"],
+                properties={
+                    "severity": genai.types.Schema(
+                        type=genai.types.Type.ARRAY,
+                        items=genai.types.Schema(
+                            type=genai.types.Type.STRING,
+                        ),
+                    ),
+                },
+            ),
+        )
+        output_chunks = []
+        for chunk in client.models.generate_content_stream(
+            model="gemini-2.0-flash",
+            contents=contents,
+            config=generate_content_config,
+        ):
+            output_chunks.append(chunk.text)
+
+        # Join the chunks into a complete string
+        output_text = "".join(output_chunks)
+
+        try:
+            # Parse the JSON text to a Python dictionary
+            result = json.loads(output_text)
+            print(type(result))
+            return result
+        except json.JSONDecodeError:
+            print("Failed to parse output as JSON.")
+            return None 
+
     async def classify_text(self, classify_request: ClassifyRequest) -> str:
-        result = classifier(classify_request.text)
-        return result[0]['label']
+        result = model.predict(classify_request.text)
+        if result['toxicity'] > 0.4 or result['severe_toxicity'] > 0.4 or result['obscene'] > 0.4 or result['threat'] > 0.4 or result['insult'] > 0.4 or result['identity_attack'] > 0.4:
+            return "HATE"
+        else:
+            return "NOT HATE"
 
     async def create_blog(self, blog: BlogCreate) -> Blog:
         """Create a new blog post"""

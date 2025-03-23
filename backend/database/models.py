@@ -1,6 +1,9 @@
-from pydantic import BaseModel, EmailStr, validator, Field
+from pydantic import BaseModel, EmailStr, validator, Field, field_serializer, ConfigDict
+from typing import List, Optional, Any
+from bson import ObjectId
+from pydantic_core import core_schema
 from datetime import datetime
-from typing import List, Optional
+
 
 class EmailRequest(BaseModel):
     email: EmailStr
@@ -55,10 +58,7 @@ class RoleRequest(BaseModel):
     email: str
     
 # search post
-from pydantic import BaseModel, Field, field_serializer, ConfigDict
-from typing import List, Optional, Any
-from bson import ObjectId
-from pydantic_core import core_schema
+
 
 # PyObjectId for handling MongoDB ObjectId with Pydantic v2
 class PyObjectId(ObjectId):
@@ -104,7 +104,7 @@ class PostResponse(BaseModel):
     title: str
     content: str
     relevant_tags: List[str]
-    tag_match_count: Optional[int] = 0  
+    tag_match_count: Optional[float] = 0  
 
 class PostSearch(BaseModel):
     """Search query model"""

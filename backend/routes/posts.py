@@ -31,6 +31,13 @@ async def classify_text(
 ):
     return await post_service.classify_text(text)
 
+@router.post("/classify-severity", response_model=dict, response_description="Classify the severity of a text")
+async def classify_severity(
+    text : ClassifyRequest,
+    post_service: PostService = Depends(get_post_service)
+): 
+    return await post_service.classify_severity(text)
+
 @router.get("/blogs", response_model=List[Blog], response_description="Get all blogs")
 async def get_blogs(
     skip: int = 0, 
