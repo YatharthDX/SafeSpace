@@ -274,14 +274,14 @@ const Home = () => {
                     <FaShareAlt />
                   </button> */}
                 </div>
-                {post.tags && post.tags.length > 0 && (
+                {post.relevance_tags && post.relevance_tags.length > 0 && (
                   <div className="post-tags">
-                    {post.tags.map((tag, index) => (
+                    {post.relevance_tags.map((relevance_tag, index) => (
                       <span 
                         key={index} 
                         className="tag"
                       >
-                        {tag}
+                        {relevance_tag}
                       </span>
                     ))}
                   </div>
