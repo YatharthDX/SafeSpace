@@ -157,9 +157,9 @@ const Navbar = ({ onSearch }) => {
         <Link to="/profile" className="nav-link">
           <FaUser /> Profile
         </Link>
-        <button onClick={handleLogout} className="nav-link logout-btn">
+        <a onClick={() => navigate("/")} className="nav-link">
           <FaSignOutAlt /> Logout
-        </button>
+        </a>
       </div>
     </nav>
   );
