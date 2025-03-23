@@ -6,6 +6,16 @@ import uuid
 from datetime import datetime
 from database.connection import blogs_collection, comments_collection ,liked_posts_collection
 from services.auth_service import get_current_user_service
+# from transformers import AutoTokenizer, AutoModelForSequenceClassification
+# from transformers import pipeline
+
+# # Load the model and tokenizer
+# model_name = "Hate-speech-CNERG/dehatebert-mono-english"
+# tokenizer = AutoTokenizer.from_pretrained(model_name)
+# model = AutoModelForSequenceClassification.from_pretrained(model_name)
+
+# classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
+
 
 from database.models import BlogCreate, Blog, CommentCreate, Comment
 
