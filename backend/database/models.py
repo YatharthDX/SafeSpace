@@ -1,6 +1,6 @@
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, validator, Field
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 class EmailRequest(BaseModel):
     email: EmailStr
@@ -44,7 +44,7 @@ class Appointment(BaseModel):
     time_slot: str
     description: str
     contact_no: str
-    status: str = "pending"
+    status: str
 
 class AvailableSlot(BaseModel):
     counselor_email: EmailStr
@@ -54,49 +54,133 @@ class AvailableSlot(BaseModel):
 class RoleRequest(BaseModel):
     email: str
     
-
-
-
-from pydantic import BaseModel, Field
-from typing import List, Optional
+# search post
+from pydantic import BaseModel, Field, field_serializer, ConfigDict
+from typing import List, Optional, Any
 from bson import ObjectId
+from pydantic_core import core_schema
 
-
-
+# PyObjectId for handling MongoDB ObjectId with Pydantic v2
 class PyObjectId(ObjectId):
     @classmethod
-    def __get_validators__(cls):
-        yield cls.validate
-
+    def __get_pydantic_core_schema__(
+        cls, _source_type: Any, _handler: Any
+    ) -> core_schema.CoreSchema:
+        return core_schema.no_info_plain_validator_function(cls.validate)
+    
     @classmethod
-    def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid ObjectId")
-        return ObjectId(v)
-
-    @classmethod
-    def __modify_schema__(cls, field_schema):
-        field_schema.update(type="string")
+    def validate(cls, value: Any) -> ObjectId:
+        """Ensure the value is a valid ObjectId."""
+        if not isinstance(value, ObjectId):
+            try:
+                return ObjectId(value)
+            except Exception:
+                raise ValueError("Invalid ObjectId format")
+        return value
 
 class Post(BaseModel):
+    """Database post model"""
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+    )
+    
     id: Optional[PyObjectId] = Field(default_factory=PyObjectId, alias="_id")
     title: str
     content: str
     relevant_tags: List[str]
     
-    class Config:
-        allow_population_by_field_name = True
-        arbitrary_types_allowed = True
-        json_encoders = {
-            ObjectId: lambda v: str(v)
-        }
+    @field_serializer('id')
+    def serialize_id(self, id: PyObjectId) -> str:
+        return str(id)
+    
+    def dict(self, *args, **kwargs):
+        """Compatibility method for Pydantic v2"""
+        return self.model_dump(*args, **kwargs)
 
 class PostResponse(BaseModel):
+    """API response model for posts, including tag match count for sorting"""
     id: str
     title: str
     content: str
     relevant_tags: List[str]
+    tag_match_count: Optional[int] = 0  
 
 class PostSearch(BaseModel):
-    text: Optional[str] = ""
-    tags: Optional[List[str]] = []
+    """Search query model"""
+    text: str = ""
+    tags: List[str] = Field(default_factory=list) # Default to empty list
+
+
+# Blog-related models
+class BlogCreate(BaseModel):
+    title: str
+    content: str
+    author: str
+    relevance_tags: List[str] = []
+    severity_tag: str
+    image_url: Optional[str] = None
+
+class Blog(BaseModel):
+    id: str = Field(alias="_id")
+    title: str
+    content: str
+    author: str
+    relevance_tags: List[str] = []
+    severity_tag: str
+    image_url: Optional[str] = None
+    likes: int = 0
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "_id": "60d21b4967d0d8992e610c85",
+                "title": "My Experience",
+                "content": "This is my story...",
+                "author": "John Doe",
+                "relevance_tags": ["anxiety", "depression", "support"],
+                "severity_tag": "moderate",
+                "image_url": "/uploads/image.jpg",
+                "likes": 10,
+                "created_at": "2021-06-22T19:40:09.603Z",
+                "updated_at": "2021-06-22T19:40:09.603Z"
+            }
+        }
+
+class CommentCreate(BaseModel):
+    content: str
+    author: str
+
+class Comment(BaseModel):
+    id: str = Field(alias="_id")
+    blog_id: str
+    content: str
+    author: str
+    created_at: datetime
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "_id": "60d21b4967d0d8992e610c86",
+                "blog_id": "60d21b4967d0d8992e610c85",
+                "content": "Thank you for sharing your story",
+                "author": "Jane Smith",
+                "created_at": "2021-06-22T19:40:09.603Z"
+            }
+        }
+
+class LikesUpdate(BaseModel):
+    likes: int
+
+class SlotUpdate(BaseModel):
+    counselor_email: str
+    date: datetime
+    time_slots: List[str]
+
+class StatusUpdate(BaseModel):
+    status: str
+    

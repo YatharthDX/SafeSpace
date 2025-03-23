@@ -4,14 +4,13 @@ from middleware.auth_middleware import exception_handling
 from routes.auth import router as auth_router
 from routes.user import router as user_router
 from routes.appointments import router as appointments_router
+from routes.posts import router as posts_router
 from database.connection import users_collection, appointments_collection, available_slots_collection, role_requests_collection, redis_client
 from utils.config import EMAIL_USERNAME, EMAIL_PASSWORD
 import logging
 from routes.search import router as search_router
-
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
 app = FastAPI()
 
 # Add CORS middleware first
@@ -30,6 +29,7 @@ app.include_router(auth_router, prefix="/api/auth")
 app.include_router(user_router, prefix="/api")
 app.include_router(appointments_router, prefix="/appointments")  # For prefixed routes
 app.include_router(search_router,prefix="/search_blog")  # For prefixed routes
+app.include_router(posts_router, prefix="/blogs")
 
 @app.get("/health")
 async def health_check():

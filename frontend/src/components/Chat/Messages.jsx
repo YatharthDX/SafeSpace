@@ -37,15 +37,32 @@ const Messages = ({ selectedChat }) => {
 
   useEffect(() => {
     // Listen for new messages
-    socketService.onNewMessage((newMessage) => {
+    const handleNewMessage = (newMessage) => {
+      console.log("Messages component received message:", newMessage);
+      console.log("Current selectedChat:", selectedChat);
+      
       if (selectedChat && (newMessage.senderId === selectedChat.id || newMessage.receiverId === selectedChat.id)) {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        console.log("Message matches current chat, adding to messages");
+        setMessages((prevMessages) => {
+          console.log("Previous messages:", prevMessages);
+          const newMessages = [...prevMessages, newMessage];
+          console.log("New messages array:", newMessages);
+          return newMessages;
+        });
+      } else {
+        console.log("Message does not match current chat, ignoring");
       }
-    });
+    };
 
-    // Cleanup on unmount
+    console.log("Setting up message listener for chat:", selectedChat?.id);
+    socketService.onNewMessage(handleNewMessage);
+
+    // Cleanup on unmount or when selectedChat changes
     return () => {
-      socketService.socket?.off("newMessage");
+      console.log("Cleaning up message listener for chat:", selectedChat?.id);
+      if (socketService.socket) {
+        socketService.socket.off("newMessage", handleNewMessage);
+      }
     };
   }, [selectedChat]);
 
@@ -58,7 +75,9 @@ const Messages = ({ selectedChat }) => {
         text: newMessage,
         receiverId: selectedChat.id,
       };
+      console.log("Sending message:", messageData);
       const sentMessage = await sendMessage(selectedChat.id, messageData);
+      console.log("Message sent successfully:", sentMessage);
       setMessages([...messages, sentMessage]);
       setNewMessage("");
       // Emit the message through socket
