@@ -159,3 +159,15 @@ async def get_user_liked_posts(
         raise HTTPException(status_code=400, detail="Invalid user ID format")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.get("/user/{user_id}/blogs", response_description="Get blogs by a particular user")
+async def get_user_blogs(
+    user_id: str,
+    post_service: PostService = Depends(get_post_service)
+):
+    try:
+        return await post_service.get_user_blogs(user_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid user ID format")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
