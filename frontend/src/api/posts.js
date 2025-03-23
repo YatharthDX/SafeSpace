@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { getCurrentUser } from '../chat-services/pyapi';
 
 const API_URL = 'http://127.0.0.1:8000/blogs';
 
 // Configure axios defaults
 axios.defaults.withCredentials = true;
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 // Create a new blog post
 export const createPost = async (postData) => {
@@ -16,6 +18,7 @@ export const createPost = async (postData) => {
     });
     return response.data;
   } catch (error) {
+    console.error('Error creating post:', error);
     throw error.response?.data || error.message;
   }
 };
@@ -54,14 +57,20 @@ export const getPost = async (postId) => {
 // Like a blog post
 export const likePost = async (postId) => {
   try {
-    const response = await axios.post(`${API_URL}/blogs/${postId}/like`, {}, {
+    console.log('Attempting to like post:', postId);
+    const currentUser = await getCurrentUser();
+    const response = await axios.post(`${API_URL}/blogs/${postId}/like`, {
+      user_id: currentUser._id
+    }, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
       }
     });
+    console.log('Like response:', response.data);
     return response.data;
   } catch (error) {
+    console.error('Error liking post:', error);
     throw error.response?.data || error.message;
   }
 };
@@ -69,7 +78,10 @@ export const likePost = async (postId) => {
 // Unlike a blog post
 export const unlikePost = async (postId) => {
   try {
-    const response = await axios.post(`${API_URL}/blogs/${postId}/unlike`, {}, {
+    const currentUser = await getCurrentUser();
+    const response = await axios.post(`${API_URL}/blogs/${postId}/unlike`, {
+      user_id: currentUser._id
+    }, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
@@ -119,11 +131,30 @@ export const uploadPostImage = async (postId, imageFile) => {
     const response = await axios.post(`${API_URL}/blogs/${postId}/upload-image`, formData, {
       withCredentials: true,
       headers: {
+      
         'Content-Type': 'multipart/form-data',
       },
     });
     return response.data;
   } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+// Get user's liked posts
+export const getUserLikedPosts = async () => {
+  try {
+    const currentUser = await getCurrentUser();
+    const response = await axios.get(`${API_URL}/user/liked-posts`, {
+      params: { user_id: currentUser._id },
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching liked posts:', error);
     throw error.response?.data || error.message;
   }
 };

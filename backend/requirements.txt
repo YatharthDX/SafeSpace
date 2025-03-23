@@ -7,4 +7,4 @@ python-jose
 pydantic[email]
 dotenv
 python-multipart
-jwt
+pyjwt

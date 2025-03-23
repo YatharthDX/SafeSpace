@@ -1,4 +1,4 @@
-from database.connection import users_collection, redis_client, liked_posts_collection
+from database.connection import users_collection, redis_client
 from database.models import EmailRequest, OTPVerification, UserRegistration, PasswordReset, LoginRequest
 from utils.otp import generate_otp, send_email
 from utils.hash import pwd_context
@@ -65,7 +65,7 @@ def register_user_service(user: UserRegistration):
     }
     users_collection.insert_one(new_user)
     user_id = users_collection.find_one({"email": user.email})["_id"]
-    liked_posts_collection.insert_one({"user_id": user_id, "post_ids": []})
+    # liked_posts_collection.insert_one({"user_id": user_id, "post_ids": []})
 
     redis_client.delete(verification_key)
     return {"success": True, "message": "User registered successfully"}
