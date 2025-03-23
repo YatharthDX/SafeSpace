@@ -10,37 +10,28 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
   const [hasRequestedRole, setHasRequestedRole] = useState(false);
   const [appointments, setAppointments] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [postsLoading, setPostsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [postsError, setPostsError] = useState(null);
   const [userDetails, setUserDetails] = useState({
     username: "Loading...",
-    profile_picture: null
+    profile_picture: null,
+    _id: null
   });
-
-  // Sample posts data
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: "Playful Raccoon",
-      time: "2 hours ago",
-      title: "My healthcare journey",
-      content:
-        "Just had a great appointment with Dr. Smith. The new treatment plan looks promising!",
-      tags: ["healthcare", "wellness"],
-    },
-    {
-      id: 2,
-      author: "Playful Raccoon",
-      time: "2 days ago",
-      content: "Does anyone have recommendations for good nutrition resources?",
-      tags: ["nutrition", "advice"],
-    },
-  ]);
 
   // Fetch user details on component mount
   useEffect(() => {
     fetchUserDetails();
   }, []);
+
+  // Fetch posts when tab changes to posts or when user details are loaded
+  useEffect(() => {
+    if (activeTab === "posts" && userDetails._id) {
+      fetchUserPosts(userDetails._id);
+    }
+  }, [activeTab, userDetails._id]);
 
   // Fetch appointments when tab changes to appointments
   useEffect(() => {
@@ -86,6 +77,65 @@ const Profile = () => {
       } else {
         setError("Failed to load user details. Please try again later.");
       }
+    }
+  };
+
+  const fetchUserPosts = async (userId) => {
+    setPostsLoading(true);
+    setPostsError(null);
+    try {
+      // Get the token from localStorage
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setPostsError("You need to be logged in to view posts");
+        setPostsLoading(false);
+        return;
+      }
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/blogs/user/${userId}/blogs`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      // Transform the backend data to match our frontend structure
+      const formattedPosts = data.map(post => ({
+        id: post._id,
+        author: userDetails.username, // Use the username from user details
+        time: new Date(post.created_at).toLocaleString(), // Format the date
+        title: post.title,
+        content: post.content,
+        tags: post.tags || [],
+      }));
+
+      setPosts(formattedPosts);
+    } catch (error) {
+      console.error("Error fetching user posts:", error);
+
+      // Handle specific error cases
+      if (error.message.includes("401") || error.message.includes("403")) {
+        setPostsError("Authentication error. Please log in again.");
+      } else if (error.name === "TypeError") {
+        setPostsError("No response from server. Please check your connection.");
+      } else {
+        setPostsError("Failed to load posts. Please try again later.");
+      }
+    } finally {
+      setPostsLoading(false);
     }
   };
 
@@ -157,9 +207,41 @@ const Profile = () => {
     setHasRequestedRole(true);
   };
 
-  const handleDeletePost = (postId) => {
-    // Filter out the deleted post
-    setPosts(posts.filter((post) => post.id !== postId));
+  const handleDeletePost = async (postId) => {
+    try {
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        alert("You need to be logged in to delete posts");
+        return;
+      }
+      
+      // Implement the API call to delete the post
+      // This is a placeholder - update with your actual API endpoint
+      
+      const response = await fetch(
+        `http://127.0.0.1:8000/blogs/blogs/${postId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
+      
+      // For now, just update the UI
+      setPosts(posts.filter((post) => post.id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("Failed to delete post. Please try again.");
+    }
   };
 
   return (
@@ -178,7 +260,19 @@ const Profile = () => {
 
         <div className="profile-content">
           {activeTab === "posts" ? (
-            <PostsList posts={posts} onDeletePost={handleDeletePost} />
+            <>
+              {postsLoading ? (
+                <div className="loading-indicator">Loading posts...</div>
+              ) : postsError ? (
+                <div className="error-message">{postsError}</div>
+              ) : posts.length === 0 ? (
+                <div className="empty-state">
+                  No posts found. Your blog posts will appear here.
+                </div>
+              ) : (
+                <PostsList posts={posts} onDeletePost={handleDeletePost} />
+              )}
+            </>
           ) : (
             <>
               {loading ? (
@@ -187,8 +281,7 @@ const Profile = () => {
                 <div className="error-message">{error}</div>
               ) : appointments.length === 0 ? (
                 <div className="empty-state">
-                  No appointments found. Your appointments will appear
-                  here.
+                  No appointments found. Your appointments will appear here.
                 </div>
               ) : (
                 <AppointmentsList appointments={appointments} />

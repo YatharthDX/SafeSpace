@@ -1,81 +1,63 @@
-import React, { useState } from 'react';
-import { FaRegUser, FaRegHeart, FaHeart, FaRegComment, FaShareAlt, FaTrashAlt, FaTimes } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaRegUser, FaTrashAlt } from 'react-icons/fa';
 
 const PostsList = ({ posts, onDeletePost }) => {
-  // Sample comments data - In a real app, this would likely come from props or an API
-  const sampleComments = {
-    1: [
-      {
-        id: 1,
-        author: "Helpful Panda",
-        time: "2 hours ago",
-        content: "Make sure to take breaks between study sessions! It really helps."
-      },
-      {
-        id: 2,
-        author: "Caring Cat",
-        time: "1 hour ago",
-        content: "I went through the same thing last semester. Remember to hydrate and get some sleep!"
-      }
-    ],
-    2: [
-      {
-        id: 1,
-        author: "Happy Penguin",
-        time: "45 minutes ago",
-        content: "Same feeling here!"
-      }
-    ],
-    3: [
-      {
-        id: 1,
-        author: "Friendly Owl",
-        time: "10 hours ago",
-        content: "Have you tried joining some campus clubs? That really helped me when I was feeling homesick."
-      },
-      {
-        id: 2,
-        author: "Gentle Fox",
-        time: "8 hours ago",
-        content: "Schedule regular video calls with your family. It makes a big difference!"
-      }
-    ]
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update the current time every minute
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(intervalId); // Clean up on unmount
+  }, []);
+
+  // Function to parse specific date format: "23/03/2025, 22:46:07"
+  const parsePostTime = (timeString) => {
+    // Extract parts from "DD/MM/YYYY, HH:MM:SS" format
+    const [datePart, timePart] = timeString.split(', ');
+    if (!datePart || !timePart) return null;
+    
+    const [day, month, year] = datePart.split('/');
+    const [hours, minutes, seconds] = timePart.split(':');
+    
+    // Note: months in JavaScript Date are 0-indexed (0-11)
+    return new Date(year, month - 1, day, hours, minutes, seconds);
   };
 
-  const [likedPosts, setLikedPosts] = useState({});
-  const [activeCommentPost, setActiveCommentPost] = useState(null);
-  const [newComment, setNewComment] = useState("");
+  // Function to calculate time difference
+  const getTimeAgo = (postTime) => {
+    if (!postTime) return "Unknown time";
+    
+    // Parse the specific format
+    const postDate = parsePostTime(postTime);
+    
+    // If parsing failed, return the original string
+    if (!postDate || isNaN(postDate.getTime())) {
+      return postTime;
+    }
 
-  const toggleLike = (postId) => {
-    setLikedPosts((prev) => ({
-      ...prev,
-      [postId]: !prev[postId]
-    }));
-  };
+    const diffMs = currentTime - postDate;
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
 
-  const toggleCommentSection = (postId) => {
-    if (activeCommentPost === postId) {
-      setActiveCommentPost(null);
+    if (diffSeconds < 60) {
+      return "Just now";
+    } else if (diffMinutes < 60) {
+      return `${diffMinutes} ${diffMinutes === 1 ? 'minute' : 'minutes'} ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+    } else if (diffDays < 30) {
+      return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
     } else {
-      setActiveCommentPost(postId);
+      // For older posts, show the actual date
+      return postDate.toLocaleDateString();
     }
   };
 
-  const handleCommentChange = (e) => {
-    setNewComment(e.target.value);
-  };
-
-  const handleCommentSubmit = (e) => {
-    e.preventDefault();
-    if (newComment.trim() === "") return;
-
-    // In a real app, you would send this to your API
-    console.log(`New comment on post ${activeCommentPost}: ${newComment}`);
-
-    // Clear the input
-    setNewComment("");
-  };
-  
   const handleDelete = (postId) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
       onDeletePost(postId);
@@ -91,7 +73,7 @@ const PostsList = ({ posts, onDeletePost }) => {
   }
 
   return (
-    <div className={`posts-section ${activeCommentPost ? "with-comments-open" : ""}`}>
+    <div className="posts-section">
       <div className="appointments-header">
         <h2>My Posts</h2>
         <div className="appointment-count">{posts.length} posts</div>
@@ -107,7 +89,7 @@ const PostsList = ({ posts, onDeletePost }) => {
                 </div>
                 <div className="user-info">
                   <span className="username">{post.author}</span>
-                  <span className="post-time">{post.time}</span>
+                  <span className="post-time">{getTimeAgo(post.time)}</span>
                 </div>
               </div>
               <button
@@ -125,27 +107,6 @@ const PostsList = ({ posts, onDeletePost }) => {
             </div>
 
             <div className="post-footer">
-              <div className="post-actions">
-                <button
-                  className={`action-button ${
-                    likedPosts[post.id] ? "active" : ""
-                  }`}
-                  onClick={() => toggleLike(post.id)}
-                >
-                  {likedPosts[post.id] ? <FaHeart /> : <FaRegHeart />}
-                </button>
-                <button
-                  className={`action-button ${
-                    activeCommentPost === post.id ? "active" : ""
-                  }`}
-                  onClick={() => toggleCommentSection(post.id)}
-                >
-                  <FaRegComment />
-                </button>
-                {/* <button className="action-button">
-                  <FaShareAlt />
-                </button> */}
-              </div>
               {post.tags && post.tags.length > 0 && (
                 <div className="post-tags">
                   {post.tags.map((tag, index) => (
@@ -159,90 +120,6 @@ const PostsList = ({ posts, onDeletePost }) => {
           </div>
         ))}
       </div>
-
-      {/* Comment Section (Instagram-style) */}
-      {activeCommentPost && (
-        <div className="comments-panel">
-          <div className="comments-header">
-            <h3>Comments</h3>
-            <button
-              className="close-comments"
-              onClick={() => setActiveCommentPost(null)}
-            >
-              <FaTimes />
-            </button>
-          </div>
-
-          <div className="post-preview">
-            <div className="post-user">
-              <div className="user-avatar">
-                <FaRegUser />
-              </div>
-              <div className="user-info">
-                <span className="username">
-                  {
-                    posts.find((post) => post.id === activeCommentPost)
-                      ?.author
-                  }
-                </span>
-                <span className="post-time">
-                  {posts.find((post) => post.id === activeCommentPost)?.time}
-                </span>
-              </div>
-            </div>
-            <p className="post-text-preview">
-              {posts
-                .find((post) => post.id === activeCommentPost)
-                ?.content.substring(0, 100)}
-              {posts.find((post) => post.id === activeCommentPost)?.content
-                .length > 100
-                ? "..."
-                : ""}
-            </p>
-          </div>
-
-          <div className="comments-list">
-            {sampleComments[activeCommentPost]?.map((comment) => (
-              <div key={comment.id} className="comment">
-                <div className="comment-header">
-                  <div className="post-user">
-                    <div className="user-avatar">
-                      <FaRegUser />
-                    </div>
-                    <div className="user-info">
-                      <span className="username">{comment.author}</span>
-                      <span className="post-time">{comment.time}</span>
-                    </div>
-                  </div>
-                </div>
-                <p className="comment-text">{comment.content}</p>
-              </div>
-            ))}
-            {!sampleComments[activeCommentPost] && (
-              <div className="no-comments">
-                <p>No comments yet. Be the first to comment!</p>
-              </div>
-            )}
-          </div>
-
-          <form className="comment-form" onSubmit={handleCommentSubmit}>
-            <input
-              type="text"
-              placeholder="Add a comment..."
-              value={newComment}
-              onChange={handleCommentChange}
-              className="comment-input"
-            />
-            <button
-              type="submit"
-              className="post-comment-btn"
-              disabled={newComment.trim() === ""}
-            >
-              Post
-            </button>
-          </form>
-        </div>
-      )}
     </div>
   );
 };
