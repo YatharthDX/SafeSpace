@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Navbar2 from "../components/Public/navbar2";
 import ProfileHeader from "../components/Profile/ProfileHeader";
 import ProfileTabs from "../components/Profile/ProfileTabs";
@@ -13,6 +12,10 @@ const Profile = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [userDetails, setUserDetails] = useState({
+    username: "Loading...",
+    profile_picture: null
+  });
 
   // Sample posts data
   const [posts, setPosts] = useState([
@@ -34,12 +37,57 @@ const Profile = () => {
     },
   ]);
 
+  // Fetch user details on component mount
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
+
   // Fetch appointments when tab changes to appointments
   useEffect(() => {
     if (activeTab === "appointments") {
       fetchAppointments();
     }
   }, [activeTab]);
+
+  const fetchUserDetails = async () => {
+    try {
+      // Get the token from localStorage
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setError("You need to be logged in to view profile");
+        return;
+      }
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/auth/getuserdetails",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setUserDetails(data);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      
+      if (error.message.includes("401") || error.message.includes("403")) {
+        setError("Authentication error. Please log in again.");
+      } else if (error.name === "TypeError") {
+        setError("No response from server. Please check your connection.");
+      } else {
+        setError("Failed to load user details. Please try again later.");
+      }
+    }
+  };
 
   const fetchAppointments = async () => {
     setLoading(true);
@@ -54,18 +102,25 @@ const Profile = () => {
         return;
       }
 
-      // Use full URL instead of relative path
-      const response = await axios.get(
+      const response = await fetch(
         "http://127.0.0.1:8000/appointments/getappointments",
         {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
           },
         }
       );
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
       // Transform the backend data to match our frontend structure
-      const formattedAppointments = response.data.map((appointment) => ({
+      const formattedAppointments = data.map((appointment) => ({
         id: appointment._id,
         time: appointment.time_slot,
         doctor: appointment.counselor_email,
@@ -84,13 +139,9 @@ const Profile = () => {
       console.error("Error fetching appointments:", error);
 
       // Handle specific error cases
-      if (error.response) {
-        if (error.response.status === 401 || error.response.status === 403) {
-          setError("Authentication error. Please log in again.");
-        } else {
-          setError(`Server error: ${error.response.status}`);
-        }
-      } else if (error.request) {
+      if (error.message.includes("401") || error.message.includes("403")) {
+        setError("Authentication error. Please log in again.");
+      } else if (error.name === "TypeError") {
         setError("No response from server. Please check your connection.");
       } else {
         setError("Failed to load appointments. Please try again later.");
@@ -117,7 +168,8 @@ const Profile = () => {
 
       <div className="profile-container">
         <ProfileHeader
-          username="Playful Raccoon"
+          username={userDetails.username}
+          profilePicture={userDetails.profile_picture}
           hasRequestedRole={hasRequestedRole}
           onRoleRequest={handleRoleRequest}
         />
