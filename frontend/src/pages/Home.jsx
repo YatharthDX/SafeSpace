@@ -225,11 +225,7 @@ const Home = () => {
   };
   
   return (
-    <div
-      className={`home-container ${
-        activeCommentPost ? "with-comments-open" : ""
-      }`}
-    >
+    <div className="home-container">
       {/* Navbar with search function */}
       <Navbar onSearch={handleSearch} />
 
@@ -276,7 +272,7 @@ const Home = () => {
         </div>
 
         {/* Main posts area */}
-        <div className="posts-container">
+        <div className={`posts-container ${!activeCommentPost ? 'comments-closed' : ''}`}>
           {loading ? (
             <div className="loading-indicator">Loading posts...</div>
           ) : error ? (
@@ -350,7 +346,7 @@ const Home = () => {
 
         {/* Comment Section */}
         {activeCommentPost && (
-          <div className="comments-panel">
+          <div className={`comments-panel ${activeCommentPost ? 'open' : ''}`}>
             <div className="comments-header">
               <h3>Comments</h3>
               <button
