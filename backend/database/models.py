@@ -104,7 +104,7 @@ class PostResponse(BaseModel):
     title: str
     content: str
     relevant_tags: List[str]
-    tag_match_count: Optional[int] = 0  
+    tag_match_count: Optional[float] = 0  
 
 class PostSearch(BaseModel):
     """Search query model"""

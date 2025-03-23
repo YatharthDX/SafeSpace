@@ -14,7 +14,6 @@ import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
 import { getCurrentUser } from "../chat-services/pyapi";
-// import { useAuth } from '../contexts/AuthContext';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -22,15 +21,13 @@ const Home = () => {
   const [comments, setComments] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
-  // Popular tags list
-  const popularTags = [
-    "anxiety", "depression", "stress", "academic", "social",
-    "relationships", "family", "health", "career"
-  ];
+  const [allTags, setAllTags] = useState([]);
   
   // State for selected tags
   const [selectedTags, setSelectedTags] = useState([]);
+  
+  // State for search text from navbar
+  const [searchText, setSearchText] = useState("");
 
   // State for liked posts
   const [likedPosts, setLikedPosts] = useState(new Set());
@@ -41,36 +38,67 @@ const Home = () => {
   // State for comment input
   const [newComment, setNewComment] = useState("");
 
-  // const { isAuthenticated } = useAuth();
-
   const HandleCreate = () => {
     navigate("/createpost");
   };
 
-  // Fetch posts on component mount
+  // Fetch all available tags
   useEffect(() => {
-    fetchPosts();
+    const fetchTags = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/search_blog/tags/");
+        if (response.ok) {
+          const tags = await response.json();
+          setAllTags(tags);
+        }
+      } catch (error) {
+        console.error("Error fetching tags:", error);
+      }
+    };
+    
+    fetchTags();
   }, []);
 
-  // Fetch posts from API
+  // Fetch posts on component mount and when search criteria change
+  useEffect(() => {
+    fetchPosts();
+  }, [selectedTags, searchText]);
+
+  // Fetch posts from API with search parameters
   const fetchPosts = async () => {
     try {
-      // First get the current user and their liked posts
+      setLoading(true);
+      
+      // Get user and liked posts
       const currentUser = await getCurrentUser();
       let likedPostIds = [];
       if (currentUser) {
-        console.log("currentUser",currentUser)
         likedPostIds = await getUserLikedPosts();
         setLikedPosts(new Set(likedPostIds));
       }
 
-      // Then fetch all posts
-      const fetchedPosts = await getPosts();
+      // Prepare search parameters
+      let fetchedPosts;
+      if (selectedTags.length > 0 || searchText) {
+        // Use search API with parameters
+        const tagsParam = selectedTags.join(',');
+        const url = `http://127.0.0.1:8000/search_blog/search-get/?text=${encodeURIComponent(searchText)}&tags=${encodeURIComponent(tagsParam)}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Search request failed');
+        }
+        
+        fetchedPosts = await response.json();
+      } else {
+        // No search criteria, get all posts
+        fetchedPosts = await getPosts();
+      }
       
       // Update posts with correct likes count and liked state
       const updatedPosts = fetchedPosts.map(post => ({
         ...post,
-        isLiked: likedPostIds.includes(post._id)
+        isLiked: likedPostIds.includes(post._id || post.id)
       }));
       
       setPosts(updatedPosts);
@@ -78,14 +106,29 @@ const Home = () => {
       // Initialize comments state for each post
       const commentsState = {};
       for (const post of updatedPosts) {
-        const postComments = await getComments(post._id);
-        commentsState[post._id] = postComments;
+        const postId = post._id || post.id;
+        const postComments = await getComments(postId);
+        commentsState[postId] = postComments;
       }
       setComments(commentsState);
     } catch (err) {
       setError(err.message || "Failed to fetch posts. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Handle search from navbar
+  const handleSearch = (text, tags) => {
+    setSearchText(text);
+    if (tags && tags.length > 0) {
+      setSelectedTags(prevTags => {
+        // If tag is already selected, don't add it again
+        if (prevTags.includes(tags[0])) {
+          return prevTags;
+        }
+        return [...prevTags, ...tags];
+      });
     }
   };
 
@@ -106,14 +149,15 @@ const Home = () => {
       
       // Update the post's likes count in the posts state
       setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post._id === postId
+        prevPosts.map(post => {
+          const currentPostId = post._id || post.id;
+          return currentPostId === postId
             ? {
                 ...post,
                 likes: likedPosts.has(postId) ? post.likes - 1 : post.likes + 1
               }
             : post
-        )
+        })
       );
     } catch (err) {
       setError(err.message || "Failed to update like status. Please try again.");
@@ -152,7 +196,7 @@ const Home = () => {
       const currentUser = await getCurrentUser();
       const commentData = {
         content: newComment,
-        author: currentUser.name, // This should come from auth context
+        author: currentUser.name,
         author_id: currentUser._id,
       };
       
@@ -186,11 +230,11 @@ const Home = () => {
         activeCommentPost ? "with-comments-open" : ""
       }`}
     >
-      {/* Navbar will be included from your existing components */}
-      <Navbar />
+      {/* Navbar with search function */}
+      <Navbar onSearch={handleSearch} />
 
       <div className="home-main-content">
-        {/* Left sidebar with popular tags and create post button */}
+        {/* Left sidebar with tags and create post button */}
         <div className="left-sidebar">
           <div className="sidebar-section">
             <div className="tag-header">
@@ -208,11 +252,11 @@ const Home = () => {
                   <line x1="7" y1="7" x2="7.01" y2="7"></line>
                 </svg>
               </div>
-              <h2>Popular Tags</h2>
+              <h2>Filter by Tags</h2>
             </div>
 
             <div className="tags-list">
-              {popularTags.map((tag, index) => (
+              {allTags.map((tag, index) => (
                 <div 
                   key={index} 
                   className={`tag-item ${selectedTags.includes(tag) ? 'active' : ''}`}
@@ -233,65 +277,78 @@ const Home = () => {
 
         {/* Main posts area */}
         <div className="posts-container">
-          {posts.map((post) => (
-            <div key={post._id} className="post">
-              <div className="post-header">
-                <div className="post-user">
-                  <div className="user-avatar">
-                    <FaRegUser />
-                  </div>
-                  <div className="user-info">
-                    <span className="username">{post.author}</span>
-                    <span className="post-time">{post.time}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="post-content">
-                {post.title && <h3 className="post-title">{post.title}</h3>}
-                <p className="post-text">{post.content}</p>
-              </div>
-
-              <div className="post-footer">
-                <div className="post-actions">
-                  <button
-                    className={`action-button ${
-                      likedPosts.has(post._id) ? "active" : ""
-                    }`}
-                    onClick={() => toggleLike(post._id)}
-                  >
-                    {likedPosts.has(post._id) ? <FaHeart /> : <FaRegHeart />}
-                  </button>
-                  <button
-                    className={`action-button ${
-                      activeCommentPost === post._id ? "active" : ""
-                    }`}
-                    onClick={() => toggleCommentSection(post._id)}
-                  >
-                    <FaRegComment />
-                  </button>
-                  {/* <button className="action-button">
-                    <FaShareAlt />
-                  </button> */}
-                </div>
-                {post.relevance_tags && post.relevance_tags.length > 0 && (
-                  <div className="post-tags">
-                    {post.relevance_tags.map((relevance_tag, index) => (
-                      <span 
-                        key={index} 
-                        className="tag"
-                      >
-                        {relevance_tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+          {loading ? (
+            <div className="loading-indicator">Loading posts...</div>
+          ) : error ? (
+            <div className="error-message">{error}</div>
+          ) : posts.length === 0 ? (
+            <div className="no-posts-message">
+              No posts found. Try different search criteria or create a new post!
             </div>
-          ))}
+          ) : (
+            posts.map((post) => {
+              const postId = post._id || post.id;
+              return (
+                <div key={postId} className="post">
+                  <div className="post-header">
+                    <div className="post-user">
+                      <div className="user-avatar">
+                        <FaRegUser />
+                      </div>
+                      <div className="user-info">
+                        <span className="username">{post.author}</span>
+                        <span className="post-time">{post.time}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="post-content">
+                    {post.title && <h3 className="post-title">{post.title}</h3>}
+                    <p className="post-text">{post.content}</p>
+                  </div>
+
+                  <div className="post-footer">
+                    <div className="post-actions">
+                      <button
+                        className={`action-button ${
+                          likedPosts.has(postId) ? "active" : ""
+                        }`}
+                        onClick={() => toggleLike(postId)}
+                      >
+                        {likedPosts.has(postId) ? <FaHeart /> : <FaRegHeart />}
+                      </button>
+                      <button
+                        className={`action-button ${
+                          activeCommentPost === postId ? "active" : ""
+                        }`}
+                        onClick={() => toggleCommentSection(postId)}
+                      >
+                        <FaRegComment />
+                      </button>
+                    </div>
+                    
+                    {/* Display tags from both possible fields */}
+                    {(post.relevance_relevance_tags || post.relevant_relevance_tags || []).length > 0 && (
+                      <div className="post-tags">
+                        {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
+                          <span 
+                            key={index} 
+                            className="tag"
+                            onClick={() => toggleTagSelection(tag)}
+                          >
+                            {relevance_tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
-        {/* Comment Section (Instagram-style) */}
+        {/* Comment Section */}
         {activeCommentPost && (
           <div className="comments-panel">
             <div className="comments-header">
@@ -305,31 +362,29 @@ const Home = () => {
             </div>
 
             <div className="post-preview">
-              <div className="post-user">
-                <div className="user-avatar">
-                  <FaRegUser />
-                </div>
-                <div className="user-info">
-                  <span className="username">
-                    {
-                      posts.find((post) => post._id === activeCommentPost)
-                        ?.author
-                    }
-                  </span>
-                  <span className="post-time">
-                    {posts.find((post) => post._id === activeCommentPost)?.time}
-                  </span>
-                </div>
-              </div>
-              <p className="post-text-preview">
-                {posts
-                  .find((post) => post._id === activeCommentPost)
-                  ?.content.substring(0, 100)}
-                {posts.find((post) => post._id === activeCommentPost)?.content
-                  .length > 100
-                  ? "..."
-                  : ""}
-              </p>
+              {/* Find post by id or _id */}
+              {(() => {
+                const post = posts.find(p => (p._id || p.id) === activeCommentPost);
+                if (!post) return null;
+                
+                return (
+                  <>
+                    <div className="post-user">
+                      <div className="user-avatar">
+                        <FaRegUser />
+                      </div>
+                      <div className="user-info">
+                        <span className="username">{post.author}</span>
+                        <span className="post-time">{post.time}</span>
+                      </div>
+                    </div>
+                    <p className="post-text-preview">
+                      {post.content?.substring(0, 100)}
+                      {post.content?.length > 100 ? "..." : ""}
+                    </p>
+                  </>
+                );
+              })()}
             </div>
 
             <div className="comments-list">
