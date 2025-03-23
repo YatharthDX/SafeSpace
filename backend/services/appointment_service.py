@@ -106,4 +106,13 @@ def update_available_slots_service(counselor_email: str, date: datetime, time_sl
     )
     return {"message": "Available slots updated successfully"}
 
-
+def get_appointments_service(current_user: dict):
+    if appointments_collection is None:
+        raise HTTPException(status_code=503, detail="Service unavailable")
+    if current_user["role"] != "student":
+        raise HTTPException(status_code=403, detail="Only students can view their appointments")
+    appointments = [
+        {**appt, "_id": str(appt["_id"])}
+        for appt in appointments_collection.find({"user_email": current_user["email"]})
+    ]
+    return appointments

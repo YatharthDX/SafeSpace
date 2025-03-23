@@ -261,3 +261,20 @@ class PostService:
             return []
             
         return liked_posts.get("post_ids", [])
+    
+    async def get_user_blogs(self, user_id: str, skip: int = 0, limit: int = 20) -> List[Blog]:
+        """Get all blogs created by a specific user with pagination"""
+        if not ObjectId.is_valid(user_id):
+            raise ValueError("Invalid user ID format")
+            
+        blogs = []
+        cursor = self.blogs_collection.find({"author_id": user_id}).skip(skip).limit(limit).sort("created_at", -1)
+        
+        # Using a synchronous approach instead of async for
+        for document in cursor:
+            document["_id"] = str(document["_id"])
+            blog = Blog(**document)
+            blogs.append(blog)
+            
+        return blogs
+    
