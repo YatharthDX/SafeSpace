@@ -328,15 +328,15 @@ const Home = () => {
                     </div>
                     
                     {/* Display tags from both possible fields */}
-                    {(post.relevance_tags || post.relevant_tags || []).length > 0 && (
+                    {(post.relevance_relevance_tags || post.relevant_relevance_tags || []).length > 0 && (
                       <div className="post-tags">
-                        {(post.relevance_tags || post.relevant_tags || []).map((tag, index) => (
+                        {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
                           <span 
                             key={index} 
                             className="tag"
                             onClick={() => toggleTagSelection(tag)}
                           >
-                            {tag}
+                            {relevance_tag}
                           </span>
                         ))}
                       </div>

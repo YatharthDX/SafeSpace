@@ -144,7 +144,7 @@ function AppointmentForm() {
         // Modal content
         modal.innerHTML = `
           <div class="safespace-modal-header">
-            <h3 class="safespace-modal-title">Appointment Confirmed!</h3>
+            <h3 class="safespace-modal-title">Appointment Request Sent!</h3>
           </div>
           <div class="safespace-modal-body">
             <div class="safespace-appointment-info">
