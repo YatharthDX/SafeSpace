@@ -7,23 +7,29 @@ import logo from "../../assets/logo_edited.png";
 const Navbar2 = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Clear localStorage
-    localStorage.clear();
-    
-    // Clear sessionStorage
-    sessionStorage.clear();
-    
-    // Clear all cookies
-    document.cookie.split(";").forEach(cookie => {
-      const eqPos = cookie.indexOf("=");
-      const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
-      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-    });
-    
-    // Redirect to the home page
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      // Clear localStorage
+      localStorage.removeItem("token");
+
+      // Clear all cookies
+      document.cookie.split(";").forEach((cookie) => {
+        document.cookie = cookie.replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      await fetch("http://127.0.0.1:8000/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // Ensures cookies are sent
+      });
+  
+
+  
+      // Navigate to login page
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
+  
 
   return (
     <nav className="navbar">
