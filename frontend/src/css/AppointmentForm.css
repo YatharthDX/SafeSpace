@@ -2,7 +2,8 @@
 .appointment-form-container {
   min-height: 100vh;
   background-color: #f5ead9;
-  padding-top: 60px; /* Space for navbar */
+  padding-top: 17rem; /* Space for navbar */
+  width: 70rem;
 }
 
 .appointment-content {
@@ -15,7 +16,7 @@
 
 /* Left Panel - Appointment Info */
 .appointment-info {
-  flex: 0.8; /* Changed from 1 to make it narrower */
+  flex: 0.7; /* Changed from 1 to make it narrower */
   background-color: white;
   padding: 2rem;
   border-radius: 12px;
@@ -23,25 +24,20 @@
 }
 
 .back-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: none;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
-  color: #666;
-  font-size: 1rem;
+  justify-content: center;
   cursor: pointer;
-  padding: 8px 0;
-  margin-bottom: 1.5rem;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .back-button:hover {
-  color: #e3b27c;
-}
-
-.back-arrow {
-  font-size: 1.2rem;
+  background-color: #f9f9f9;
 }
 
 .appointment-info h2 {

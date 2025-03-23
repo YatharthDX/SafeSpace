@@ -25,7 +25,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f8f8f8;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 /* ===== NAVBAR STYLES ===== */
@@ -76,6 +76,9 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-top: 30px;
+  margin-top: 20px;
+  width: 70rem;
 }
 
 /* .appointment-container {
@@ -87,8 +90,8 @@ body {
 
 .appointment-container {
   max-width: 1800px;
-  margin-top: 11rem;
-  padding: 6rem 2rem 2rem 2rem; /* Ensure enough top padding */
+  margin-top: 15rem;
+  padding: 29rem 2rem 2rem 2rem; /* Ensure enough top padding */
   flex: 1;
 }
 
@@ -200,6 +203,12 @@ body {
   text-align: center; /* Ensures text is centered */
 }
 
+/* .loading-indicator {
+  padding: 10px;
+  text-align: center;
+  color: #666;
+} */
+
 .time-slot:hover {
   background-color: #f9f9f9;
 }
@@ -216,14 +225,10 @@ body {
   color: #999;
 }
 
-.loading-indicator {
-  padding: 10px;
-  text-align: center;
-  color: #666;
-}
 /* ===== BOOKING ACTION STYLES ===== */
 .booking-action {
   margin-top: 2rem;
+  clear: both;
 }
 
 .confirm-button {
