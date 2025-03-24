@@ -49,4 +49,14 @@ export const sendMessage = async (userId, messageData) => {
   }
 };
 
+export const markMessagesAsRead = async (userId) => {
+  try {
+    const response = await api.put(`/messages/read/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error marking messages as read:', error);
+    throw error;
+  }
+};
+
 export default api; 

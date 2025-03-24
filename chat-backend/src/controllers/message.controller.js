@@ -69,3 +69,24 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const markMessagesAsRead = async (req, res) => {
+  try {
+    const { id: senderId } = req.params;
+    const receiverId = req.user._id;
+
+    await Message.updateMany(
+      {
+        senderId,
+        receiverId,
+        status: "sent",
+      },
+      { status: "read" }
+    );
+
+    res.status(200).json({ message: "Messages marked as read" });
+  } catch (error) {
+    console.log("Error in markMessagesAsRead controller: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

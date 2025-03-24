@@ -1,7 +1,7 @@
 import React from "react";
 import { FaEdit, FaUserCircle } from "react-icons/fa"; // Import icons
 
-const ChatBox = ({ chats, setSelectedChat, selectedChat }) => {
+const ChatBox = ({ chats, setSelectedChat, selectedChat, onlineUsers }) => {
   return (
     <div className="chat-list">
       <div className="chat-header">
@@ -15,7 +15,6 @@ const ChatBox = ({ chats, setSelectedChat, selectedChat }) => {
           className={`chat-item ${selectedChat?.id === chat.id ? "active" : ""}`}
           onClick={() => setSelectedChat(chat)}
         >
-          {/* Use default contact icon if avatar is missing */}
           {chat.avatar ? (
             <img src={chat.avatar} alt={chat.name} className="chat-avatar" />
           ) : (
@@ -23,9 +22,12 @@ const ChatBox = ({ chats, setSelectedChat, selectedChat }) => {
           )}
           <div className="chat-info">
             <p className="chat-name">{chat.name}</p>
-            <p className="chat-message">You: {chat.message}</p>
+            <p className="chat-message">{chat.message}</p>
           </div>
           {chat.unread > 0 && <span className="unread-badge">{chat.unread}</span>}
+          {onlineUsers.includes(chat.id) && (
+            <span className="online-indicator"></span>
+          )}
         </div>
       ))}
     </div>

@@ -15,7 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
 import { getCurrentUser } from "../chat-services/pyapi";
 import { classifyText } from "../api/posts";
-
+import { jwtDecode } from "jwt-decode";
+// const current_user=await getCurrentUser();
 const Home = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -23,7 +24,10 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [allTags, setAllTags] = useState([]);
-  
+  const current_user=localStorage.getItem('token');
+  const current_user_json = jwtDecode(current_user);
+  const current_user_role = current_user_json.role;
+  // console.log(current_user_role);
   // State for selected tags
   const [selectedTags, setSelectedTags] = useState([]);
   
@@ -211,7 +215,9 @@ const Home = () => {
       };
       
       await addComment(activeCommentPost, commentData);
-      
+      const current_user2=localStorage.getItem('token');
+      const current_user_json = jwtDecode(current_user2);
+      const current_user_role = current_user_json.role;
       // Refresh comments
       const updatedComments = await getComments(activeCommentPost);
       setComments(prev => ({ ...prev, [activeCommentPost]: updatedComments }));
@@ -338,13 +344,19 @@ const Home = () => {
                       <div className="post-tags">
                         {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
                           <span 
-                            key={index} 
+                            key={index}
                             className="tag"
-                            onClick={() => toggleTagSelection(relevance_tag)}
+                            // onClick={() => toggleTagSelection(relevance_tag)}
                           >
                             {relevance_tag}
                           </span>
                         ))}
+                        {(post.severity_tag !== "" && current_user_role !=="student") && (
+                          <span className="tag"
+                          style={{backgroundColor:post.severity_tag === "moderate" ? "orange" : post.severity_tag === "severe" ? "red" : "yellow"}}>
+                            {post.severity_tag}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>

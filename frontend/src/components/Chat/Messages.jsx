@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaImage } from "react-icons/fa";
-import { getMessages, sendMessage } from "../../chat-services/api";
+import { getMessages, sendMessage, markMessagesAsRead } from "../../chat-services/api";
 import socketService from "../../chat-services/socket";
 
 const Messages = ({ selectedChat }) => {
@@ -21,6 +21,9 @@ const Messages = ({ selectedChat }) => {
         setLoading(true);
         const messagesData = await getMessages(selectedChat.id);
         setMessages(messagesData);
+        
+        // Mark messages as read when viewing them
+        await markMessagesAsRead(selectedChat.id);
       } catch (error) {
         console.error("Error fetching messages:", error);
       } finally {
@@ -113,7 +116,7 @@ const Messages = ({ selectedChat }) => {
         {messages.map((message) => (
           <div
             key={message._id}
-            className={`message ${message.senderId === selectedChat.id ? "received" : "sent"}`}
+            className={`message ${message.senderId === selectedChat.id ? "received" : "sent"} ${message.status}`}
           >
             {message.text}
             {message.image && (

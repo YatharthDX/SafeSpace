@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import ChatBox from "/src/components/Chat/ChatBox.jsx";
 import Messages from "/src/components/Chat/Messages.jsx";
 import { getCurrentUser } from "../chat-services/pyapi";
-import { getUsers } from "../chat-services/api";
+import { getUsers, getMessages } from "../chat-services/api";
 import socketService from "../chat-services/socket";
 import "/src/css/Chat.css";
 
@@ -25,14 +25,26 @@ const Chat = () => {
         } else if (currentUser.role === 'counsellor') {
           users2 = users.filter(user => user.role === 'student'); 
         }
-        const transformedUsers = users2.map(user => ({
-          id: user._id,
-          name: user.name,
-          message: "Click to start chatting",
-          unread: 0,
-          avatar: user.profilePic || "https://avatar.iran.liara.run/public",
-        }));
-        setChats(transformedUsers);
+
+        // Fetch messages for each user to calculate unread counts
+        const usersWithMessages = await Promise.all(
+          users2.map(async (user) => {
+            const messages = await getMessages(user._id);
+            const unreadCount = messages.filter(
+              msg => msg.status === "sent" && msg.receiverId === currentUser._id
+            ).length;
+            
+            return {
+              id: user._id,
+              name: user.name,
+              message: "Click to start chatting",
+              unread: unreadCount,
+              avatar: user.profilePic || "https://avatar.iran.liara.run/public",
+            };
+          })
+        );
+
+        setChats(usersWithMessages);
       } catch (error) {
         console.error('❌ Error fetching users:', error);
       } finally {
@@ -46,7 +58,6 @@ const Chat = () => {
   useEffect(() => {
     const setupSocket = async () => {
       try {
-        // Get current user's MongoDB ID from the server
         const currentUser = await getCurrentUser();
         console.log("🔗 Current user data:", currentUser);
         
@@ -62,6 +73,19 @@ const Chat = () => {
         socketService.onOnlineUsers((users) => {
           console.log("✅ Online users received:", users);
           setOnlineUsers(users);
+        });
+
+        // Listen for new messages to update unread counts
+        socketService.onNewMessage((newMessage) => {
+          if (newMessage.receiverId === currentUser._id) {
+            setChats(prevChats => 
+              prevChats.map(chat => 
+                chat.id === newMessage.senderId
+                  ? { ...chat, unread: chat.unread + 1 }
+                  : chat
+              )
+            );
+          }
         });
       } catch (error) {
         console.error("❌ Error setting up socket:", error);
