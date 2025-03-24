@@ -43,6 +43,29 @@ const Navbar = ({ onSearch }) => {
     fetchTags();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      // Clear localStorage
+      localStorage.removeItem("token");
+
+      // Clear all cookies
+      document.cookie.split(";").forEach((cookie) => {
+        document.cookie = cookie.replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+
+      await fetch("http://127.0.0.1:8000/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // Ensures cookies are sent
+      });
+
+      // Navigate to login page
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+
   // Search handling functions
   const handleSearch = (event) => {
     const value = event.target.value;
@@ -84,14 +107,6 @@ const Navbar = ({ onSearch }) => {
       onSearch(searchTerm, []);
     }
     setShowDropdown(false);
-  };
-
-  // Logout handler
-  const handleLogout = () => {
-    // Remove token from localStorage
-    localStorage.removeItem("token");
-    // Navigate to login page
-    navigate("/");
   };
 
   return (
@@ -160,10 +175,9 @@ const Navbar = ({ onSearch }) => {
         <Link to="/profile" className="nav-link">
           <FaUser /> Profile
         </Link>
-        <a onClick={() => navigate("/")} className="nav-link">
-        <button onClick={handleLogout} className="nav-link logout-btn">
+        <a onClick={handleLogout} className="nav-link">
           <FaSignOutAlt /> Logout
-        </button>
+      
         </a>
       </div>
     </nav>

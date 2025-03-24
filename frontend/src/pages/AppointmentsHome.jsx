@@ -2,9 +2,43 @@ import React, { useEffect, useState } from "react";
 import Navbar2 from "../components/Public/navbar2";
 import CounselorCard from "../components/Appointments/CounsellorCard";
 import "../css/AppointmentsHome.css";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Appointments = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [counselors, setCounselors] = useState([]);
+    const [userDetails, setUserDetails] = useState(null);
+
+    useEffect(() => {
+        const fetchUserDetails = async () => {
+            try {
+                // const response = await fetch("http://127.0.0.1:8000/api/auth/getuserdetails");
+                const response = await fetch(
+                    "http://127.0.0.1:8000/api/auth/getuserdetails",
+                    {
+                      method: "GET",
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json"
+                      },
+                    }
+                  );
+                const data = await response.json();
+                console.log(data);
+                setUserDetails(data);
+            } catch (error) {
+                console.error("Error fetching user details:", error);
+            }
+        };
+        fetchUserDetails();
+    }, []);
+
+    useEffect(() => {
+        if (userDetails && userDetails.role === "counsellor") {
+            navigate("/home");
+        }
+    }, [userDetails, navigate]);
 
     useEffect(() => {
         const fetchCounselors = async () => {

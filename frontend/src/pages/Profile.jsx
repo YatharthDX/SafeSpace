@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar2 from "../components/Public/navbar2";
 import ProfileHeader from "../components/Profile/ProfileHeader";
+import ProfileHeaderCounselor from "../components/Profile/ProfileHeaderCounselor";
 import ProfileTabs from "../components/Profile/ProfileTabs";
 import PostsList from "../components/Profile/PostsList";
 import AppointmentsList from "../components/Profile/AppointmentsList";
@@ -249,12 +250,20 @@ const Profile = () => {
       <Navbar2 />
 
       <div className="profile-container">
-        <ProfileHeader
-          username={userDetails.username}
-          profilePicture={userDetails.profile_picture}
-          hasRequestedRole={hasRequestedRole}
-          onRoleRequest={handleRoleRequest}
-        />
+        {userDetails.role === "counsellor" ? (
+          <ProfileHeaderCounselor
+            username={userDetails.username}
+            profilePicture={userDetails.profile_picture}
+          />
+        ) : (
+          <ProfileHeader
+            username={userDetails.username}
+            profilePicture={userDetails.profile_picture}
+            hasRequestedRole={hasRequestedRole}
+            onRoleRequest={handleRoleRequest}
+          />
+        )}
+
 
         <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
 

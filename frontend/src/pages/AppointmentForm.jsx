@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState , useEffect } from "react";
+import { useLocation, useNavigate} from "react-router-dom";
 import "../css/AppointmentForm.css";
 import Navbar2 from "../components/Public/navbar2";
 
@@ -45,6 +45,11 @@ function AppointmentForm() {
   console.log("Counselor data:", counselor);
   console.log("Selected date:", selectedDate);
   console.log("Selected time:", selectedTime);
+  useEffect(() => {
+    if (!counselor) {
+      navigate("/appointments");
+    }
+  }, [counselor, navigate]);
   // 2. Form states
   const [name, setName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
