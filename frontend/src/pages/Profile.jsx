@@ -202,12 +202,6 @@ const Profile = () => {
     }
   };
 
-  const handleRoleRequest = () => {
-    //add api request here
-    alert("Role request sent!");
-    setHasRequestedRole(true);
-  };
-
   const handleDeletePost = async (postId) => {
     try {
       const token = localStorage.getItem("token");
@@ -259,13 +253,11 @@ const Profile = () => {
           <ProfileHeader
             username={userDetails.username}
             profilePicture={userDetails.profile_picture}
-            hasRequestedRole={hasRequestedRole}
-            onRoleRequest={handleRoleRequest}
           />
         )}
 
 
-        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} userRole={userDetails.role} />
 
         <div className="profile-content">
           {activeTab === "posts" ? (
