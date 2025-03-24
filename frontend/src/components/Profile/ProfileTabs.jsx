@@ -7,13 +7,13 @@ const ProfileTabs = ({ activeTab, onTabChange }) => {
                 className={`nav-tab ${activeTab === 'posts' ? 'active' : ''}`}
                 onClick={() => onTabChange('posts')}
             >
-                Posts
+                My posts
             </button>
             <button 
                 className={`nav-tab ${activeTab === 'appointments' ? 'active' : ''}`}
                 onClick={() => onTabChange('appointments')}
             >
-                Past Appointments
+                 Appointments status
             </button>
         </div>
     );
