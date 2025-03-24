@@ -9,10 +9,35 @@ import "/src/css/Chat.css";
 
 const Chat = () => {
   const [chats, setChats] = useState([]);
+  const [filteredChats, setFilteredChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
   const [loading, setLoading] = useState(true);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Function to sort chats by unread count
+  const sortChats = (chatsToSort) => {
+    return [...chatsToSort].sort((a, b) => {
+      // First sort by unread count (descending)
+      if (b.unread !== a.unread) {
+        return b.unread - a.unread;
+      }
+      // If unread counts are equal, sort alphabetically by name
+      return a.name.localeCompare(b.name);
+    });
+  };
+
+  // Function to filter chats based on search query
+  const filterChats = (chatsToFilter, query) => {
+    if (!query.trim()) return chatsToFilter;
+    
+    const searchTerm = query.toLowerCase();
+    return chatsToFilter.filter(chat => 
+      chat.name.toLowerCase().includes(searchTerm) ||
+      chat.message.toLowerCase().includes(searchTerm)
+    );
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -44,7 +69,10 @@ const Chat = () => {
           })
         );
 
-        setChats(usersWithMessages);
+        // Sort the chats before setting state
+        const sortedChats = sortChats(usersWithMessages);
+        setChats(sortedChats);
+        setFilteredChats(sortedChats);
       } catch (error) {
         console.error('❌ Error fetching users:', error);
       } finally {
@@ -54,6 +82,12 @@ const Chat = () => {
 
     fetchUsers();
   }, []);
+
+  // Update filtered chats when search query changes
+  useEffect(() => {
+    const filtered = filterChats(chats, searchQuery);
+    setFilteredChats(filtered);
+  }, [searchQuery, chats]);
 
   useEffect(() => {
     const setupSocket = async () => {
@@ -78,13 +112,15 @@ const Chat = () => {
         // Listen for new messages to update unread counts
         socketService.onNewMessage((newMessage) => {
           if (newMessage.receiverId === currentUser._id) {
-            setChats(prevChats => 
-              prevChats.map(chat => 
+            setChats(prevChats => {
+              const updatedChats = prevChats.map(chat => 
                 chat.id === newMessage.senderId
                   ? { ...chat, unread: chat.unread + 1 }
                   : chat
-              )
-            );
+              );
+              // Sort the chats after updating unread count
+              return sortChats(updatedChats);
+            });
           }
         });
       } catch (error) {
@@ -116,10 +152,12 @@ const Chat = () => {
       <Navbar2 />
       <div className="chat-container">
         <ChatBox
-          chats={chats}
+          chats={filteredChats}
           setSelectedChat={setSelectedChat}
           selectedChat={selectedChat}
           onlineUsers={onlineUsers}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
         />
         <Messages selectedChat={selectedChat} />
       </div>
