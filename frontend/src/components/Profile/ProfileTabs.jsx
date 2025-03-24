@@ -17,6 +17,13 @@ const ProfileTabs = ({ activeTab, onTabChange, userRole }) => {
                     Appointments status
                 </button>
             )}
+            <button 
+                className={`nav-tab ${activeTab === 'others' ? 'active' : ''}`}
+                onClick={() => onTabChange('others')}
+            >
+                Others
+            </button>
+
         </div>
     );
 };

@@ -14,6 +14,7 @@ import AvailabilityCalendar from "./pages/CounselorAvailability";
 import AppointmentRequests from "./pages/AppointmentRequests";
 import ForgotPassword from "./pages/ForgotPassword";
 import ProtectedRoute from "./components/Public/ProtectedRoute"; // Import the protected route component
+import ResetPassword from "./pages/ResetPassword"
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/createpost" element={<CreatePostPage />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
         </Routes>
       </div>
