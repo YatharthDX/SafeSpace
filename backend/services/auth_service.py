@@ -149,7 +149,8 @@ def get_user_details_service(current_user: dict):
     user_details = {
         "username": user.get("name"),
         "profile_picture": user.get("profile_picture"),
-        "_id": str(user["_id"])
+        "_id": str(user["_id"]),
+        "role": user.get("role")
     }
     
     return user_details

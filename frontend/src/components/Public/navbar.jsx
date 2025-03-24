@@ -8,6 +8,9 @@ import logo from "../../assets/logo_edited.png";
 const Navbar = ({ onSearch }) => {
   const navigate = useNavigate();
   const [role, setRole] = useState(null);
+  
+
+
 
   useEffect(() => {
     // Decode JWT token and extract role
@@ -22,6 +25,29 @@ const Navbar = ({ onSearch }) => {
       }
     }
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      // Clear localStorage
+      localStorage.removeItem("token");
+
+      // Clear all cookies
+      document.cookie.split(";").forEach((cookie) => {
+        document.cookie = cookie.replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+
+      await fetch("http://127.0.0.1:8000/api/auth/logout", {
+        method: "POST",
+        credentials: "include", // Ensures cookies are sent
+      });
+
+      // Navigate to login page
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -52,7 +78,7 @@ const Navbar = ({ onSearch }) => {
         <Link to="/profile" className="nav-link">
           <FaUser /> Profile
         </Link>
-        <a onClick={() => navigate("/")} className="nav-link">
+        <a onClick={handleLogout} className="nav-link">
           <FaSignOutAlt /> Logout
         </a>
       </div>

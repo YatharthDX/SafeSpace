@@ -16,6 +16,12 @@ function AppointmentSelect() {
   const location = useLocation();
   const { counselor } = location.state || {};
 
+  useEffect(() => {
+    if (!counselor) {
+      navigate("/appointments");
+    }
+  }, [counselor, navigate]);
+
   // Time slots that could potentially be available
   const allTimeSlots = [
     "9:00 AM",
