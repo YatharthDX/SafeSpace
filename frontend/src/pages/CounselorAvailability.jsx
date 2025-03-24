@@ -70,14 +70,24 @@ const AvailabilityCalendar = () => {
             'Content-Type': 'application/json'
           }
         });
+      
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      
         const data = await response.json();
         console.log("Current counselor data:", data);
         setCounselorEmail(data[0].email);
         console.log("Current counselor email:", data[0].email);
-
+      
       } catch (error) {
         console.error("Error fetching current counselor:", error);
         setMessage("Error: Unable to fetch counselor information. Please log in again.");
+      
+        // Handle HTTP errors separately
+        if (error.message.includes("403") || error.message.includes("401")) {
+          navigate("/");
+        }
       }
     };
 
