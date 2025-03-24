@@ -45,7 +45,6 @@ export const classifyText = async (postData) => {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
-        
       }
     });
     return response.data;

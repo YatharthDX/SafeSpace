@@ -18,7 +18,14 @@ const Chat = () => {
     const fetchUsers = async () => {
       try {
         const users = await getUsers();
-        const transformedUsers = users.map(user => ({
+        const currentUser = await getCurrentUser();
+        let users2 = [];
+        if (currentUser.role === 'student') {
+          users2 = users.filter(user => user.role === 'counsellor');
+        } else if (currentUser.role === 'counsellor') {
+          users2 = users.filter(user => user.role === 'student'); 
+        }
+        const transformedUsers = users2.map(user => ({
           id: user._id,
           name: user.name,
           message: "Click to start chatting",

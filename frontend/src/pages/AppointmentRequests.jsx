@@ -22,6 +22,7 @@ const AppointmentRequests = () => {
         
         if (!token) {
           // Redirect to login if there's no token
+          console.log("No token found. Redirecting to login.");
           navigate("/");
           return;
         }
