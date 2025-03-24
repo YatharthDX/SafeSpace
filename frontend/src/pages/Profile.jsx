@@ -6,6 +6,8 @@ import ProfileTabs from "../components/Profile/ProfileTabs";
 import PostsList from "../components/Profile/PostsList";
 import AppointmentsList from "../components/Profile/AppointmentsList";
 import "../css/profile.css";
+import { useNavigate, useLocation } from "react-router-dom";
+
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("posts");
@@ -21,6 +23,11 @@ const Profile = () => {
     profile_picture: null,
     _id: null
   });
+  const navigate = useNavigate();
+
+  const handlePasswordReset = () => {
+    navigate("/reset-password");
+  };
 
   // Fetch user details on component mount
   useEffect(() => {
@@ -274,7 +281,7 @@ const Profile = () => {
                 <PostsList posts={posts} onDeletePost={handleDeletePost} />
               )}
             </>
-          ) : (
+          ) : activeTab === "appointments" ?( 
             <>
               {loading ? (
                 <div className="loading-indicator">Loading appointments...</div>
@@ -286,9 +293,18 @@ const Profile = () => {
                 </div>
               ) : (
                 <AppointmentsList appointments={appointments} />
-              )}
+              ) }
             </>
-          )}
+          ) : activeTab === "others" ? (
+            <div className="others-tab-content">
+              <button 
+                className="reset-password-btn"
+                onClick={handlePasswordReset}
+              >
+                Reset Password
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
