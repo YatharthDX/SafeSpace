@@ -8,8 +8,16 @@ from database.connection import blogs_collection, comments_collection ,liked_pos
 from services.auth_service import get_current_user_service
 from detoxify import Detoxify
 from database.models import BlogCreate, Blog, CommentCreate, Comment, ClassifyRequest
-from google import genai
-from google.genai import types
+import platform
+import os
+current_os = platform.system()
+if(current_os=="Darwin"):
+    import google.generativeai as genai
+    from google.generativeai import types
+else:
+    from google import genai
+    from google.genai import types
+
 import json 
 model = Detoxify('original')
 
