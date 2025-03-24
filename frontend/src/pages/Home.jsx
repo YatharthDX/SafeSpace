@@ -340,7 +340,7 @@ const Home = () => {
                     </div>
                     
                     {/* Display tags from both possible fields */}
-                    {(post.relevance_tags || post.relevant_relevance_tags || []).length > 0 && (
+                    {(((post.relevance_tags || post.relevant_relevance_tags || [] ).length > 0)||(post.severity_tag !== "")) && (
                       <div className="post-tags">
                         {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
                           <span 
