@@ -125,6 +125,8 @@
   transition: all 0.2s ease;
   background: #fff;
   border: 1px solid #e0d6c2;
+  position: relative;
+  padding-right: 40px; /* Make room for the unread badge */
 }
 
 .chat-item:hover {
@@ -173,14 +175,27 @@
 }
 
 .unread-badge {
-  background: #e3b27c;
+  background-color: #007bff;
   color: white;
-  font-size: 12px;
-  font-weight: 600;
   border-radius: 50%;
-  padding: 4px 8px;
-  min-width: 20px;
+  padding: 2px 6px;
+  font-size: 12px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 18px;
   text-align: center;
+}
+
+.online-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #28a745;
+  border-radius: 50%;
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 
 /* Message Header */
@@ -357,4 +372,30 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message.sent {
+  background-color: #007bff;
+  color: white;
+  border-radius: 15px 15px 0 15px;
+}
+
+.message.received {
+  background-color: #e9ecef;
+  color: black;
+  border-radius: 15px 15px 15px 0;
+}
+
+.message {
+  padding: 8px 12px;
+  margin: 4px 0;
+  max-width: 70%;
+  word-wrap: break-word;
+}
+
+.message-image {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 10px;
+  margin-top: 5px;
 }
