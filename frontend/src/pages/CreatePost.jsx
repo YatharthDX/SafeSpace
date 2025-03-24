@@ -4,7 +4,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { BsTag } from "react-icons/bs";
 import "../css/CreatePost.css";
 import Navbar2 from "../components/Public/navbar2";
-import { createPost, uploadPostImage } from "../api/posts";
+import { createPost, uploadPostImage, classifyText, classifySeverity } from "../api/posts";
 import { useNavigate } from "react-router-dom";
 import { Fetch } from "socket.io-client";
 import { getCurrentUser } from "../chat-services/pyapi";
@@ -49,16 +49,62 @@ const CreatePost = () => {
     setError("");
 
     try {
-      // Create post data
+      // Basic validation
+      if (!title.trim()) {
+        setError("Please enter a title");
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (!content.trim()) {
+        setError("Please enter some content");
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (content.trim().length < 10) {
+        setError("Content must be at least 10 characters long");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Get current user
       const currentUser = await getCurrentUser();
-      console.log(currentUser);
+      if (!currentUser) {
+        setError("Please log in to create a post");
+        setIsSubmitting(false);
+        return;
+      }
+      const classifyData = {
+        text: content
+      }
+      // Check for hate speech
+      const classification = await classifyText(classifyData);
+      // console.log(classifyData);
+      // console.log(classification);
+      if (classification === "HATE") {
+        setError("Please refrain from using hate speech in your post");
+        setIsSubmitting(false);
+        return;
+      }
+      const classifyData2 = {
+        text: title
+      }
+      const classification2 = await classifyText(classifyData2);
+      if (classification2 === "HATE") {
+        setError("Please refrain from using hate speech in your title");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Create post data
       const postData = {
         title,
         content,
         author_id: currentUser._id,
-        author: currentUser.name, // This should come from auth context
+        author: currentUser.name,
         relevance_tags: selectedTags,
-        severity_tag: severityTag
+        severity_tag: await classifySeverity(classifyData) || "medium" // Default to medium if not set
       };
 
       // Create the post
@@ -77,7 +123,14 @@ const CreatePost = () => {
       setImageFile(null);
       navigate("/home");
     } catch (err) {
-      setError(err.message || "Failed to create post. Please try again.");
+      // More specific error handling
+      if (err.response?.status === 401) {
+        setError("Please log in to create a post");
+      } else if (err.response?.status === 413) {
+        setError("Image file is too large. Please choose a smaller image");
+      } else {
+        setError(err.message || "Failed to create post. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }

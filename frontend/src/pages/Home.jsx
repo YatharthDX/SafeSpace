@@ -14,6 +14,7 @@ import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
 import { getCurrentUser } from "../chat-services/pyapi";
+import { classifyText } from "../api/posts";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -193,6 +194,15 @@ const Home = () => {
     if (newComment.trim() === "") return;
 
     try {
+      const classifyData = {
+        text: newComment
+      }
+      const classification = await classifyText(classifyData);
+      if (classification === "HATE") {
+        alert("Please refrain from using hate speech in your comment");
+        return;
+      }
+
       const currentUser = await getCurrentUser();
       const commentData = {
         content: newComment,
@@ -324,13 +334,13 @@ const Home = () => {
                     </div>
                     
                     {/* Display tags from both possible fields */}
-                    {(post.relevance_relevance_tags || post.relevant_relevance_tags || []).length > 0 && (
+                    {(post.relevance_tags || post.relevant_relevance_tags || []).length > 0 && (
                       <div className="post-tags">
                         {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
                           <span 
                             key={index} 
                             className="tag"
-                            onClick={() => toggleTagSelection(tag)}
+                            onClick={() => toggleTagSelection(relevance_tag)}
                           >
                             {relevance_tag}
                           </span>

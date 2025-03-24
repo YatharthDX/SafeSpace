@@ -1,6 +1,9 @@
-from pydantic import BaseModel, EmailStr, validator, Field
+from pydantic import BaseModel, EmailStr, validator, Field, field_serializer, ConfigDict
+from typing import List, Optional, Any
+from bson import ObjectId
+from pydantic_core import core_schema
 from datetime import datetime
-from typing import List, Optional
+
 
 class EmailRequest(BaseModel):
     email: EmailStr
@@ -55,10 +58,7 @@ class RoleRequest(BaseModel):
     email: str
     
 # search post
-from pydantic import BaseModel, Field, field_serializer, ConfigDict
-from typing import List, Optional, Any
-from bson import ObjectId
-from pydantic_core import core_schema
+
 
 # PyObjectId for handling MongoDB ObjectId with Pydantic v2
 class PyObjectId(ObjectId):
@@ -121,6 +121,9 @@ class BlogCreate(BaseModel):
     relevance_tags: List[str] = []
     severity_tag: str
     image_url: Optional[str] = None
+
+class ClassifyRequest(BaseModel):
+    text: str
 
 class Blog(BaseModel):
     id: str = Field(alias="_id")

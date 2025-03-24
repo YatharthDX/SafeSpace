@@ -23,6 +23,37 @@ export const createPost = async (postData) => {
   }
 };
 
+// Classify the severity of a text
+export const classifySeverity = async (postData) => {
+  try {
+    const response = await axios.post(`${API_URL}/classify-severity`, postData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    return response.data["severity"][0];
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
+// Classify a text
+export const classifyText = async (postData) => {
+  try {
+    const response = await axios.post(`${API_URL}/classify`, postData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
 // Get all blog posts
 export const getPosts = async (skip = 0, limit = 20) => {
   try {

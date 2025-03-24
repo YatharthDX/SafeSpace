@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from typing import List, Optional
 from bson import ObjectId
 
-from database.models import BlogCreate, Blog, CommentCreate, Comment, LikesUpdate
+from database.models import BlogCreate, Blog, CommentCreate, Comment, LikesUpdate, ClassifyRequest
 from services.post_service import PostService
 router = APIRouter(tags=["posts"])
 from pydantic import BaseModel
@@ -23,6 +23,20 @@ async def create_blog(
     post_service: PostService = Depends(get_post_service)
 ):
     return await post_service.create_blog(blog)
+
+@router.post("/classify", response_model=str, response_description="Classify a text")
+async def classify_text(
+    text : ClassifyRequest,
+    post_service: PostService = Depends(get_post_service)
+):
+    return await post_service.classify_text(text)
+
+@router.post("/classify-severity", response_model=dict, response_description="Classify the severity of a text")
+async def classify_severity(
+    text : ClassifyRequest,
+    post_service: PostService = Depends(get_post_service)
+): 
+    return await post_service.classify_severity(text)
 
 @router.get("/blogs", response_model=List[Blog], response_description="Get all blogs")
 async def get_blogs(
