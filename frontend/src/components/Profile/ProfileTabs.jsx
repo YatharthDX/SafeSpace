@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ProfileTabs = ({ activeTab, onTabChange }) => {
+const ProfileTabs = ({ activeTab, onTabChange, userRole }) => {
     return (
         <div className="profile-nav">
             <button 
@@ -9,12 +9,14 @@ const ProfileTabs = ({ activeTab, onTabChange }) => {
             >
                 My posts
             </button>
-            <button 
-                className={`nav-tab ${activeTab === 'appointments' ? 'active' : ''}`}
-                onClick={() => onTabChange('appointments')}
-            >
-                 Appointments status
-            </button>
+            {userRole !== 'counsellor' && (
+                <button 
+                    className={`nav-tab ${activeTab === 'appointments' ? 'active' : ''}`}
+                    onClick={() => onTabChange('appointments')}
+                >
+                    Appointments status
+                </button>
+            )}
         </div>
     );
 };
