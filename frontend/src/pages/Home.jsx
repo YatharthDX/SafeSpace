@@ -10,7 +10,7 @@ import {
   FaFlag,
 } from "react-icons/fa";
 import Navbar from "../components/Public/navbar";
-import ReportModal from "../components/Posts/ReportModal"; // Import the new ReportModal component
+import ReportModal from "../components/Posts/ReportModal";
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
@@ -42,7 +42,8 @@ const Home = () => {
   const current_user = localStorage.getItem('token');
   const current_user_json = jwtDecode(current_user);
   const current_user_role = current_user_json.role;
-  // State for selected tags
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [selectedPostForReport, setSelectedPostForReport] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [likedPosts, setLikedPosts] = useState(new Set());
@@ -76,7 +77,6 @@ const Home = () => {
   const fetchAvatar = async (authorId) => {
     try {
       const token = localStorage.getItem("token");
-      console.log(`Fetching avatar for author ${authorId} with token: ${token ? 'present' : 'missing'}`);
       const response = await fetch(
         `http://127.0.0.1:8000/api/auth/get-avatar/?id=${authorId}`,
         {
@@ -89,22 +89,16 @@ const Home = () => {
       );
   
       if (!response.ok) {
-        console.error(`Avatar fetch failed for ${authorId}: ${response.status}`);
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
   
       const data = await response.json();
-      // Assuming the API returns an object like { avatar: 1 } or { avatar_number: 1 }
-      // Adjust the key based on your actual API response structure
-      const avatarNumber = data.avatar || data.avatar_number || data.number || 1; // Fallback to 1 if no valid number
-      console.log(`Avatar fetch for author ${authorId}: number ${avatarNumber} (raw data: ${JSON.stringify(data)})`);
+      const avatarNumber = data.avatar || data.avatar_number || data.number || 1;
       
       if (avatarNumber && avatarImages[avatarNumber]) {
         const avatarModule = await avatarImages[avatarNumber]();
-        console.log(`Avatar module loaded for ${authorId}: ${avatarModule.default}`);
         return avatarModule.default;
       }
-      console.log(`No avatar found for ${authorId} - invalid number: ${avatarNumber}`);
       return null;
     } catch (error) {
       console.error(`Error fetching avatar for ${authorId}:`, error);
@@ -156,7 +150,6 @@ const Home = () => {
         if (avatarSrc) acc[authorId] = avatarSrc;
         return acc;
       }, {});
-      console.log('Updated avatars state:', newAvatars);
       setAvatars(prev => ({ ...prev, ...newAvatars }));
 
       const commentsState = {};
@@ -257,16 +250,14 @@ const Home = () => {
       };
       
       await addComment(activeCommentPost, commentData);
-      // Refresh comments
       const updatedComments = await getComments(activeCommentPost);
       setComments(prev => ({ ...prev, [activeCommentPost]: updatedComments }));
-      
       setNewComment("");
     } catch (err) {
       setError(err.message || "Failed to add comment. Please try again.");
     }
   };
-  
+
   const toggleTagSelection = (tag) => {
     setSelectedTags(prevSelectedTags => {
       if (prevSelectedTags.includes(tag)) {
@@ -276,12 +267,22 @@ const Home = () => {
       }
     });
   };
-  
+
+  const handleReportPost = (postId) => {
+    setSelectedPostForReport(postId);
+    setIsReportModalOpen(true);
+  };
+
+  const submitReport = (reportData) => {
+    console.log('Report submitted for post:', selectedPostForReport);
+    console.log('Report details:', reportData);
+    alert('Thank you for your report. We will review it shortly.');
+  };
+
   return (
     <div className="home-container">
       <Navbar onSearch={handleSearch} />
 
-      {/* Report Modal */}
       <ReportModal 
         isOpen={isReportModalOpen}
         onClose={() => {
@@ -344,7 +345,6 @@ const Home = () => {
             posts.map((post) => {
               const postId = post._id || post.id;
               const authorAvatar = avatars[post.author_id];
-              console.log(`Rendering post ${postId} - Avatar available: ${!!authorAvatar}`);
 
               return (
                 <div key={postId} className="post">
@@ -362,7 +362,6 @@ const Home = () => {
                         <span className="post-time">{post.time}</span>
                       </div>
                     </div>
-                    {/* Report button added to post header */}
                     <button
                       className="action-button report-button"
                       onClick={() => handleReportPost(postId)}
@@ -469,7 +468,6 @@ const Home = () => {
             <div className="comments-list">
               {comments[activeCommentPost]?.map((comment) => {
                 const commentAvatar = avatars[comment.author_id];
-                console.log(`Rendering comment ${comment._id} - Avatar available: ${!!commentAvatar}`);
                 return (
                   <div key={comment._id} className="comment">
                     <div className="comment-header">
