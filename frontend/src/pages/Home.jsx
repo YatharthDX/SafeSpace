@@ -7,16 +7,17 @@ import {
   FaShareAlt,
   FaPlus,
   FaTimes,
-  FaTag,
+  FaFlag,
 } from "react-icons/fa";
 import Navbar from "../components/Public/navbar";
+import ReportModal from "../components/Posts/ReportModal"; // Import the new ReportModal component
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
 import { getCurrentUser } from "../chat-services/pyapi";
 import { classifyText } from "../api/posts";
 import { jwtDecode } from "jwt-decode";
-// const current_user=await getCurrentUser();
+
 const Home = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -24,10 +25,12 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [allTags, setAllTags] = useState([]);
-  const current_user=localStorage.getItem('token');
+  const current_user = localStorage.getItem('token');
   const current_user_json = jwtDecode(current_user);
   const current_user_role = current_user_json.role;
-  // console.log(current_user_role);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [selectedPostForReport, setSelectedPostForReport] = useState(null);
+  
   // State for selected tags
   const [selectedTags, setSelectedTags] = useState([]);
   
@@ -215,9 +218,10 @@ const Home = () => {
       };
       
       await addComment(activeCommentPost, commentData);
-      const current_user2=localStorage.getItem('token');
+      const current_user2 = localStorage.getItem('token');
       const current_user_json = jwtDecode(current_user2);
       const current_user_role = current_user_json.role;
+      
       // Refresh comments
       const updatedComments = await getComments(activeCommentPost);
       setComments(prev => ({ ...prev, [activeCommentPost]: updatedComments }));
@@ -239,11 +243,35 @@ const Home = () => {
       }
     });
   };
-  
+
+  // Handle reporting a post
+  const handleReportPost = (postId) => {
+    setSelectedPostForReport(postId);
+    setIsReportModalOpen(true);
+  };
+
+  // Method to submit report
+  const submitReport = (reportData) => {
+    console.log('Report submitted for post:', selectedPostForReport);
+    console.log('Report details:', reportData);
+    // In a real app, you would send this to your backend
+    alert('Thank you for your report. We will review it shortly.');
+  };
+
   return (
     <div className="home-container">
       {/* Navbar with search function */}
       <Navbar onSearch={handleSearch} />
+
+      {/* Report Modal */}
+      <ReportModal 
+        isOpen={isReportModalOpen}
+        onClose={() => {
+          setIsReportModalOpen(false);
+          setSelectedPostForReport(null);
+        }}
+        onSubmit={submitReport}
+      />
 
       <div className="home-main-content">
         {/* Left sidebar with tags and create post button */}
@@ -312,6 +340,13 @@ const Home = () => {
                         <span className="post-time">{post.time}</span>
                       </div>
                     </div>
+                    {/* Report button added to post header */}
+                    <button
+                      className="action-button report-button"
+                      onClick={() => handleReportPost(postId)}
+                    >
+                      <FaFlag />
+                    </button>
                   </div>
 
                   <div className="post-content">
@@ -339,14 +374,12 @@ const Home = () => {
                       </button>
                     </div>
                     
-                    {/* Display tags from both possible fields */}
                     {(((post.relevance_tags || post.relevant_relevance_tags || [] ).length > 0)||(post.severity_tag !== "")) && (
                       <div className="post-tags">
                         {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
                           <span 
                             key={index}
                             className="tag"
-                            // onClick={() => toggleTagSelection(relevance_tag)}
                           >
                             {relevance_tag}
                           </span>
@@ -380,7 +413,6 @@ const Home = () => {
             </div>
 
             <div className="post-preview">
-              {/* Find post by id or _id */}
               {(() => {
                 const post = posts.find(p => (p._id || p.id) === activeCommentPost);
                 if (!post) return null;
