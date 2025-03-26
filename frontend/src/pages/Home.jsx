@@ -374,6 +374,9 @@ const Home = () => {
                   <div className="post-content">
                     {post.title && <h3 className="post-title">{post.title}</h3>}
                     <p className="post-text">{post.content}</p>
+                    {post.image && post.image.trim() !== "" && (
+                      <img src={post.image} alt="Post" className="post-image" />
+                    )}
                   </div>
 
                   <div className="post-footer">
