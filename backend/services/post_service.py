@@ -93,7 +93,7 @@ class PostService:
 
     async def classify_text(self, classify_request: ClassifyRequest) -> str:
         result = model.predict(classify_request.text)
-        if result['toxicity'] > 0.4 or result['severe_toxicity'] > 0.4 or result['obscene'] > 0.4 or result['threat'] > 0.4 or result['insult'] > 0.4 or result['identity_attack'] > 0.4:
+        if result['toxicity'] > 0.6 or result['severe_toxicity'] > 0.6 or result['obscene'] > 0.6 or result['threat'] > 0.6 or result['insult'] > 0.6 or result['identity_attack'] > 0.6:
             return "HATE"
         else:
             return "NOT HATE"

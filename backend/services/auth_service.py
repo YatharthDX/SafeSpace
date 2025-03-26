@@ -59,7 +59,8 @@ def register_user_service(user: UserRegistration):
         "password": hashed_password,
         "name": user.name,
         "role": "student",
-        "created_at": datetime.utcnow()
+        "created_at": datetime.utcnow(),
+        "avatar" : 0
     }
     users_collection.insert_one(new_user)
     user_id = users_collection.find_one({"email": user.email})["_id"]
@@ -150,7 +151,8 @@ def get_user_details_service(current_user: dict):
         "username": user.get("name"),
         "profile_picture": user.get("profile_picture"),
         "_id": str(user["_id"]),
-        "role": user.get("role")
+        "role": user.get("role"),
+        "avatar": user.get("avatar")
     }
     
     return user_details
