@@ -7,9 +7,10 @@ import {
   FaShareAlt,
   FaPlus,
   FaTimes,
-  FaTag,
+  FaFlag,
 } from "react-icons/fa";
 import Navbar from "../components/Public/navbar";
+import ReportModal from "../components/Posts/ReportModal"; // Import the new ReportModal component
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
@@ -24,9 +25,12 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [allTags, setAllTags] = useState([]);
-  const current_user = localStorage.getItem("token");
+  const current_user = localStorage.getItem('token');
   const current_user_json = jwtDecode(current_user);
   const current_user_role = current_user_json.role;
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [selectedPostForReport, setSelectedPostForReport] = useState(null);
+  
   // State for selected tags
   const [selectedTags, setSelectedTags] = useState([]);
   
@@ -214,6 +218,10 @@ const Home = () => {
       };
       
       await addComment(activeCommentPost, commentData);
+      const current_user2 = localStorage.getItem('token');
+      const current_user_json = jwtDecode(current_user2);
+      const current_user_role = current_user_json.role;
+      
       // Refresh comments
       const updatedComments = await getComments(activeCommentPost);
       setComments(prev => ({ ...prev, [activeCommentPost]: updatedComments }));
@@ -235,11 +243,35 @@ const Home = () => {
       }
     });
   };
-  
+
+  // Handle reporting a post
+  const handleReportPost = (postId) => {
+    setSelectedPostForReport(postId);
+    setIsReportModalOpen(true);
+  };
+
+  // Method to submit report
+  const submitReport = (reportData) => {
+    console.log('Report submitted for post:', selectedPostForReport);
+    console.log('Report details:', reportData);
+    // In a real app, you would send this to your backend
+    alert('Thank you for your report. We will review it shortly.');
+  };
+
   return (
     <div className="home-container">
       {/* Navbar with search function */}
       <Navbar onSearch={handleSearch} />
+
+      {/* Report Modal */}
+      <ReportModal 
+        isOpen={isReportModalOpen}
+        onClose={() => {
+          setIsReportModalOpen(false);
+          setSelectedPostForReport(null);
+        }}
+        onSubmit={submitReport}
+      />
 
       <div className="home-main-content">
         {/* Left sidebar with tags and create post button */}
@@ -308,14 +340,18 @@ const Home = () => {
                         <span className="post-time">{post.time}</span>
                       </div>
                     </div>
+                    {/* Report button added to post header */}
+                    <button
+                      className="action-button report-button"
+                      onClick={() => handleReportPost(postId)}
+                    >
+                      <FaFlag />
+                    </button>
                   </div>
 
                   <div className="post-content">
                     {post.title && <h3 className="post-title">{post.title}</h3>}
                     <p className="post-text">{post.content}</p>
-                    {post.image && post.image.trim() !== "" && (
-                      <img src={post.image} alt="Post" className="post-image" />
-                    )}
                   </div>
 
                   <div className="post-footer">
@@ -338,7 +374,6 @@ const Home = () => {
                       </button>
                     </div>
                     
-                    {/* Display tags from both possible fields */}
                     {(((post.relevance_tags || post.relevant_relevance_tags || [] ).length > 0)||(post.severity_tag !== "")) && (
                       <div className="post-tags">
                         {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
@@ -349,16 +384,9 @@ const Home = () => {
                             {relevance_tag}
                           </span>
                         ))}
-                        {(post.severity_tag !== "" && current_user_role !== "student") && (
+                        {(post.severity_tag !== "" && current_user_role !=="student") && (
                           <span className="tag"
-                          style={{
-                            backgroundColor:
-                              post.severity_tag === "moderate"
-                                ? "orange"
-                                : post.severity_tag === "severe"
-                                ? "red"
-                                : "yellow"
-                          }}>
+                          style={{backgroundColor:post.severity_tag === "moderate" ? "orange" : post.severity_tag === "severe" ? "red" : "yellow"}}>
                             {post.severity_tag}
                           </span>
                         )}
@@ -385,7 +413,6 @@ const Home = () => {
             </div>
 
             <div className="post-preview">
-              {/* Find post by id or _id */}
               {(() => {
                 const post = posts.find(p => (p._id || p.id) === activeCommentPost);
                 if (!post) return null;
