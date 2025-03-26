@@ -125,7 +125,7 @@ class BlogCreate(BaseModel):
     author_id: str
     relevance_tags: List[str] = []
     severity_tag: str
-    image_url: Optional[str] = None
+    image: Optional[str] = None
 
 class ClassifyRequest(BaseModel):
     text: str
@@ -138,7 +138,7 @@ class Blog(BaseModel):
     author_id: str
     relevance_tags: List[str] = []
     severity_tag: str
-    image_url: Optional[str] = None
+    image: Optional[str] = None
     likes: int = 0
     created_at: datetime
     updated_at: datetime
@@ -153,7 +153,7 @@ class Blog(BaseModel):
                 "author": "John Doe",
                 "relevance_tags": ["anxiety", "depression", "support"],
                 "severity_tag": "moderate",
-                "image_url": "/uploads/image.jpg",
+                "image": "/uploads/image.jpg",
                 "likes": 10,
                 "created_at": "2021-06-22T19:40:09.603Z",
                 "updated_at": "2021-06-22T19:40:09.603Z"
