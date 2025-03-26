@@ -118,10 +118,15 @@ const Messages = ({ selectedChat }) => {
             key={message._id}
             className={`message ${message.senderId === selectedChat.id ? "received" : "sent"} ${message.status}`}
           >
-            {message.text}
-            {message.image && (
-              <img src={message.image} alt="Shared" className="message-image" />
-            )}
+            <div className="message-content">
+              {message.text}
+              {message.image && (
+                <img src={message.image} alt="Shared" className="message-image" />
+              )}
+            </div>
+            <span className="message-timestamp">
+              {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </span>
           </div>
         ))}
         <div ref={messagesEndRef} />
