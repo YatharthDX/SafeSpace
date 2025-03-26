@@ -132,7 +132,7 @@ const Messages = ({ selectedChat }) => {
         <div ref={messagesEndRef} />
       </div>
       <form onSubmit={handleSendMessage} className="chat-input">
-        <FaImage className="image-icon" />
+        {/* <FaImage className="image-icon" /> */}
         <input
           type="text"
           value={newMessage}
