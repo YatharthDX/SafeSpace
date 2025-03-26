@@ -16,7 +16,7 @@ import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPo
 import { getCurrentUser } from "../chat-services/pyapi";
 import { classifyText } from "../api/posts";
 import { jwtDecode } from "jwt-decode";
-// const current_user=await getCurrentUser();
+
 const Home = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
@@ -24,10 +24,9 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [allTags, setAllTags] = useState([]);
-  const current_user=localStorage.getItem('token');
+  const current_user = localStorage.getItem("token");
   const current_user_json = jwtDecode(current_user);
   const current_user_role = current_user_json.role;
-  // console.log(current_user_role);
   // State for selected tags
   const [selectedTags, setSelectedTags] = useState([]);
   
@@ -215,9 +214,6 @@ const Home = () => {
       };
       
       await addComment(activeCommentPost, commentData);
-      const current_user2=localStorage.getItem('token');
-      const current_user_json = jwtDecode(current_user2);
-      const current_user_role = current_user_json.role;
       // Refresh comments
       const updatedComments = await getComments(activeCommentPost);
       setComments(prev => ({ ...prev, [activeCommentPost]: updatedComments }));
@@ -317,6 +313,9 @@ const Home = () => {
                   <div className="post-content">
                     {post.title && <h3 className="post-title">{post.title}</h3>}
                     <p className="post-text">{post.content}</p>
+                    {post.image && post.image.trim() !== "" && (
+                      <img src={post.image} alt="Post" className="post-image" />
+                    )}
                   </div>
 
                   <div className="post-footer">
@@ -346,14 +345,20 @@ const Home = () => {
                           <span 
                             key={index}
                             className="tag"
-                            // onClick={() => toggleTagSelection(relevance_tag)}
                           >
                             {relevance_tag}
                           </span>
                         ))}
-                        {(post.severity_tag !== "" && current_user_role !=="student") && (
+                        {(post.severity_tag !== "" && current_user_role !== "student") && (
                           <span className="tag"
-                          style={{backgroundColor:post.severity_tag === "moderate" ? "orange" : post.severity_tag === "severe" ? "red" : "yellow"}}>
+                          style={{
+                            backgroundColor:
+                              post.severity_tag === "moderate"
+                                ? "orange"
+                                : post.severity_tag === "severe"
+                                ? "red"
+                                : "yellow"
+                          }}>
                             {post.severity_tag}
                           </span>
                         )}
