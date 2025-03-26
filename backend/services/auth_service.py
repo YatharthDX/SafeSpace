@@ -8,6 +8,7 @@ from fastapi import HTTPException, Response, Request
 import logging
 from datetime import datetime
 from jose import jwt
+from bson.objectid import ObjectId, InvalidId
 
 logger = logging.getLogger(__name__)
 
@@ -184,3 +185,24 @@ def change_avatar_service(avatar: str, current_user: dict):
         raise HTTPException(status_code=404, detail="User not found or avatar not changed")
 
     return {"success": True, "message": "Avatar updated successfully"}
+
+def get_avatar_service(id: str, current_user: dict):
+    if users_collection is None:
+        raise HTTPException(status_code=503, detail="Service unavailable")
+
+    try:
+        # Convert string ID to ObjectId if your MongoDB uses ObjectId for _id
+        user_id = ObjectId(id)
+    except InvalidId:
+        raise HTTPException(status_code=400, detail="Invalid user ID format")
+
+    try:
+        user = users_collection.find_one({"_id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        # Return avatar, default to None if not present
+        return {"avatar": user.get("avatar")}
+    except Exception as e:
+        # Handle potential MongoDB errors (e.g., network issues)
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")

@@ -61,6 +61,9 @@ class AvailableSlot(BaseModel):
 
 class RoleRequest(BaseModel):
     email: str
+
+class NameOnly(BaseModel):
+    name: str
     
 # search post
 

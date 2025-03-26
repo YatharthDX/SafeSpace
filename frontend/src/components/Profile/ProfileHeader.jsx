@@ -117,7 +117,7 @@ const ProfileHeader = ({ username, avatar }) => {
 
     const handleAvatarChange = async (newAvatarId) => {
         try {
-            const response = await fetch('http://localhost:8000/api/auth/change-avatar', {
+            const response = await fetch('http://127.0.0.1:8000/api/auth/change-avatar', {
                 method: 'POST',
                 credentials: "include",
                 headers: {

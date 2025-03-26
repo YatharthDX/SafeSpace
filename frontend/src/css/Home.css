@@ -517,3 +517,10 @@ body {
     width: auto;
   }
 }
+
+.avatar-image {
+  width: 40px; /* or whatever size you want */
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
