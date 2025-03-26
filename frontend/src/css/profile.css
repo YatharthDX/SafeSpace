@@ -349,6 +349,13 @@
     background-color: #d4a76a;
 }
 
+.reset-password-btn{
+  background-color: #e3b27c;
+  color: #fff;
+}
+.reset-password-btn:hover{
+  background-color: #e4be96;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .profile-container {
