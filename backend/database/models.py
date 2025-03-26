@@ -39,6 +39,11 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+class AvatarRequest(BaseModel):
+    avatar: str
+
+# Appointments
+
 class Appointment(BaseModel):
     user_name: str
     user_email: EmailStr

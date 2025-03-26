@@ -259,7 +259,7 @@ const Profile = () => {
         ) : (
           <ProfileHeader
             username={userDetails.username}
-            profilePicture={userDetails.profile_picture}
+            avatar={userDetails.avatar}
           />
         )}
 
