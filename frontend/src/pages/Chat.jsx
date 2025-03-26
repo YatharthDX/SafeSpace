@@ -6,6 +6,18 @@ import { getCurrentUser } from "../chat-services/pyapi";
 import { getUsers, getMessages } from "../chat-services/api";
 import socketService from "../chat-services/socket";
 import "/src/css/Chat.css";
+import avatar1 from "../assets/1.png";
+import avatar2 from "../assets/2.png";
+import avatar3 from "../assets/3.png";
+import avatar4 from "../assets/4.png";
+import avatar5 from "../assets/5.png";
+import avatar6 from "../assets/6.png";
+import avatar7 from "../assets/7.png";
+import avatar8 from "../assets/8.png";
+import avatar9 from "../assets/9.png";
+import avatar10 from "../assets/10.png";
+
+// import require from "require";
 
 const Chat = () => {
   const [chats, setChats] = useState([]);
@@ -15,7 +27,7 @@ const Chat = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const avatars = [avatar1, avatar2, avatar3, avatar4, avatar5, avatar6, avatar7, avatar8, avatar9, avatar10];
   // Function to sort chats by unread count
   const sortChats = (chatsToSort) => {
     return [...chatsToSort].sort((a, b) => {
@@ -39,6 +51,21 @@ const Chat = () => {
     );
   };
 
+  const getAvatarUrl = (avatar) => {
+    if (!avatar) {
+      const randomIndex = Math.floor(Math.random() * 3) + 1; // Adjust range
+      return avatars[randomIndex];
+    }
+  
+    return avatars[Number(avatar)-1] || avatar; // Use stored images or return avatar as is
+  };
+  const getAvatarUrl2 = (avatar) => {
+    if (avatar.startsWith("/9j/")) {
+      return `data:image/jpeg;base64,${avatar}`; // Convert Base64 string to image source
+    }
+    return avatar; // If avatar is already a valid URL, return it as is
+  };
+  
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -64,7 +91,7 @@ const Chat = () => {
               name: user.name,
               message: "Click to start chatting",
               unread: unreadCount,
-              avatar: user.profilePic || "https://avatar.iran.liara.run/public",
+              avatar: user.role === "student" ? getAvatarUrl(user.avatar) : getAvatarUrl2(user.profile_picture) ,
             };
           })
         );
