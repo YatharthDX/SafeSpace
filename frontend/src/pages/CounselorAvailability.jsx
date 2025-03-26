@@ -572,6 +572,7 @@ const AvailabilityCalendar = () => {
               className="update-button"
               onClick={updateAvailability}
               disabled={isLoading || !hasUnsavedChanges}
+              style={{ backgroundColor: "#e3b27c", color: "white" }} 
             >
               {isLoading ? "Updating..." : "Update Availability"}
             </button>

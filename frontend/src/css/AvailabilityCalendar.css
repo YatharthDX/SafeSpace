@@ -1,5 +1,4 @@
 /* AvailabilityCalendar.css */
-
 .safespace-container {
   display: flex;
   flex-direction: column;
@@ -19,6 +18,23 @@
   flex: 1;
   gap: 20px;
   overflow-x: auto; /* Prevent horizontal scrolling */
+}
+
+.content-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content-container::-webkit-scrollbar-track {
+  background: #f5ead9;
+}
+
+.content-container::-webkit-scrollbar-thumb {
+  background-color: #fbd6a0;
+  border-radius: 4px;
+}
+
+.content-container::-webkit-scrollbar-thumb:hover {
+  background-color: #d4a76a;
 }
 
 /* Sidebar styles */
@@ -88,6 +104,24 @@
   /* margin-bottom: 20px; */
   width: 100%;
   max-width: 800px;
+}
+
+/* Scrollbar styling */
+.calendar-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.calendar-container::-webkit-scrollbar-track {
+  background: #f5ead9;
+}
+
+.calendar-container::-webkit-scrollbar-thumb {
+  background-color: #fbd6a0;
+  border-radius: 4px;
+}
+
+.calendar-container::-webkit-scrollbar-thumb:hover {
+  background-color: #d4a76a;
 }
 
 .calendar-header {
@@ -285,3 +319,4 @@
   letter-spacing: -0.3px;
   text-align: center;
 }
+
