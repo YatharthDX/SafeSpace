@@ -759,4 +759,44 @@
   background-color: #b71c1c;
 }
 
+.profile-header {
+  position: relative;
+}
+
+.profile-picture {
+  cursor: pointer;
+}
+
+.avatar-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+  max-width: 250px;
+}
+
+.avatar-option {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.avatar-option:hover {
+  opacity: 0.8;
+}
+
   /* ends.. */
+
