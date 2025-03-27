@@ -13,6 +13,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from utils.config import EMAIL_HOST, EMAIL_PORT, EMAIL_USERNAME, EMAIL_PASSWORD
+from pydantic import BaseModel, EmailStr
 
 from fastapi import UploadFile
 import os
@@ -350,7 +351,7 @@ class PostService:
             blog = Blog(**document)
             blogs.append(blog)
             
-        return blogs
+        return blogs 
     
 
 def send_report_email(report: ReportRequest):
@@ -397,3 +398,4 @@ def send_report_email(report: ReportRequest):
     except Exception as e:
         print(f"Error sending email: {e}")
         return False
+
