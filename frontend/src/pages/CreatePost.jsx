@@ -4,10 +4,14 @@ import { IoMdArrowBack } from "react-icons/io";
 import { BsTag } from "react-icons/bs";
 import "../css/CreatePost.css";
 import Navbar2 from "../components/Public/navbar2";
-import { createPost, uploadPostImage, classifyText, classifySeverity } from "../api/posts";
+import {
+  createPost,
+  classifyText,
+  classifySeverity,
+} from "../api/posts";
 import { useNavigate } from "react-router-dom";
-import { Fetch } from "socket.io-client";
 import { getCurrentUser } from "../chat-services/pyapi";
+import { jwtDecode } from "jwt-decode"; // Import the library
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -16,33 +20,48 @@ const CreatePost = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [severityTag, setSeverityTag] = useState("");
   const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   // Available tags
   const availableTags = [
-    "anxiety", "depression", "stress", "academic", "social",
-    "relationships", "family", "health", "career"
+    "anxiety",
+    "depression",
+    "stress",
+    "academic",
+    "social",
+    "relationships",
+    "family",
+    "health",
+    "career",
   ];
 
   // Handle tag selection
   const toggleTag = (tag) => {
     if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
+      setSelectedTags(selectedTags.filter((t) => t !== tag));
     } else {
       setSelectedTags([...selectedTags, tag]);
     }
   };
 
-  // Handle image selection
+  // Handle image selection with preview generation
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
+
+      // Generate a preview of the selected image
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  // Handle form submission
+  // Handle form submission including direct image inclusion in the post data
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -75,45 +94,34 @@ const CreatePost = () => {
         setIsSubmitting(false);
         return;
       }
-      const classifyData = {
-        text: content
-      }
-      // Check for hate speech
-      const classification = await classifyText(classifyData);
-      // console.log(classifyData);
-      // console.log(classification);
-      if (classification === "HATE") {
+
+      // Check for hate speech in content and title
+      const contentClassification = await classifyText({ text: content });
+      if (contentClassification === "HATE") {
         setError("Please refrain from using hate speech in your post");
         setIsSubmitting(false);
         return;
       }
-      const classifyData2 = {
-        text: title
-      }
-      const classification2 = await classifyText(classifyData2);
-      if (classification2 === "HATE") {
+      const titleClassification = await classifyText({ text: title });
+      if (titleClassification === "HATE") {
         setError("Please refrain from using hate speech in your title");
         setIsSubmitting(false);
         return;
       }
 
-      // Create post data
+      // Create post data with the image field if available
       const postData = {
         title,
         content,
         author_id: currentUser._id,
         author: currentUser.name,
         relevance_tags: selectedTags,
-        severity_tag: await classifySeverity(classifyData) || "medium" // Default to medium if not set
+        severity_tag: (await classifySeverity({ text: content })) || "medium", // Default to medium if not set
+        image: imagePreview || null, // Include image if one is selected
       };
 
-      // Create the post
-      const newPost = await createPost(postData);
-
-      // If there's an image, upload it
-      if (imageFile) {
-        await uploadPostImage(newPost._id, imageFile);
-      }
+      // Create the post directly with the image field
+      await createPost(postData);
 
       // Reset form and navigate to home
       setTitle("");
@@ -121,13 +129,12 @@ const CreatePost = () => {
       setSelectedTags([]);
       setSeverityTag("");
       setImageFile(null);
+      setImagePreview(null);
       navigate("/home");
     } catch (err) {
       // More specific error handling
       if (err.response?.status === 401) {
         setError("Please log in to create a post");
-      } else if (err.response?.status === 413) {
-        setError("Image file is too large. Please choose a smaller image");
       } else {
         setError(err.message || "Failed to create post. Please try again.");
       }
@@ -135,6 +142,9 @@ const CreatePost = () => {
       setIsSubmitting(false);
     }
   };
+
+  const role = jwtDecode(localStorage.getItem("token")).role;
+  console.log(role);
 
   return (
     <div className="create-post-page">
@@ -154,7 +164,7 @@ const CreatePost = () => {
             <div className="post-form-section">
               <form onSubmit={handleSubmit}>
                 {error && <div className="error-message">{error}</div>}
-                
+
                 <input
                   type="text"
                   className="post-title-input"
@@ -174,23 +184,35 @@ const CreatePost = () => {
                   ></textarea>
 
                   <div className="post-media-actions">
-                    <label className="media-button">
-                      <FaImage />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageSelect}
-                        style={{ display: 'none' }}
-                      />
-                    </label>
-                    <button type="button" className="media-button-2">
-                      <FaMicrophone />
-                    </button>
+                    {role !== "student" && (
+                      <label className="media-button">
+                        <FaImage />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageSelect}
+                          style={{ display: "none" }}
+                        />
+                      </label>
+                    )}
                   </div>
                 </div>
 
-                {/* Severity Tag Selection */}
-                
+                {/* Image Preview */}
+                {imagePreview && (
+                  <div className="image-preview">
+                    <img src={imagePreview} alt="Preview" />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImageFile(null);
+                        setImagePreview(null);
+                      }}
+                    >
+                      Remove Image
+                    </button>
+                  </div>
+                )}
 
                 {/* Selected Tags Display */}
                 <div className="selected-tags-section">
@@ -205,8 +227,8 @@ const CreatePost = () => {
                 </div>
 
                 <div className="post-submit-container">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="post-submit-button"
                     disabled={isSubmitting}
                   >
@@ -227,7 +249,9 @@ const CreatePost = () => {
                 {availableTags.map((tag, index) => (
                   <div
                     key={index}
-                    className={`tag-item ${selectedTags.includes(tag) ? "selected" : ""}`}
+                    className={`tag-item ${
+                      selectedTags.includes(tag) ? "selected" : ""
+                    }`}
                     onClick={() => toggleTag(tag)}
                   >
                     {tag}

@@ -89,13 +89,13 @@
   margin-left: auto;
   font-size: 20px;
   color: #666;
-  cursor: pointer;
-  transition: color 0.2s ease;
+  /* cursor: pointer; */
+  transition: none;
 }
 
-.edit-icon:hover {
+/* .edit-icon:hover {
   color: #e3b27c;
-}
+} */
 
 /* Search Bar */
 .search-bar {
@@ -231,6 +231,28 @@
   overflow-y: auto;
   padding: 20px;
   background: #fff;
+  background-image: url("/src/assets/Chatbg.png");
+  background-blend-mode:darken;
+  background-size: cover;
+
+}
+
+/* Scrollbar styling */
+.chat-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: #f5ead9;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background-color: #e3b27c;
+  border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background-color: #d4a76a;
 }
 
 .chat-date {
@@ -378,12 +400,16 @@
   background-color: #e3b27c;
   color: white;
   border-radius: 15px 15px 0 15px;
+  font-size: large;
+  text-align: end;
 }
 
 .message.received {
   background-color: #e9ecef;
   color: black;
   border-radius: 15px 15px 15px 0;
+  font-size: large;
+  text-align: start;
 }
 
 .message {
@@ -399,3 +425,31 @@
   border-radius: 10px;
   margin-top: 5px;
 }
+/* Updated message timestamp styling */
+.message-timestamp {
+  font-size: 10px;
+  margin-top: 4px;
+  text-align: right;
+}
+.message.sent .message-timestamp {
+  float: right;
+  color: rgba(248, 246, 246, 0.753);
+
+}
+.message.received .message-timestamp {
+  float: left;
+  color: rgba(0, 0, 0, 0.5);
+
+}
+
+
+/* .message.sent .message-content {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 200 100'%3E%3Cdefs%3E%3Cpattern id='softPattern' patternUnits='userSpaceOnUse' width='50' height='50'%3E%3Crect width='50' height='50' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='25' cy='25' r='10' fill='rgba(255,255,255,0.05)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23softPattern)'/%3E%3C/svg%3E");
+  background-blend-mode: overlay;
+}
+
+.message.received .message-content {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' viewBox='0 0 200 100'%3E%3Cdefs%3E%3Cpattern id='softPattern' patternUnits='userSpaceOnUse' width='50' height='50'%3E%3Crect width='50' height='50' fill='rgba(0,0,0,0.05)'/%3E%3Ccircle cx='25' cy='25' r='10' fill='rgba(0,0,0,0.03)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23softPattern)'/%3E%3C/svg%3E");
+  background-blend-mode: overlay;
+} */
+ 

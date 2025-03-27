@@ -7,47 +7,53 @@ import {
   FaShareAlt,
   FaPlus,
   FaTimes,
-  FaTag,
+  FaFlag,
 } from "react-icons/fa";
 import Navbar from "../components/Public/navbar";
+import ReportModal from "../components/Posts/ReportModal";
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
 import { getCurrentUser } from "../chat-services/pyapi";
 import { classifyText } from "../api/posts";
 import { jwtDecode } from "jwt-decode";
-// const current_user=await getCurrentUser();
+
+const avatarImages = {
+  1: () => import('../assets/1.png'),
+  2: () => import('../assets/2.png'),
+  3: () => import('../assets/3.png'),
+  4: () => import('../assets/4.png'),
+  5: () => import('../assets/5.png'),
+  6: () => import('../assets/6.png'),
+  7: () => import('../assets/7.png'),
+  8: () => import('../assets/8.png'),
+  9: () => import('../assets/9.png'),
+  10: () => import('../assets/10.png')
+};
+
 const Home = () => {
+  const [avatars, setAvatars] = React.useState({});
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [allTags, setAllTags] = useState([]);
-  const current_user=localStorage.getItem('token');
+  const current_user = localStorage.getItem('token');
   const current_user_json = jwtDecode(current_user);
   const current_user_role = current_user_json.role;
-  // console.log(current_user_role);
-  // State for selected tags
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [selectedPostForReport, setSelectedPostForReport] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
-  
-  // State for search text from navbar
   const [searchText, setSearchText] = useState("");
-
-  // State for liked posts
   const [likedPosts, setLikedPosts] = useState(new Set());
-
-  // State for active comment section
   const [activeCommentPost, setActiveCommentPost] = useState(null);
-
-  // State for comment input
   const [newComment, setNewComment] = useState("");
 
   const HandleCreate = () => {
     navigate("/createpost");
   };
 
-  // Fetch all available tags
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -64,17 +70,46 @@ const Home = () => {
     fetchTags();
   }, []);
 
-  // Fetch posts on component mount and when search criteria change
   useEffect(() => {
     fetchPosts();
   }, [selectedTags, searchText]);
 
-  // Fetch posts from API with search parameters
+  const fetchAvatar = async (authorId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/auth/get-avatar/?id=${authorId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      const avatarNumber = data.avatar || data.avatar_number || data.number || 1;
+      
+      if (avatarNumber && avatarImages[avatarNumber]) {
+        const avatarModule = await avatarImages[avatarNumber]();
+        return avatarModule.default;
+      }
+      return null;
+    } catch (error) {
+      console.error(`Error fetching avatar for ${authorId}:`, error);
+      return null;
+    }
+  };
+
   const fetchPosts = async () => {
     try {
       setLoading(true);
       
-      // Get user and liked posts
       const currentUser = await getCurrentUser();
       let likedPostIds = [];
       if (currentUser) {
@@ -82,10 +117,8 @@ const Home = () => {
         setLikedPosts(new Set(likedPostIds));
       }
 
-      // Prepare search parameters
       let fetchedPosts;
       if (selectedTags.length > 0 || searchText) {
-        // Use search API with parameters
         const tagsParam = selectedTags.join(',');
         const url = `http://127.0.0.1:8000/search_blog/search-get/?text=${encodeURIComponent(searchText)}&tags=${encodeURIComponent(tagsParam)}`;
         
@@ -96,11 +129,9 @@ const Home = () => {
         
         fetchedPosts = await response.json();
       } else {
-        // No search criteria, get all posts
         fetchedPosts = await getPosts();
       }
       
-      // Update posts with correct likes count and liked state
       const updatedPosts = fetchedPosts.map(post => ({
         ...post,
         isLiked: likedPostIds.includes(post._id || post.id)
@@ -108,7 +139,19 @@ const Home = () => {
       
       setPosts(updatedPosts);
 
-      // Initialize comments state for each post
+      const uniqueAuthorIds = [...new Set(updatedPosts.map(post => post.author_id))];
+      const avatarPromises = uniqueAuthorIds.map(async (authorId) => {
+        const avatarSrc = await fetchAvatar(authorId);
+        return { authorId, avatarSrc };
+      });
+      
+      const avatarResults = await Promise.all(avatarPromises);
+      const newAvatars = avatarResults.reduce((acc, { authorId, avatarSrc }) => {
+        if (avatarSrc) acc[authorId] = avatarSrc;
+        return acc;
+      }, {});
+      setAvatars(prev => ({ ...prev, ...newAvatars }));
+
       const commentsState = {};
       for (const post of updatedPosts) {
         const postId = post._id || post.id;
@@ -123,12 +166,10 @@ const Home = () => {
     }
   };
 
-  // Handle search from navbar
   const handleSearch = (text, tags) => {
     setSearchText(text);
     if (tags && tags.length > 0) {
       setSelectedTags(prevTags => {
-        // If tag is already selected, don't add it again
         if (prevTags.includes(tags[0])) {
           return prevTags;
         }
@@ -137,7 +178,6 @@ const Home = () => {
     }
   };
 
-  // Toggle like function
   const toggleLike = async (postId) => {
     try {
       if (likedPosts.has(postId)) {
@@ -152,7 +192,6 @@ const Home = () => {
         setLikedPosts(prev => new Set([...prev, postId]));
       }
       
-      // Update the post's likes count in the posts state
       setPosts(prevPosts =>
         prevPosts.map(post => {
           const currentPostId = post._id || post.id;
@@ -169,13 +208,11 @@ const Home = () => {
     }
   };
 
-  // Toggle comment section
   const toggleCommentSection = async (postId) => {
     if (activeCommentPost === postId) {
       setActiveCommentPost(null);
     } else {
       setActiveCommentPost(postId);
-      // Fetch comments if not already loaded
       if (!comments[postId]) {
         try {
           const postComments = await getComments(postId);
@@ -187,12 +224,10 @@ const Home = () => {
     }
   };
 
-  // Handle comment input change
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
   };
 
-  // Handle comment submission
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim() === "") return;
@@ -215,21 +250,14 @@ const Home = () => {
       };
       
       await addComment(activeCommentPost, commentData);
-      const current_user2=localStorage.getItem('token');
-      const current_user_json = jwtDecode(current_user2);
-      const current_user_role = current_user_json.role;
-      // Refresh comments
       const updatedComments = await getComments(activeCommentPost);
       setComments(prev => ({ ...prev, [activeCommentPost]: updatedComments }));
-      
-      // Clear the input
       setNewComment("");
     } catch (err) {
       setError(err.message || "Failed to add comment. Please try again.");
     }
   };
-  
-  // Handle tag selection (toggle)
+
   const toggleTagSelection = (tag) => {
     setSelectedTags(prevSelectedTags => {
       if (prevSelectedTags.includes(tag)) {
@@ -239,14 +267,32 @@ const Home = () => {
       }
     });
   };
-  
+
+  const handleReportPost = (postId) => {
+    setSelectedPostForReport(postId);
+    setIsReportModalOpen(true);
+  };
+
+  const submitReport = (reportData) => {
+    console.log('Report submitted for post:', selectedPostForReport);
+    console.log('Report details:', reportData);
+    alert('Thank you for your report. We will review it shortly.');
+  };
+
   return (
     <div className="home-container">
-      {/* Navbar with search function */}
       <Navbar onSearch={handleSearch} />
 
+      <ReportModal 
+        isOpen={isReportModalOpen}
+        onClose={() => {
+          setIsReportModalOpen(false);
+          setSelectedPostForReport(null);
+        }}
+        onSubmit={submitReport}
+      />
+
       <div className="home-main-content">
-        {/* Left sidebar with tags and create post button */}
         <div className="left-sidebar">
           <div className="sidebar-section">
             <div className="tag-header">
@@ -280,14 +326,12 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Create post button in the sidebar */}
           <button className="create-post-btn" onClick={HandleCreate}>
             <FaPlus className="plus-icon" />
             <span>Create Post</span>
           </button>
         </div>
 
-        {/* Main posts area */}
         <div className={`posts-container ${!activeCommentPost ? 'comments-closed' : ''}`}>
           {loading ? (
             <div className="loading-indicator">Loading posts...</div>
@@ -300,23 +344,38 @@ const Home = () => {
           ) : (
             posts.map((post) => {
               const postId = post._id || post.id;
+              const authorAvatar = avatars[post.author_id];
+
               return (
                 <div key={postId} className="post">
                   <div className="post-header">
                     <div className="post-user">
                       <div className="user-avatar">
-                        <FaRegUser />
+                        {authorAvatar ? (
+                          <img src={authorAvatar} alt="User avatar" className="avatar-image" />
+                        ) : (
+                          <FaRegUser />
+                        )}
                       </div>
                       <div className="user-info">
                         <span className="username">{post.author}</span>
                         <span className="post-time">{post.time}</span>
                       </div>
                     </div>
+                    <button
+                      className="action-button report-button"
+                      onClick={() => handleReportPost(postId)}
+                    >
+                      <FaFlag />
+                    </button>
                   </div>
 
                   <div className="post-content">
                     {post.title && <h3 className="post-title">{post.title}</h3>}
                     <p className="post-text">{post.content}</p>
+                    {post.image && post.image.trim() !== "" && (
+                      <img src={post.image} alt="Post" className="post-image" />
+                    )}
                   </div>
 
                   <div className="post-footer">
@@ -339,14 +398,12 @@ const Home = () => {
                       </button>
                     </div>
                     
-                    {/* Display tags from both possible fields */}
                     {(((post.relevance_tags || post.relevant_relevance_tags || [] ).length > 0)||(post.severity_tag !== "")) && (
                       <div className="post-tags">
                         {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
                           <span 
                             key={index}
                             className="tag"
-                            // onClick={() => toggleTagSelection(relevance_tag)}
                           >
                             {relevance_tag}
                           </span>
@@ -366,7 +423,6 @@ const Home = () => {
           )}
         </div>
 
-        {/* Comment Section */}
         {activeCommentPost && (
           <div className={`comments-panel ${activeCommentPost ? 'open' : ''}`}>
             <div className="comments-header">
@@ -380,16 +436,20 @@ const Home = () => {
             </div>
 
             <div className="post-preview">
-              {/* Find post by id or _id */}
               {(() => {
                 const post = posts.find(p => (p._id || p.id) === activeCommentPost);
                 if (!post) return null;
+                const authorAvatar = avatars[post.author_id];
                 
                 return (
                   <>
                     <div className="post-user">
                       <div className="user-avatar">
-                        <FaRegUser />
+                        {authorAvatar ? (
+                          <img src={authorAvatar} alt="User avatar" className="avatar-image" />
+                        ) : (
+                          <FaRegUser />
+                        )}
                       </div>
                       <div className="user-info">
                         <span className="username">{post.author}</span>
@@ -406,22 +466,29 @@ const Home = () => {
             </div>
 
             <div className="comments-list">
-              {comments[activeCommentPost]?.map((comment) => (
-                <div key={comment._id} className="comment">
-                  <div className="comment-header">
-                    <div className="post-user">
-                      <div className="user-avatar">
-                        <FaRegUser />
-                      </div>
-                      <div className="user-info">
-                        <span className="username">{comment.author}</span>
-                        <span className="post-time">{comment.time}</span>
+              {comments[activeCommentPost]?.map((comment) => {
+                const commentAvatar = avatars[comment.author_id];
+                return (
+                  <div key={comment._id} className="comment">
+                    <div className="comment-header">
+                      <div className="post-user">
+                        <div className="user-avatar">
+                          {commentAvatar ? (
+                            <img src={commentAvatar} alt="User avatar" className="avatar-image" />
+                          ) : (
+                            <FaRegUser />
+                          )}
+                        </div>
+                        <div className="user-info">
+                          <span className="username">{comment.author}</span>
+                          <span className="post-time">{comment.time}</span>
+                        </div>
                       </div>
                     </div>
+                    <p className="comment-text">{comment.content}</p>
                   </div>
-                  <p className="comment-text">{comment.content}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <form className="comment-form" onSubmit={handleCommentSubmit}>

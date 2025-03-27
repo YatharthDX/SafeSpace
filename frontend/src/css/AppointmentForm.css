@@ -125,6 +125,7 @@
   resize: vertical;
   transition: all 0.2s ease;
   font-family: inherit;
+  background-color: #ffffff;
 }
 
 .form-group textarea:focus {
