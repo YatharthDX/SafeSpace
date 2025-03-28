@@ -4,6 +4,8 @@ import Navbar2 from "../components/Public/navbar2";
 import RequestCard from "../components/Appointments/RequestCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaTachometerAlt, FaCalendarAlt } from "react-icons/fa";
+
 
 const AppointmentRequests = () => {
   const navigate = useNavigate();
@@ -144,11 +146,15 @@ const AppointmentRequests = () => {
       <div className="content-container">
         <div className="sidebar">
           <div className="sidebar-item" onClick={() => handleNavigation("/counselor/dashboard")}>
-            <span className="sidebar-icon">📊</span>
+            <span className="sidebar-icon">
+              <FaTachometerAlt/>
+            </span>
             <span>Dashboard</span>
           </div>
           <div className="sidebar-item active" onClick={() => handleNavigation("/counselor/requests")}>
-            <span className="sidebar-icon">📝</span>
+            <span className="sidebar-icon">
+            <FaCalendarAlt/>
+            </span>
             <span>Requests</span>
           </div>
         </div>
