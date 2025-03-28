@@ -273,11 +273,49 @@ const Home = () => {
     setIsReportModalOpen(true);
   };
 
-  const submitReport = (reportData) => {
-    console.log('Report submitted for post:', selectedPostForReport);
-    console.log('Report details:', reportData);
-    alert('Thank you for your report. We will review it shortly.');
+  const submitReport = async (reportData) => {
+    if (!selectedPostForReport) {
+      alert("Error: No post selected for reporting.");
+      return;
+    }
+  
+    try {
+      const token = localStorage.getItem("token");
+      const currentUser = await getCurrentUser(); // Fetch current user details
+      const reportedPost = posts.find(p => (p._id || p.id) === selectedPostForReport);
+  
+      const payload = {
+        blog_id: selectedPostForReport,
+        reported_author_id: reportedPost?.author_id || "",
+        reported_author_name: reportedPost?.author || "",
+        reporter_email: currentUser?.email || current_user_json.email,
+        reason: reportData.title,
+        description: reportData.body || "",
+      };
+  
+      console.log("Submitting report with payload:", payload);
+  
+      const response = await fetch("http://127.0.0.1:8000/blogs/report-blog/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token if required by backend
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message);
+      } else {
+        alert(`Error: ${result.detail || "Failed to submit report"}`);
+      }
+    } catch (error) {
+      console.error("Report submission error:", error);
+      alert("Failed to submit the report. Please try again.");
+    }
   };
+
 
   return (
     <div className="home-container">

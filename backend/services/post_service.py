@@ -7,8 +7,15 @@ from datetime import datetime
 from database.connection import blogs_collection, comments_collection ,liked_posts_collection
 from services.auth_service import get_current_user_service
 from detoxify import Detoxify
-from database.models import BlogCreate, Blog, CommentCreate, Comment, ClassifyRequest
+from database.models import BlogCreate, Blog, CommentCreate, Comment, ClassifyRequest, ReportRequest
 import platform
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from utils.config import EMAIL_HOST, EMAIL_PORT, EMAIL_USERNAME, EMAIL_PASSWORD
+from pydantic import BaseModel, EmailStr
+
+from fastapi import UploadFile
 import os
 current_os = platform.system()
 if(current_os=="Darwin"):
@@ -344,5 +351,51 @@ class PostService:
             blog = Blog(**document)
             blogs.append(blog)
             
-        return blogs
+        return blogs 
     
+
+def send_report_email(report: ReportRequest):
+    """
+    Send an email report about a blog creator
+    """
+    try:
+        sender_email = EMAIL_USERNAME
+        sender_password = EMAIL_PASSWORD
+        recipient_email = EMAIL_USERNAME
+
+        # Create message
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = recipient_email
+        message['Subject'] = f"Blog Report: {report.reported_author_name}"
+
+        # Email body
+        body = f"""
+        Blog Report Details:
+        
+        Blog ID: {report.blog_id}
+        Reported Author: {report.reported_author_name}
+        Author ID: {report.reported_author_id}
+        Reporter Email: {report.reporter_email}
+        
+        Reason for Report: {report.reason}
+        
+        Additional Description:
+        {report.description or 'No additional description provided'}
+        
+        Please review and take appropriate action.
+        """
+
+        message.attach(MIMEText(body, 'plain'))
+
+        # Send email
+        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(message)
+
+        return True
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False
+

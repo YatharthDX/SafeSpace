@@ -7,20 +7,17 @@ const ReportModal = ({ isOpen, onClose, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Basic validation
     if (!reportTitle.trim() || !reportBody.trim()) {
       alert('Please provide both a title and description for your report.');
       return;
     }
-
-    // Call the onSubmit prop with report details
     onSubmit({
       title: reportTitle,
-      body: reportBody
+      body: reportBody,
+      reportedAuthorId: "", // Placeholder
+      reportedAuthorName: "", // Placeholder
+      reporterEmail: "", // Placeholder
     });
-
-    // Reset form and close modal
     setReportTitle('');
     setReportBody('');
     onClose();

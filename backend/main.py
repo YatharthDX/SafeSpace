@@ -31,7 +31,6 @@ app.include_router(user_router, prefix="/api")
 app.include_router(appointments_router, prefix="/appointments")  # For prefixed routes
 app.include_router(search_router,prefix="/search_blog")  # For prefixed routes
 app.include_router(posts_router, prefix="/blogs")
-
 @app.get("/health")
 async def health_check():
     health = {
