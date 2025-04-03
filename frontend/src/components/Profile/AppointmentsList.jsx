@@ -42,7 +42,7 @@ const AppointmentsList = ({ appointments = [] }) => {
                   <div className="info-value highlighted">{time}</div>
                 </div>
                 <div className="info-row">
-                  <div className="info-label">Counsellor</div>
+                  <div className="info-label">Counsellor Email</div>
                   <div className="info-divider">:</div>
                   <div className="info-value">
                     <FaUser className="icon" /> {doctor}

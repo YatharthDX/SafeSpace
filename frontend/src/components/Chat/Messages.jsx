@@ -113,6 +113,7 @@ const Messages = ({ selectedChat }) => {
         <h3>{selectedChat.name}</h3>
       </div>
       <div className="chat-messages">
+        
         {messages.map((message) => (
           <div
             key={message._id}

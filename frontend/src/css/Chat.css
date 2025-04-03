@@ -231,9 +231,9 @@
   overflow-y: auto;
   padding: 20px;
   background: #fff;
-  background-image: url("/src/assets/Chatbg.png");
+  /* background-image: url("/src/assets/Chatbg.png");
   background-blend-mode:darken;
-  background-size: cover;
+  background-size: cover; */
 
 }
 

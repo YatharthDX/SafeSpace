@@ -75,7 +75,7 @@ body {
 
 .tags-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px;
   overflow-y: auto;
   max-height: calc(100% - 40px);
@@ -265,7 +265,7 @@ body {
   align-items: center;
   padding: 5px;
   transition: all 0.2s ease;
-  outline:none;
+  outline: none;
 }
 
 .action-button:hover {
@@ -275,11 +275,11 @@ body {
 
 .action-button.active {
   color: #e3b27c;
-  outline:none;
+  outline: none;
 }
 
 .action-button:focus {
-  outline: none;       
+  outline: none;
 }
 
 .post-tags {
@@ -478,8 +478,6 @@ body {
     width: 100%;
     margin: 0;
   }
-
-
 }
 
 /* Report Modal Styles */
@@ -654,4 +652,14 @@ body {
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.post-image {
+  max-height: 50vh;
+  max-width: auto;
+  height: auto;
+  object-fit: cover; /* Ensures images are cropped nicely if needed */
+  border-radius: 10px; /* Optional: adds rounded corners */
+  display: block;
+  margin: 10px auto;
 }

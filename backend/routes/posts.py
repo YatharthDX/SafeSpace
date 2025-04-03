@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from typing import List, Optional
 from bson import ObjectId
-
-from database.models import BlogCreate, Blog, CommentCreate, Comment, LikesUpdate, ClassifyRequest
-from services.post_service import PostService
+from database.models import BlogCreate, Blog, CommentCreate, Comment, LikesUpdate, ClassifyRequest, ReportRequest
+from services.post_service import PostService, send_report_email
+from fastapi import HTTPException
 router = APIRouter(tags=["posts"])
 from pydantic import BaseModel
 
@@ -185,3 +185,24 @@ async def get_user_blogs(
         raise HTTPException(status_code=400, detail="Invalid user ID format")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/report-blog")
+async def report_blog(report: ReportRequest):
+    """
+    Endpoint to handle blog reporting
+    """
+    # Validate report request
+    if not report.blog_id or not report.reported_author_id:
+        raise HTTPException(status_code=400, detail="Invalid report information")
+
+    # Send email report
+    email_sent = send_report_email(report)
+
+    if not email_sent:
+        raise HTTPException(status_code=500, detail="Failed to send report email")
+
+    return {
+        "status": "success", 
+        "message": "Blog report submitted successfully"
+    }

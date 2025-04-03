@@ -163,6 +163,15 @@ class Blog(BaseModel):
             }
         }
     }
+    
+class ReportRequest(BaseModel):
+    blog_id: str
+    reported_author_id: str
+    reported_author_name: str
+    reporter_email: EmailStr
+    reason: str
+    description: Optional[str] = None
+
 
 class CommentCreate(BaseModel):
     content: str

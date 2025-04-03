@@ -4,11 +4,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { BsTag } from "react-icons/bs";
 import "../css/CreatePost.css";
 import Navbar2 from "../components/Public/navbar2";
-import {
-  createPost,
-  classifyText,
-  classifySeverity,
-} from "../api/posts";
+import { createPost, classifyText, classifySeverity } from "../api/posts";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../chat-services/pyapi";
 import { jwtDecode } from "jwt-decode"; // Import the library
@@ -27,7 +23,7 @@ const CreatePost = () => {
   // Available tags
   const availableTags = [
     "anxiety",
-    "depression",
+    "motivation",
     "stress",
     "academic",
     "social",
@@ -35,6 +31,8 @@ const CreatePost = () => {
     "family",
     "health",
     "career",
+    "work-life balance",
+    "self-care",
   ];
 
   // Handle tag selection

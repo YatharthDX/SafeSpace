@@ -111,7 +111,7 @@ def get_current_user_service(request: Request):
     # Get the JWT token from cookies
     jwt_token = request.cookies.get("jwt")
     # jwt_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2ZWRhbnRuZWUyM0BpaXRrLmFjLmluIiwicm9sZSI6InN0dWRlbnQiLCJleHAiOjE3NDI2NDg5OTJ9.wjmu848uaGbBDHoFfdSx-ZZLe3IPdd2I08fm5ZleaGA"
-    print("here",jwt_token)
+    # print("here",jwt_token)
     if not jwt_token:
         raise HTTPException(status_code=401, detail="Not authenticated")
     
@@ -119,8 +119,8 @@ def get_current_user_service(request: Request):
         # Decode the JWT token
         payload = jwt.decode(jwt_token, SECRET_KEY, algorithms=[ALGORITHM])
         email = payload.get("sub")
-        print(email)
-        if not email:
+        # print(email)
+        if not email:   
             raise HTTPException(status_code=401, detail="Invalid token")
         
         # Get user from database
