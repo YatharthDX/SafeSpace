@@ -26,19 +26,18 @@ const Login = () => {
                 body: JSON.stringify({ email, password }),
                 credentials: 'include',
             });
-
+            
             const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.detail || 'Invalid email or password');
+            }
+            
             if (data.access_token) {
                 localStorage.setItem("token", data.access_token);
+                sessionStorage.setItem('isAuthenticated', 'true'); 
+                navigate('/home');
             }
-
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Invalid email or password');
-            }
-
-            sessionStorage.setItem('isAuthenticated', 'true'); // Store session state
-            navigate('/home');
         } catch (err) {
             setError(err.message);
         } finally {
