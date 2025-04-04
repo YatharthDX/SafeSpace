@@ -46,7 +46,16 @@ const Signup = () => {
 
             if (!otpResponse.ok) {
                 const otpErrorData = await otpResponse.json();
-                throw new Error(otpErrorData.detail || 'Failed to send OTP');
+                let errorMessage;
+                if (Array.isArray(otpErrorData?.detail)) {
+                    errorMessage = otpErrorData.detail[0]?.msg || 'Validation failed';
+                } else if (typeof otpErrorData?.detail === 'string') {
+                    errorMessage = otpErrorData.detail;
+                } else {
+                    errorMessage = 'Failed to send OTP';
+                }
+
+                throw new Error(errorMessage);
             }
             
             // If OTP was sent successfully, show the OTP verification modal
