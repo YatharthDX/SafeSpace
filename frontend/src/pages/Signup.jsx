@@ -46,7 +46,7 @@ const Signup = () => {
 
             if (!otpResponse.ok) {
                 const otpErrorData = await otpResponse.json();
-                throw new Error(otpErrorData.message || 'Failed to send OTP');
+                throw new Error(otpErrorData.detail || 'User already exists');
             }
             
             // If OTP was sent successfully, show the OTP verification modal

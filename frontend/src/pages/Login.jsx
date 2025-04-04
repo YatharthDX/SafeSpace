@@ -28,13 +28,11 @@ const Login = () => {
             });
 
             const data = await response.json();
+            if (!data.success) {
+                throw new Error(data.detail || 'Invalid email or password');
+            }
             if (data.access_token) {
                 localStorage.setItem("token", data.access_token);
-            }
-
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Invalid email or password');
             }
 
             sessionStorage.setItem('isAuthenticated', 'true'); // Store session state
