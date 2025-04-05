@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  FaRegUser,
-  FaRegComment,
-  FaHeart,
-  FaRegHeart,
-  FaShareAlt,
-  FaPlus,
-  FaTimes,
-  FaFlag,
-} from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import Navbar from "../components/Public/navbar";
 import ReportModal from "../components/Posts/ReportModal";
+import Post from "../components/Posts/PostsContainer"; // Import the new Post component
+import CommentSection from "../components/Posts/CommentSection"; // Import the new CommentSection component
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
 import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
@@ -281,7 +274,7 @@ const Home = () => {
   
     try {
       const token = localStorage.getItem("token");
-      const currentUser = await getCurrentUser(); // Fetch current user details
+      const currentUser = await getCurrentUser();
       const reportedPost = posts.find(p => (p._id || p.id) === selectedPostForReport);
   
       const payload = {
@@ -299,7 +292,7 @@ const Home = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Add token if required by backend
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
@@ -316,6 +309,9 @@ const Home = () => {
     }
   };
 
+  const closeComments = () => {
+    setActiveCommentPost(null);
+  };
 
   return (
     <div className="home-container">
@@ -380,172 +376,33 @@ const Home = () => {
               No posts found. Try different search criteria or create a new post!
             </div>
           ) : (
-            posts.map((post) => {
-              const postId = post._id || post.id;
-              const authorAvatar = avatars[post.author_id];
-
-              return (
-                <div key={postId} className="post">
-                  <div className="post-header">
-                    <div className="post-user">
-                      <div className="user-avatar">
-                        {authorAvatar ? (
-                          <img src={authorAvatar} alt="User avatar" className="avatar-image" />
-                        ) : (
-                          <FaRegUser />
-                        )}
-                      </div>
-                      <div className="user-info">
-                        <span className="username">{post.author}</span>
-                        <span className="post-time">{post.time}</span>
-                      </div>
-                    </div>
-                    <button
-                      className="action-button report-button"
-                      onClick={() => handleReportPost(postId)}
-                    >
-                      <FaFlag />
-                    </button>
-                  </div>
-
-                  <div className="post-content">
-                    {post.title && <h3 className="post-title">{post.title}</h3>}
-                    <p className="post-text">{post.content}</p>
-                    {post.image && post.image.trim() !== "" && (
-                      <img src={post.image} alt="Post" className="post-image" />
-                    )}
-                  </div>
-
-                  <div className="post-footer">
-                    <div className="post-actions">
-                      <button
-                        className={`action-button ${
-                          likedPosts.has(postId) ? "active" : ""
-                        }`}
-                        onClick={() => toggleLike(postId)}
-                      >
-                        {likedPosts.has(postId) ? <FaHeart /> : <FaRegHeart />}
-                      </button>
-                      <button
-                        className={`action-button ${
-                          activeCommentPost === postId ? "active" : ""
-                        }`}
-                        onClick={() => toggleCommentSection(postId)}
-                      >
-                        <FaRegComment />
-                      </button>
-                    </div>
-                    
-                    {(((post.relevance_tags || post.relevant_relevance_tags || [] ).length > 0)||(post.severity_tag !== "")) && (
-                      <div className="post-tags">
-                        {(post.relevance_tags || post.relevant_relevance_tags || []).map((relevance_tag, index) => (
-                          <span 
-                            key={index}
-                            className="tag"
-                          >
-                            {relevance_tag}
-                          </span>
-                        ))}
-                        {(post.severity_tag !== "" && current_user_role !=="student") && (
-                          <span className="tag"
-                          style={{backgroundColor:post.severity_tag === "moderate" ? "orange" : post.severity_tag === "severe" ? "red" : "yellow"}}>
-                            {post.severity_tag}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })
+            posts.map((post) => (
+              <Post
+                key={post._id || post.id}
+                post={post}
+                avatars={avatars}
+                likedPosts={likedPosts}
+                activeCommentPost={activeCommentPost}
+                toggleLike={toggleLike}
+                toggleCommentSection={toggleCommentSection}
+                handleReportPost={handleReportPost}
+                currentUserRole={current_user_role}
+              />
+            ))
           )}
         </div>
 
         {activeCommentPost && (
-          <div className={`comments-panel ${activeCommentPost ? 'open' : ''}`}>
-            <div className="comments-header">
-              <h3>Comments</h3>
-              <button
-                className="close-comments"
-                onClick={() => setActiveCommentPost(null)}
-              >
-                <FaTimes />
-              </button>
-            </div>
-
-            <div className="post-preview">
-              {(() => {
-                const post = posts.find(p => (p._id || p.id) === activeCommentPost);
-                if (!post) return null;
-                const authorAvatar = avatars[post.author_id];
-                
-                return (
-                  <>
-                    <div className="post-user">
-                      <div className="user-avatar">
-                        {authorAvatar ? (
-                          <img src={authorAvatar} alt="User avatar" className="avatar-image" />
-                        ) : (
-                          <FaRegUser />
-                        )}
-                      </div>
-                      <div className="user-info">
-                        <span className="username">{post.author}</span>
-                        <span className="post-time">{post.time}</span>
-                      </div>
-                    </div>
-                    <p className="post-text-preview">
-                      {post.content?.substring(0, 100)}
-                      {post.content?.length > 100 ? "..." : ""}
-                    </p>
-                  </>
-                );
-              })()}
-            </div>
-
-            <div className="comments-list">
-              {comments[activeCommentPost]?.map((comment) => {
-                const commentAvatar = avatars[comment.author_id];
-                return (
-                  <div key={comment._id} className="comment">
-                    <div className="comment-header">
-                      <div className="post-user">
-                        <div className="user-avatar">
-                          {commentAvatar ? (
-                            <img src={commentAvatar} alt="User avatar" className="avatar-image" />
-                          ) : (
-                            <FaRegUser />
-                          )}
-                        </div>
-                        <div className="user-info">
-                          <span className="username">{comment.author}</span>
-                          <span className="post-time">{comment.time}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="comment-text">{comment.content}</p>
-                  </div>
-                );
-              })}
-            </div>
-
-            <form className="comment-form" onSubmit={handleCommentSubmit}>
-              <input
-                type="text"
-                placeholder="Add a comment..."
-                value={newComment}
-                onChange={handleCommentChange}
-                className="comment-input"
-              />
-              <button
-                type="submit"
-                className="post-comment-btn"
-                disabled={newComment.trim() === ""}
-              >
-                Post
-              </button>
-            </form>
-          </div>
+          <CommentSection
+            activeCommentPost={activeCommentPost}
+            posts={posts}
+            comments={comments}
+            avatars={avatars}
+            newComment={newComment}
+            handleCommentChange={handleCommentChange}
+            handleCommentSubmit={handleCommentSubmit}
+            closeComments={closeComments}
+          />
         )}
       </div>
     </div>
