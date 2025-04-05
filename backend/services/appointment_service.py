@@ -5,12 +5,6 @@ from bson import ObjectId
 from datetime import datetime
 from typing import List
 
-def get_current_counselors_service(current_user: dict):
-    if current_user["role"] != "counsellor":
-        raise HTTPException(status_code=403, detail="Only counselors can view other counselors")
-    counselors = get_counselors_service()
-    filtered_counselors = [c for c in counselors if c["email"] != current_user["email"]]
-    return filtered_counselors
 
 def get_counselors_service():
     if users_collection is None:

@@ -59,7 +59,8 @@ const Navbar = ({ onSearch }) => {
       });
 
       // Navigate to login page
-      navigate("/");
+      // navigate("/");
+      navigate(0);
     } catch (error) {
       console.error("Logout failed:", error);
     }
