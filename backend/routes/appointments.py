@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Body
 from database.models import Appointment, SlotUpdate, StatusUpdate
-from services.appointment_service import get_current_counselors_service, get_counselors_service, get_available_slots_service, create_appointment_service, update_appointment_status_service, get_requests_service, update_available_slots_service,get_appointments_service
+from services.appointment_service import get_counselors_service, get_available_slots_service, create_appointment_service, update_appointment_status_service, get_requests_service, update_available_slots_service,get_appointments_service
 from utils.jwt import get_current_user
 from typing import List
 from datetime import datetime
@@ -8,9 +8,6 @@ from datetime import datetime
 
 router = APIRouter()
 
-@router.get("/current-counselors")
-def get_current_counselors(current_user: dict = Depends(get_current_user)):
-    return get_current_counselors_service(current_user)
 
 @router.get("/counselors")
 def get_counselors():
