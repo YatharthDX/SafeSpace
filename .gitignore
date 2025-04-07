@@ -20,6 +20,9 @@ venv/
 .env.local
 .env.development
 .env.production
+backend/.env
+chat-backend/.env
+chat-backend/chat.env
 
 # Ignore Logs
 logs/
