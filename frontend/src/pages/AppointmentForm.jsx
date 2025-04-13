@@ -280,7 +280,7 @@ function AppointmentForm() {
             </div>
 
             <div className="form-group">
-              <label>Problem Description</label>
+              <label>Reason for consultation</label>
               <textarea
                 placeholder="Please describe your reason for consultation"
                 value={problemDescription}
