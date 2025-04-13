@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Navigate to backend folder, activate virtual environment, and run FastAPI server
-source venv/bin/activate || { echo "Failed to activate virtual environment"; exit 1; }
 cd backend || { echo "Backend folder not found"; exit 1; }
+source venv/bin/activate || { echo "Failed to activate virtual environment"; exit 1; }
 uvicorn main:app --reload &  # Run in background
 sleep 2  # Wait for the server to start
 cd ..
