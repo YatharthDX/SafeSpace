@@ -21,13 +21,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 0 0 auto;
+  min-width: 200px;
+  margin-right: 15px;
 }
 
 .logo {
   align-content: center;
   height: 4rem;
   width: auto;
-  /* box-shadow: #e0e0e0; */
 }
 
 .brand-name {
@@ -37,9 +39,11 @@
   text-decoration: none;
   font-family: sans-serif;
 }
+
 .brand-name:hover {
   color: #eca084;
 }
+
 /* Center section - Search Bar */
 .navbar-center {
   display: flex;
@@ -81,13 +85,11 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  /* font-size: xx-large; */
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  /* background-color: fbd6a0; */
   gap: 5px;
   color: #333;
   text-decoration: none;
@@ -101,38 +103,24 @@
   color: #d86d45;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .navbar-center {
-    width: 30%;
-  }
-
-  .nav-link span {
-    display: none;
-  }
+/* Hamburger menu toggle button - hidden on larger screens */
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.3s;
 }
 
-@media (max-width: 576px) {
-  .navbar {
-    padding: 0 10px;
-  }
-
-  .brand-name {
-    font-size: 20px;
-  }
-
-  .navbar-center {
-    width: 40%;
-  }
-
-  .navbar-right {
-    gap: 10px;
-  }
+.menu-toggle:hover {
+  color: #d86d45;
 }
 
-/* Ensure content below navbar isn't hidden */
-body {
-  padding-top: 60px;
+/* Mobile search bar - hidden by default */
+.mobile-search {
+  display: none;
+  width: 100%;
+  margin-top: 15px;
 }
 
 /* Search container styles */
@@ -140,16 +128,6 @@ body {
   position: relative;
   width: 100%;
   margin-top: 10px; /* Shifts the search bar downward */
-}
-
-.search-bar {
-  width: 100%;
-  padding: 10px 40px 10px 15px;
-  border-radius: 20px;
-  border: 1px solid #e0e0e0;
-  font-size: 14px;
-  outline: none;
-  background-color: white;
 }
 
 .search-icon {
@@ -187,6 +165,7 @@ body {
 .search-item:hover {
   background: #f3e9d9;
 }
+
 /* Scrollbar styling */
 .search-dropdown::-webkit-scrollbar,
 .left-sidebar::-webkit-scrollbar,
@@ -211,4 +190,137 @@ body {
 .left-sidebar::-webkit-scrollbar-thumb:hover,
 .comments-list::-webkit-scrollbar-thumb:hover {
   background-color: #d4a76a;
+}
+
+/* Ensure content below navbar isn't hidden */
+body {
+  padding-top: 60px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .navbar-center {
+    width: 30%;
+  }
+  
+  .brand-name {
+    font-size: x-large;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Show hamburger menu */
+  .menu-toggle {
+    display: block;
+  }
+  
+  /* Hide desktop search bar */
+  .navbar-center {
+    display: none;
+  }
+  
+  /* Style navbar right for mobile */
+  .navbar-right {
+    position: fixed;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #fbd6a0;
+    top: 4.5rem;
+    right: -300px;
+    width: 250px;
+    height: 100vh;
+    padding: 30px 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+  }
+  
+  .navbar-right.active {
+    right: 0;
+  }
+  
+  .nav-link {
+    padding: 12px 0;
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .nav-link span {
+    display: inline-block;
+    margin-left: 10px;
+  }
+  
+  /* Show mobile search bar */
+  .mobile-search {
+    display: block;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    padding: 0 10px;
+  }
+  
+  .logo {
+    height: 3rem;
+  }
+  
+  .brand-name {
+    font-size: large;
+  }
+  
+  .navbar-left {
+    min-width: 150px;
+  }
+}
+
+/* Ensure content below navbar isn't hidden */
+body {
+  padding-top: 4.5rem; /* Match the height of your navbar */
+}
+
+/* Add this section to fix mobile overlap issues */
+@media (max-width: 768px) {
+  body {
+    padding-top: 4.5rem; /* Keep the same padding on mobile */
+  }
+  
+  /* Make sure the navbar maintains its position */
+  .navbar {
+    z-index: 1050; /* Increase z-index to ensure navbar stays on top */
+  }
+  
+  /* Ensure the mobile menu appears below the navbar */
+  .navbar-right {
+    top: 4.5rem; /* Should match navbar height */
+    z-index: 1040;
+    height: calc(100vh - 4.5rem); /* Subtract navbar height from viewport height */
+    overflow-y: auto; /* Allow scrolling if menu items don't fit */
+  }
+  
+  /* Add proper margin to main content */
+  main, .main-content, #root > div:not(.navbar) {
+    margin-top: 4.5rem;
+    position: relative;
+    z-index: 900;
+  }
+  
+  /* Fix for the search dropdown on mobile */
+  .search-dropdown {
+    position: absolute;
+    z-index: 1060; /* Make sure dropdown appears above everything */
+  }
+}
+
+/* Fix for smaller mobile screens */
+@media (max-width: 576px) {
+  /* Adjust if navbar height changes on smallest screens */
+  body {
+    padding-top: 4.5rem;
+  }
+}
+
+/* Add this if you're using React Router and have page transitions */
+.page-container {
+  margin-top: 4.5rem;
+  min-height: calc(100vh - 4.5rem);
 }

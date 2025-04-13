@@ -115,7 +115,7 @@ class PostService:
         
         return Blog(**created_blog)
     
-    async def get_blogs(self, skip: int = 0, limit: int = 20) -> List[Blog]:
+    async def get_blogs(self, skip: int = 0, limit: int = 10) -> List[Blog]:
         """Get all blogs with pagination"""
         blogs = []
         cursor = self.blogs_collection.find().skip(skip).limit(limit).sort("created_at", -1)

@@ -54,7 +54,7 @@ export const classifyText = async (postData) => {
 };
 
 // Get all blog posts
-export const getPosts = async (skip = 0, limit = 20) => {
+export const getPosts = async (skip = 0, limit = 10) => {
   try {
     const response = await axios.get(`${API_URL}/blogs`, {
       params: { skip, limit },
