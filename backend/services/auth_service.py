@@ -153,7 +153,8 @@ def get_user_details_service(current_user: dict):
         "profile_picture": user.get("profile_picture"),
         "_id": str(user["_id"]),
         "role": user.get("role"),
-        "avatar": user.get("avatar")
+        "avatar": user.get("avatar"),
+        "eman": user.get("email")
     }
     
     return user_details
