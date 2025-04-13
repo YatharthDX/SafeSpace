@@ -314,8 +314,11 @@ const Home = () => {
   };
 
   return (
-    <div className="home-container">
+    <div className="app-wrapper">
       <Navbar onSearch={handleSearch} />
+    
+    <div className="home-container">
+      
 
       <ReportModal 
         isOpen={isReportModalOpen}
@@ -405,6 +408,7 @@ const Home = () => {
           />
         )}
       </div>
+    </div>
     </div>
   );
 };
