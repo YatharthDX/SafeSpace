@@ -63,7 +63,7 @@ const AvailabilityCalendar = () => {
   useEffect(() => {
     const fetchCurrentCounselor = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/appointments/current-counselors", {
+        const response = await fetch("http://127.0.0.1:8000/api/auth/getuserdetails", {
           credentials: 'include',
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -77,8 +77,8 @@ const AvailabilityCalendar = () => {
       
         const data = await response.json();
         console.log("Current counselor data:", data);
-        setCounselorEmail(data[0].email);
-        console.log("Current counselor email:", data[0].email);
+        setCounselorEmail(data.email);
+        console.log("Current counselor email:", data.email);
       
       } catch (error) {
         console.error("Error fetching current counselor:", error);
