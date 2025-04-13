@@ -108,11 +108,35 @@ class Post(BaseModel):
 
 class PostResponse(BaseModel):
     """API response model for posts, including tag match count for sorting"""
-    id: str
+    id: str = Field(alias="_id")
     title: str
     content: str
-    relevant_tags: List[str]
-    tag_match_count: Optional[float] = 0  
+    author: str
+    author_id: str
+    relevance_tags: List[str] = []
+    severity_tag: str
+    image: Optional[str] = None
+    likes: int = 0
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {
+        "populate_by_name": True,
+        "json_schema_extra": {
+            "example": {
+                "_id": "60d21b4967d0d8992e610c85",
+                "title": "My Experience",
+                "content": "This is my story...",
+                "author": "John Doe",
+                "relevance_tags": ["anxiety", "depression", "support"],
+                "severity_tag": "moderate",
+                "image": "/uploads/image.jpg",
+                "likes": 10,
+                "created_at": "2021-06-22T19:40:09.603Z",
+                "updated_at": "2021-06-22T19:40:09.603Z"
+            }
+        }
+    }  
 
 class PostSearch(BaseModel):
     """Search query model"""

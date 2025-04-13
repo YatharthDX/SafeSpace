@@ -13,9 +13,7 @@ class LikeRequest(BaseModel):
 def get_post_service():
     return PostService()
 
-@router.get("/", response_description="Home endpoint")
-async def home():
-    return {"message": "Welcome to the Blog API"}
+
 
 @router.post("/blogs", response_model=Blog, response_description="Create a new blog post")
 async def create_blog(
