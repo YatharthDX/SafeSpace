@@ -6,22 +6,31 @@ import Post from "../components/Posts/PostsContainer"; // Import the new Post co
 import CommentSection from "../components/Posts/CommentSection"; // Import the new CommentSection component
 import "../css/Home.css";
 import { useNavigate } from "react-router-dom";
-import { getPosts, likePost, unlikePost, getComments, addComment, getUserLikedPosts } from "../api/posts";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {
+  getPosts,
+  likePost,
+  unlikePost,
+  getComments,
+  addComment,
+  getUserLikedPosts,
+} from "../api/posts";
 import { getCurrentUser } from "../chat-services/pyapi";
 import { classifyText } from "../api/posts";
 import { jwtDecode } from "jwt-decode";
+import { useRef } from "react";
 
 const avatarImages = {
-  1: () => import('../assets/1.png'),
-  2: () => import('../assets/2.png'),
-  3: () => import('../assets/3.png'),
-  4: () => import('../assets/4.png'),
-  5: () => import('../assets/5.png'),
-  6: () => import('../assets/6.png'),
-  7: () => import('../assets/7.png'),
-  8: () => import('../assets/8.png'),
-  9: () => import('../assets/9.png'),
-  10: () => import('../assets/10.png')
+  1: () => import("../assets/1.png"),
+  2: () => import("../assets/2.png"),
+  3: () => import("../assets/3.png"),
+  4: () => import("../assets/4.png"),
+  5: () => import("../assets/5.png"),
+  6: () => import("../assets/6.png"),
+  7: () => import("../assets/7.png"),
+  8: () => import("../assets/8.png"),
+  9: () => import("../assets/9.png"),
+  10: () => import("../assets/10.png"),
 };
 
 const Home = () => {
@@ -32,7 +41,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [allTags, setAllTags] = useState([]);
-  const current_user = localStorage.getItem('token');
+  const current_user = localStorage.getItem("token");
   const current_user_json = jwtDecode(current_user);
   const current_user_role = current_user_json.role;
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -42,6 +51,11 @@ const Home = () => {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [activeCommentPost, setActiveCommentPost] = useState(null);
   const [newComment, setNewComment] = useState("");
+  const [skip, setSkip] = useState(0); // How many posts to skip
+  const [limit] = useState(10); // Posts per fetch
+  const [hasMore, setHasMore] = useState(true); // If there are more posts to load
+  const containerRef = useRef(null);
+  const observerRef = useRef(null);
 
   const HandleCreate = () => {
     navigate("/createpost");
@@ -59,7 +73,7 @@ const Home = () => {
         console.error("Error fetching tags:", error);
       }
     };
-    
+
     fetchTags();
   }, []);
 
@@ -80,14 +94,15 @@ const Home = () => {
           },
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       const data = await response.json();
-      const avatarNumber = data.avatar || data.avatar_number || data.number || 1;
-      
+      const avatarNumber =
+        data.avatar || data.avatar_number || data.number || 1;
+
       if (avatarNumber && avatarImages[avatarNumber]) {
         const avatarModule = await avatarImages[avatarNumber]();
         return avatarModule.default;
@@ -99,10 +114,10 @@ const Home = () => {
     }
   };
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (append = false) => {
     try {
       setLoading(true);
-      
+
       const currentUser = await getCurrentUser();
       let likedPostIds = [];
       if (currentUser) {
@@ -112,38 +127,65 @@ const Home = () => {
 
       let fetchedPosts;
       if (selectedTags.length > 0 || searchText) {
-        const tagsParam = selectedTags.join(',');
-        const url = `http://127.0.0.1:8000/search_blog/search-get/?text=${encodeURIComponent(searchText)}&tags=${encodeURIComponent(tagsParam)}`;
-        
+        const tagsParam = selectedTags.join(",");
+        const url = `http://127.0.0.1:8000/search_blog/search-get/?text=${encodeURIComponent(
+          searchText
+        )}&tags=${encodeURIComponent(tagsParam)}`;
         const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('Search request failed');
-        }
-        
+        // console.log("Response from search:", response);
+        if (!response.ok) throw new Error("Search request failed");
         fetchedPosts = await response.json();
-      } else {
-        fetchedPosts = await getPosts();
-      }
-      
-      const updatedPosts = fetchedPosts.map(post => ({
-        ...post,
-        isLiked: likedPostIds.includes(post._id || post.id)
-      }));
-      
-      setPosts(updatedPosts);
+        console.log("Fetched posts from search:", fetchedPosts);
 
-      const uniqueAuthorIds = [...new Set(updatedPosts.map(post => post.author_id))];
+        // When searching, no pagination
+        setHasMore(false);
+      } else {
+        const result = await getPosts(skip, limit);
+        fetchedPosts = result;
+
+        // If fewer results than limit, assume no more posts
+        if (result.length < limit) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+
+        // Only increase skip if appending
+        if (!append) {
+          // First fetch — reset skip to 10 after loading initial posts
+          setSkip(limit);
+        } else {
+          setSkip((prev) => prev + limit);
+        }
+      }
+
+      const updatedPosts = fetchedPosts.map((post) => ({
+        ...post,
+        isLiked: likedPostIds.includes(post._id || post.id),
+      }));
+
+      // Append or replace posts
+      setPosts((prevPosts) =>
+        append ? [...prevPosts, ...updatedPosts] : updatedPosts
+      );
+
+      const uniqueAuthorIds = [
+        ...new Set(updatedPosts.map((post) => post.author_id)),
+      ];
       const avatarPromises = uniqueAuthorIds.map(async (authorId) => {
         const avatarSrc = await fetchAvatar(authorId);
         return { authorId, avatarSrc };
       });
-      
+
       const avatarResults = await Promise.all(avatarPromises);
-      const newAvatars = avatarResults.reduce((acc, { authorId, avatarSrc }) => {
-        if (avatarSrc) acc[authorId] = avatarSrc;
-        return acc;
-      }, {});
-      setAvatars(prev => ({ ...prev, ...newAvatars }));
+      const newAvatars = avatarResults.reduce(
+        (acc, { authorId, avatarSrc }) => {
+          if (avatarSrc) acc[authorId] = avatarSrc;
+          return acc;
+        },
+        {}
+      );
+      setAvatars((prev) => ({ ...prev, ...newAvatars }));
 
       const commentsState = {};
       for (const post of updatedPosts) {
@@ -151,7 +193,7 @@ const Home = () => {
         const postComments = await getComments(postId);
         commentsState[postId] = postComments;
       }
-      setComments(commentsState);
+      setComments((prev) => ({ ...prev, ...commentsState }));
     } catch (err) {
       setError(err.message || "Failed to fetch posts. Please try again.");
     } finally {
@@ -159,10 +201,40 @@ const Home = () => {
     }
   };
 
+  const loadMorePosts = () => {
+    if (!loading && hasMore && !searchText && selectedTags.length === 0) {
+      fetchPosts(true); // append = true
+    }
+  };
+
+  useEffect(() => {
+    if (loading || searchText || selectedTags.length > 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMorePosts();
+        }
+      },
+      {
+        root: containerRef.current, // 👈 observe within the container
+        rootMargin: "0px",
+        threshold: 1.0,
+      }
+    );
+
+    const current = observerRef.current;
+    if (current) observer.observe(current);
+
+    return () => {
+      if (current) observer.unobserve(current);
+    };
+  }, [posts, loading, searchText, selectedTags, hasMore]);
+
   const handleSearch = (text, tags) => {
     setSearchText(text);
     if (tags && tags.length > 0) {
-      setSelectedTags(prevTags => {
+      setSelectedTags((prevTags) => {
         if (prevTags.includes(tags[0])) {
           return prevTags;
         }
@@ -175,29 +247,31 @@ const Home = () => {
     try {
       if (likedPosts.has(postId)) {
         await unlikePost(postId);
-        setLikedPosts(prev => {
+        setLikedPosts((prev) => {
           const newSet = new Set(prev);
           newSet.delete(postId);
           return newSet;
         });
       } else {
         await likePost(postId);
-        setLikedPosts(prev => new Set([...prev, postId]));
+        setLikedPosts((prev) => new Set([...prev, postId]));
       }
-      
-      setPosts(prevPosts =>
-        prevPosts.map(post => {
+
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => {
           const currentPostId = post._id || post.id;
           return currentPostId === postId
             ? {
                 ...post,
-                likes: likedPosts.has(postId) ? post.likes - 1 : post.likes + 1
+                likes: likedPosts.has(postId) ? post.likes - 1 : post.likes + 1,
               }
-            : post
+            : post;
         })
       );
     } catch (err) {
-      setError(err.message || "Failed to update like status. Please try again.");
+      setError(
+        err.message || "Failed to update like status. Please try again."
+      );
     }
   };
 
@@ -209,9 +283,11 @@ const Home = () => {
       if (!comments[postId]) {
         try {
           const postComments = await getComments(postId);
-          setComments(prev => ({ ...prev, [postId]: postComments }));
+          setComments((prev) => ({ ...prev, [postId]: postComments }));
         } catch (err) {
-          setError(err.message || "Failed to fetch comments. Please try again.");
+          setError(
+            err.message || "Failed to fetch comments. Please try again."
+          );
         }
       }
     }
@@ -227,8 +303,8 @@ const Home = () => {
 
     try {
       const classifyData = {
-        text: newComment
-      }
+        text: newComment,
+      };
       const classification = await classifyText(classifyData);
       if (classification === "HATE") {
         alert("Please refrain from using hate speech in your comment");
@@ -241,10 +317,13 @@ const Home = () => {
         author: currentUser.name,
         author_id: currentUser._id,
       };
-      
+
       await addComment(activeCommentPost, commentData);
       const updatedComments = await getComments(activeCommentPost);
-      setComments(prev => ({ ...prev, [activeCommentPost]: updatedComments }));
+      setComments((prev) => ({
+        ...prev,
+        [activeCommentPost]: updatedComments,
+      }));
       setNewComment("");
     } catch (err) {
       setError(err.message || "Failed to add comment. Please try again.");
@@ -252,9 +331,9 @@ const Home = () => {
   };
 
   const toggleTagSelection = (tag) => {
-    setSelectedTags(prevSelectedTags => {
+    setSelectedTags((prevSelectedTags) => {
       if (prevSelectedTags.includes(tag)) {
-        return prevSelectedTags.filter(t => t !== tag);
+        return prevSelectedTags.filter((t) => t !== tag);
       } else {
         return [...prevSelectedTags, tag];
       }
@@ -271,12 +350,14 @@ const Home = () => {
       alert("Error: No post selected for reporting.");
       return;
     }
-  
+
     try {
       const token = localStorage.getItem("token");
       const currentUser = await getCurrentUser();
-      const reportedPost = posts.find(p => (p._id || p.id) === selectedPostForReport);
-  
+      const reportedPost = posts.find(
+        (p) => (p._id || p.id) === selectedPostForReport
+      );
+
       const payload = {
         blog_id: selectedPostForReport,
         reported_author_id: reportedPost?.author_id || "",
@@ -285,9 +366,9 @@ const Home = () => {
         reason: reportData.title,
         description: reportData.body || "",
       };
-  
+
       console.log("Submitting report with payload:", payload);
-  
+
       const response = await fetch("http://127.0.0.1:8000/blogs/report-blog/", {
         method: "POST",
         headers: {
@@ -296,7 +377,7 @@ const Home = () => {
         },
         body: JSON.stringify(payload),
       });
-  
+
       const result = await response.json();
       if (response.ok) {
         alert(result.message);
@@ -320,7 +401,7 @@ const Home = () => {
     <div className="home-container">
       
 
-      <ReportModal 
+      <ReportModal
         isOpen={isReportModalOpen}
         onClose={() => {
           setIsReportModalOpen(false);
@@ -352,9 +433,11 @@ const Home = () => {
 
             <div className="tags-list">
               {allTags.map((tag, index) => (
-                <div 
-                  key={index} 
-                  className={`tag-item ${selectedTags.includes(tag) ? 'active' : ''}`}
+                <div
+                  key={index}
+                  className={`tag-item ${
+                    selectedTags.includes(tag) ? "active" : ""
+                  }`}
                   onClick={() => toggleTagSelection(tag)}
                 >
                   {tag}
@@ -369,29 +452,45 @@ const Home = () => {
           </button>
         </div>
 
-        <div className={`posts-container ${!activeCommentPost ? 'comments-closed' : ''}`}>
-          {loading ? (
+        <div className="posts-container comments-closed" id="posts-container">
+          {loading && posts.length === 0 ? (
             <div className="loading-indicator">Loading posts...</div>
           ) : error ? (
             <div className="error-message">{error}</div>
           ) : posts.length === 0 ? (
             <div className="no-posts-message">
-              No posts found. Try different search criteria or create a new post!
+              No posts found. Try different search criteria or create a new
+              post!
             </div>
           ) : (
-            posts.map((post) => (
-              <Post
-                key={post._id || post.id}
-                post={post}
-                avatars={avatars}
-                likedPosts={likedPosts}
-                activeCommentPost={activeCommentPost}
-                toggleLike={toggleLike}
-                toggleCommentSection={toggleCommentSection}
-                handleReportPost={handleReportPost}
-                currentUserRole={current_user_role}
-              />
-            ))
+            <InfiniteScroll
+              dataLength={posts.length}
+              next={loadMorePosts}
+              hasMore={hasMore}
+              loader={
+                <div className="loading-indicator">Loading more posts...</div>
+              }
+              scrollableTarget="posts-container"
+              endMessage={
+                <p style={{ textAlign: "center" }}>
+                  <b>No more posts to load.</b>
+                </p>
+              }
+            >
+              {posts.map((post) => (
+                <Post
+                  key={post._id || post.id}
+                  post={post}
+                  avatars={avatars}
+                  likedPosts={likedPosts}
+                  activeCommentPost={activeCommentPost}
+                  toggleLike={toggleLike}
+                  toggleCommentSection={toggleCommentSection}
+                  handleReportPost={handleReportPost}
+                  currentUserRole={current_user_role}
+                />
+              ))}
+            </InfiniteScroll>
           )}
         </div>
 
