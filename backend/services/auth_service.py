@@ -154,7 +154,7 @@ def get_user_details_service(current_user: dict):
         "_id": str(user["_id"]),
         "role": user.get("role"),
         "avatar": user.get("avatar"),
-        "eman": user.get("email")
+        "email": user.get("email")
     }
     
     return user_details

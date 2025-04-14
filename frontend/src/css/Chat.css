@@ -61,11 +61,12 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  width: 50vw;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: 100%;
-  min-width: 800px;
+  min-width: 50vw;
   flex: 1 1;
 }
 
