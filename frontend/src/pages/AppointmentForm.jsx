@@ -87,12 +87,18 @@ function AppointmentForm() {
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
-
+    // Add validation here
+    const phoneRegex = /^(?:\+91)?\d{10}$/;
+    if (!phoneRegex.test(contactNumber)) {
+      setError("Please enter a valid 10-digit Indian phone number (e.g., 9876543210 or +919876543210)");
+      setIsSubmitting(false);
+      return;
+    }
     try {
       // Prepare appointment data
       const appointmentData = {
         user_name: name,
-        user_email: email,
+        // user_email: email,
         counselor_email: counselor?.email || "",
         date: formatDateForBackend(selectedDate),
         time_slot: formatTimeForBackend(selectedTime),
@@ -100,7 +106,6 @@ function AppointmentForm() {
         description: problemDescription,
         status: "pending"
       };
-
       console.log("Sending appointment data:", appointmentData);
 
       const token = localStorage.getItem("token");
@@ -268,16 +273,16 @@ function AppointmentForm() {
               />
             </div>
 
-            <div className="form-group">
-              <label>Email-ID</label>
+            {/* <div className="form-group"> */}
+              {/* <label>Email-ID</label>
               <input
                 type="email"
                 placeholder="Enter Email ID"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-              />
-            </div>
+              /> */}
+            {/* </div> */}
 
             <div className="form-group">
               <label>Reason for consultation</label>
