@@ -46,7 +46,7 @@ class AvatarRequest(BaseModel):
 
 class Appointment(BaseModel):
     user_name: str
-    user_email: EmailStr
+    user_email: Optional[EmailStr]= None
     counselor_email: EmailStr
     date: datetime
     time_slot: str
