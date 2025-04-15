@@ -10,7 +10,7 @@ const ChatBox = ({ chats, setSelectedChat, selectedChat, onlineUsers, searchQuer
     <div className="chat-list">
       <div className="chat-header">
         <h1>Chats</h1>
-        <FaEdit className="edit-icon" /> {/* Pencil icon */}
+        {/* <FaEdit className="edit-icon" /> Pencil icon */}
       </div>
       <div className="search-container">
         {/* <FaSearch className="search-icon" /> */}

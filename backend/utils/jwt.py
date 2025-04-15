@@ -5,7 +5,7 @@ from utils.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 from fastapi import HTTPException, Depends
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/auth/login"
+    tokenUrl="/api/auth/"
 )
 def create_access_token(data: dict):
     to_encode = data.copy()
